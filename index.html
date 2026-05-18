@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório — Falta de Água</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: rgba(99,179,237,0.12);
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --danger: #f87171;
+    --warning: #fbbf24;
+    --success: #34d399;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --norte: #38bdf8;
+    --central: #fbbf24;
+    --oeste: #34d399;
+    --sem: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .grid-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .container { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* HEADER */
+  .header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 28px; gap: 16px; flex-wrap: wrap;
+  }
+  .header-left {}
+  .header-tag {
+    font-size: 10px; font-weight: 600; letter-spacing: .12em;
+    color: var(--accent); text-transform: uppercase;
+    background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.2);
+    display: inline-block; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px;
+  }
+  h1 { font-size: 26px; font-weight: 600; color: #f1f5f9; line-height: 1.2; }
+  .header-meta { font-size: 12px; color: var(--muted); margin-top: 4px; font-family: 'DM Mono', monospace; }
+  .header-stat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 20px; text-align: right;
+  }
+  .header-stat-val { font-size: 22px; font-weight: 600; color: var(--accent); font-family: 'DM Mono', monospace; }
+  .header-stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* CARDS DIRETORIA */
+  .dir-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .dir-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; position: relative; overflow: hidden;
+    transition: border-color .2s;
+  }
+  .dir-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  }
+  .dir-card.norte::before { background: var(--norte); }
+  .dir-card.central::before { background: var(--central); }
+  .dir-card.oeste::before { background: var(--oeste); }
+  .dir-card.sem::before { background: var(--sem); }
+  .dir-name { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+  .dir-card.norte .dir-name { color: var(--norte); }
+  .dir-card.central .dir-name { color: var(--central); }
+  .dir-card.oeste .dir-name { color: var(--oeste); }
+  .dir-card.sem .dir-name { color: var(--sem); }
+  .dir-eventos { font-size: 28px; font-weight: 600; color: #f1f5f9; font-family: 'DM Mono', monospace; line-height: 1; }
+  .dir-label { font-size: 11px; color: var(--muted); margin-top: 2px; margin-bottom: 8px; }
+  .dir-municipio { font-size: 12px; color: var(--text); }
+  .dir-municipio span { color: var(--muted); }
+
+  /* MAIN GRID */
+  .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media(max-width:640px) { .main-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 18px;
+  }
+  .card-full { grid-column: 1 / -1; }
+  .card-title {
+    font-size: 11px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card-title-icon { font-size: 14px; }
+
+  /* CHART */
+  .chart-wrap { position: relative; height: 240px; }
+
+  /* TOP 10 LIST */
+  .top10-list { display: flex; flex-direction: column; gap: 6px; }
+  .top10-item { display: flex; align-items: center; gap: 8px; }
+  .top10-rank {
+    font-size: 10px; font-family: 'DM Mono', monospace;
+    color: var(--muted); min-width: 18px; text-align: right;
+  }
+  .top10-bar-wrap { flex: 1; height: 6px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; }
+  .top10-bar { height: 100%; border-radius: 3px; transition: width .6s ease; }
+  .top10-name { font-size: 12px; min-width: 130px; color: var(--text); }
+  .top10-dir {
+    font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 500;
+  }
+  .top10-dir.norte { background: rgba(56,189,248,.12); color: var(--norte); }
+  .top10-dir.central { background: rgba(251,191,36,.12); color: var(--central); }
+  .top10-dir.oeste { background: rgba(52,211,153,.12); color: var(--oeste); }
+  .top10-dir.sem { background: rgba(148,163,184,.12); color: var(--sem); }
+  .top10-val { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); min-width: 70px; text-align: right; }
+
+  /* ALERTAS */
+  .alert-list { display: flex; flex-direction: column; gap: 8px; }
+  .alert-item {
+    background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.15);
+    border-radius: 8px; padding: 10px 12px; display: flex; align-items: flex-start; gap: 10px;
+  }
+  .alert-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); margin-top: 3px; flex-shrink: 0; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .alert-municipio { font-size: 13px; font-weight: 500; color: #fca5a5; }
+  .alert-dur { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--danger); margin-top: 2px; }
+  .alert-cat { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .no-alert { color: var(--success); font-size: 13px; display: flex; align-items: center; gap: 6px; }
+
+  /* RECOMENDAÇÕES */
+  .rec-list { display: flex; flex-direction: column; gap: 8px; }
+  .rec-item {
+    background: var(--surface2); border-radius: 8px;
+    padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start;
+  }
+  .rec-dir-tag {
+    font-size: 10px; font-weight: 600; letter-spacing: .06em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .rec-dir-tag.norte { background: rgba(56,189,248,.12); color: var(--norte); }
+  .rec-dir-tag.central { background: rgba(251,191,36,.12); color: var(--central); }
+  .rec-dir-tag.oeste { background: rgba(52,211,153,.12); color: var(--oeste); }
+  .rec-dir-tag.sem { background: rgba(148,163,184,.12); color: var(--sem); }
+  .rec-text { font-size: 12px; color: var(--text); line-height: 1.6; }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; color: var(--muted); flex-wrap: wrap; gap: 8px;
+  }
+  .footer-badge {
+    background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.15);
+    color: var(--accent); padding: 3px 10px; border-radius: 4px; font-size: 10px; font-weight: 600;
+  }
+
+  /* LOADING / EMPTY */
+  .empty {
+    text-align: center; padding: 60px 20px; color: var(--muted);
+  }
+  .empty h2 { font-size: 16px; color: var(--text); margin-bottom: 8px; }
+  .empty code {
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    background: var(--surface2); padding: 4px 10px; border-radius: 6px;
+    display: inline-block; margin-top: 8px; color: var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="container">
+  <div id="app"><div class="empty"><h2>Carregando dados...</h2></div></div>
+</div>
+
+<script>
+const DEMO = {
+  gerado: new Date().toLocaleString('pt-BR'),
+  totalEconomias: '99.171',
+  diretorias: [
+    { id:'norte', nome:'Norte', eventos:48, economias:'46.003', municipio:'Gramado', area:'95,20%' },
+    { id:'central', nome:'Central', eventos:56, economias:'29.888', municipio:'Santa Maria', area:'89,23%' },
+    { id:'oeste', nome:'Oeste', eventos:22, economias:'8.170', municipio:'São Martinho', area:'97,42%' },
+    { id:'sem', nome:'Sem Diretoria', eventos:33, economias:'15.532', municipio:'Encruzilhada do Sul', area:'95,27%' },
+  ],
+  top10: [
+    { nome:'Gramado', dir:'norte', econ:26543 },
+    { nome:'Veranópolis', dir:'norte', econ:10937 },
+    { nome:'Ibirubá', dir:'central', econ:8339 },
+    { nome:'Encruzilhada do Sul', dir:'sem', econ:9025 },
+    { nome:'Piratini', dir:'sem', econ:6507 },
+    { nome:'Serafina Corrêa', dir:'norte', econ:6988 },
+    { nome:'Crissiumal', dir:'oeste', econ:3892 },
+    { nome:'Agudo', dir:'central', econ:4256 },
+    { nome:'São Martinho', dir:'oeste', econ:2194 },
+    { nome:'Tucunduva', dir:'oeste', econ:2084 },
+  ],
+  alertas: [
+    { municipio:'Gramado', duracao:'725,25h', categoria:'Paralisação — alteração da qualidade de água bruta (alta turbidez)' },
+  ],
+  recomendacoes: [
+    { id:'norte', nome:'Norte', texto:'Priorizar ações em Gramado e Serafina Corrêa. Monitorar ETA diariamente e acionar equipe eletromecânica preventiva.' },
+    { id:'central', nome:'Central', texto:'Focar em Santa Maria e Ibirubá. Verificar dosadoras de sulfato e sistemas de recalque com manutenção emergencial.' },
+    { id:'oeste', nome:'Oeste', texto:'Intensificar manutenção preventiva em São Martinho e Crissiumal. Avaliar impacto de obras da prefeitura na rede.' },
+    { id:'sem', nome:'Sem Diretoria', texto:'Mapear e integrar Piratini e Encruzilhada do Sul a uma diretoria para melhor gestão e resposta operacional.' },
+  ]
+};
+
+function parseDados(texto) {
+  if (!texto) return null;
+  try {
+    const d = JSON.parse(decodeURIComponent(texto));
+    return d;
+  } catch(e) {
+    return parseTextoIA(decodeURIComponent(texto));
+  }
+}
+
+function parseTextoIA(texto) {
+  const data = { ...DEMO, gerado: new Date().toLocaleString('pt-BR') };
+  const linhas = texto.split('\n');
+
+  // Extrai top 10
+  const top10Start = linhas.findIndex(l => l.includes('TOP 10'));
+  if (top10Start > -1) {
+    const top10Lines = [];
+    for (let i = top10Start + 1; i < linhas.length; i++) {
+      const l = linhas[i].trim();
+      if (!l || l.startsWith('---') || l.includes('ALERT') || l.includes('RECOM')) break;
+      const match = l.match(/^(.+?)\s*\((.+?)\)\s*[—–-]+\s*([\d.,]+)\s*econ/i);
+      if (match) {
+        const dirMap = {'norte':'norte','central':'central','oeste':'oeste'};
+        const dirRaw = match[2].toLowerCase().trim();
+        const dir = dirMap[dirRaw] || 'sem';
+        top10Lines.push({ nome: match[1].trim(), dir, econ: parseInt(match[3].replace(/\./g,'').replace(',','')) });
+      }
+    }
+    if (top10Lines.length > 0) data.top10 = top10Lines;
+  }
+
+  // Extrai alertas
+  const alertStart = linhas.findIndex(l => l.includes('ALERT') && l.includes('CR'));
+  if (alertStart > -1) {
+    const alertas = [];
+    for (let i = alertStart + 1; i < linhas.length; i++) {
+      const l = linhas[i].trim().replace(/^🔴\s*/,'');
+      if (!l || l.startsWith('---') || l.includes('RECOM')) break;
+      if (l.includes('Nenhum')) { data.alertas = []; break; }
+      const parts = l.split(/[—–-]+/).map(s => s.trim());
+      if (parts.length >= 2) alertas.push({ municipio: parts[0], duracao: parts[1], categoria: parts[2] || '' });
+    }
+    if (alertas.length > 0) data.alertas = alertas;
+  }
+
+  return data;
+}
+
+function dirClass(d) {
+  const m = {'norte':'norte','central':'central','oeste':'oeste'};
+  return m[d?.toLowerCase()] || 'sem';
+}
+
+function render(data) {
+  const max = Math.max(...data.top10.map(t => t.econ));
+  const barColors = { norte:'#38bdf8', central:'#fbbf24', oeste:'#34d399', sem:'#94a3b8' };
+
+  const dirCards = data.diretorias.map(d => `
+    <div class="dir-card ${d.id}">
+      <div class="dir-name">${d.nome}</div>
+      <div class="dir-eventos">${d.eventos}</div>
+      <div class="dir-label">eventos · ${d.economias} econ.</div>
+      <div class="dir-municipio">Crítico: <strong>${d.municipio}</strong> <span>${d.area}</span></div>
+    </div>
+  `).join('');
+
+  const top10Items = data.top10.map((t, i) => {
+    const pct = Math.round((t.econ / max) * 100);
+    const dc = dirClass(t.dir);
+    return `
+      <div class="top10-item">
+        <span class="top10-rank">${String(i+1).padStart(2,'0')}</span>
+        <span class="top10-name">${t.nome}</span>
+        <span class="top10-dir ${dc}">${t.dir || 'Sem dir.'}</span>
+        <div class="top10-bar-wrap"><div class="top10-bar" style="width:${pct}%;background:${barColors[dc]}"></div></div>
+        <span class="top10-val">${t.econ.toLocaleString('pt-BR')} econ.</span>
+      </div>
+    `;
+  }).join('');
+
+  const alertItems = data.alertas.length === 0
+    ? `<div class="no-alert">✅ Nenhum evento crítico identificado.</div>`
+    : data.alertas.map(a => `
+        <div class="alert-item">
+          <div class="alert-dot"></div>
+          <div>
+            <div class="alert-municipio">${a.municipio}</div>
+            <div class="alert-dur">⏱ ${a.duracao}</div>
+            <div class="alert-cat">${a.categoria}</div>
+          </div>
+        </div>
+      `).join('');
+
+  const recItems = data.recomendacoes.map(r => `
+    <div class="rec-item">
+      <span class="rec-dir-tag ${r.id}">${r.nome}</span>
+      <span class="rec-text">${r.texto}</span>
+    </div>
+  `).join('');
+
+  const chartLabels = JSON.stringify(data.top10.map(t => t.nome));
+  const chartData   = JSON.stringify(data.top10.map(t => t.econ));
+  const chartColors = JSON.stringify(data.top10.map(t => barColors[dirClass(t.dir)] + 'cc'));
+  const chartBorders= JSON.stringify(data.top10.map(t => barColors[dirClass(t.dir)]));
+
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <div class="header-left">
+        <div class="header-tag">Aegea · Saneamento</div>
+        <h1>💧 Relatório — Falta de Água</h1>
+        <div class="header-meta">Gerado em ${data.gerado}</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-val">${data.totalEconomias}</div>
+        <div class="header-stat-label">economias afetadas</div>
+      </div>
+    </div>
+
+    <div class="dir-grid">${dirCards}</div>
+
+    <div class="main-grid">
+      <div class="card card-full">
+        <div class="card-title"><span class="card-title-icon">📊</span>Top 10 municípios — economias afetadas</div>
+        <div class="top10-list">${top10Items}</div>
+      </div>
+
+      <div class="card card-full">
+        <div class="card-title"><span class="card-title-icon">📈</span>Gráfico comparativo</div>
+        <div class="chart-wrap"><canvas id="myChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">⚠️</span>Alertas críticos</div>
+        <div class="alert-list">${alertItems}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">💡</span>Recomendações</div>
+        <div class="rec-list">${recItems}</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>Dados inseridos manualmente pela equipe. Confirme na planilha antes de acionar campo.</span>
+      <span class="footer-badge">AI Builder · Power Automate</span>
+    </div>
+  `;
+
+  new Chart(document.getElementById('myChart'), {
+    type: 'bar',
+    data: {
+      labels: ${chartLabels},
+      datasets: [{
+        data: ${chartData},
+        backgroundColor: ${chartColors},
+        borderColor: ${chartBorders},
+        borderWidth: 1,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          ticks: { color: '#64748b', font: { family: 'DM Sans', size: 11 }, maxRotation: 35 },
+          grid: { color: 'rgba(99,179,237,0.06)' }
+        },
+        y: {
+          ticks: { color: '#64748b', font: { family: 'DM Mono', size: 11 }, callback: v => v.toLocaleString('pt-BR') },
+          grid: { color: 'rgba(99,179,237,0.06)' }
+        }
+      }
+    }
+  });
+}
+
+// Lê query string ?dados=...
+const params = new URLSearchParams(window.location.search);
+const dadosParam = params.get('dados');
+const parsed = dadosParam ? parseDados(dadosParam) : null;
+render(parsed || DEMO);
+</script>
+</body>
+</html>
