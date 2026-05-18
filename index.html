@@ -18,9 +18,11 @@
     --success: #34d399;
     --text: #e2e8f0;
     --muted: #64748b;
+    --leste: #818cf8;
     --norte: #38bdf8;
     --central: #fbbf24;
     --oeste: #34d399;
+    --sul: #f87171;
     --sem: #94a3b8;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -127,6 +129,8 @@
   .top10-dir.norte { background: rgba(56,189,248,.12); color: var(--norte); }
   .top10-dir.central { background: rgba(251,191,36,.12); color: var(--central); }
   .top10-dir.oeste { background: rgba(52,211,153,.12); color: var(--oeste); }
+  .top10-dir.leste { background: rgba(129,140,248,.12); color: var(--leste); }
+  .top10-dir.sul { background: rgba(248,113,113,.12); color: var(--sul); }
   .top10-dir.sem { background: rgba(148,163,184,.12); color: var(--sem); }
   .top10-val { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); min-width: 70px; text-align: right; }
 
@@ -157,6 +161,8 @@
   .rec-dir-tag.norte { background: rgba(56,189,248,.12); color: var(--norte); }
   .rec-dir-tag.central { background: rgba(251,191,36,.12); color: var(--central); }
   .rec-dir-tag.oeste { background: rgba(52,211,153,.12); color: var(--oeste); }
+  .rec-dir-tag.leste { background: rgba(129,140,248,.12); color: var(--leste); }
+  .rec-dir-tag.sul { background: rgba(248,113,113,.12); color: var(--sul); }
   .rec-dir-tag.sem { background: rgba(148,163,184,.12); color: var(--sem); }
   .rec-text { font-size: 12px; color: var(--text); line-height: 1.6; }
 
@@ -363,7 +369,7 @@ function render(data) {
   document.getElementById('app').innerHTML = `
     <div class="header">
       <div class="header-left">
-        <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan" style="height:36px;margin-bottom:10px;display:block;filter:brightness(0) invert(1);">
+        <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan" style="height:52px;margin-bottom:12px;display:block;filter:brightness(0) invert(1);">
         <h1>💧 Relatório — Falta de Água</h1>
         <div class="header-meta">Gerado em ${data.gerado}</div>
       </div>
