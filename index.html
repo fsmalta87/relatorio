@@ -312,7 +312,8 @@ function dirClass(d) {
 }
 
 function render(data) {
-  const max = Math.max(...top10Sorted.map(t => t.econ));
+  const top10Sorted = [...data.top10].sort((a, b) => b.econ - a.econ);
+  const max = Math.max(...top10Sorted.map(t => t.econ), 1);
   const barColors = { leste:'#818cf8', norte:'#38bdf8', central:'#fbbf24', oeste:'#34d399', sul:'#f87171', sem:'#94a3b8' };
 
   const dirCards = data.diretorias.filter(d => d.dk !== 'sem' && d.ev > 0).map(d => `
@@ -324,7 +325,6 @@ function render(data) {
     </div>
   `).join('');
 
-  const top10Sorted = [...data.top10].sort((a, b) => b.econ - a.econ);
   const top10Items = top10Sorted.map((t, i) => {
     const pct = Math.round((t.econ / max) * 100);
     const dc = dirClass(t.dir);
