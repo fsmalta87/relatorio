@@ -253,14 +253,15 @@ function parseTextoIA(texto) {
     if (l.includes('RECOMEND')) { section='rec'; continue; }
 
     if (section === 'dir') {
-      const mDir = l.match(/^[🔵🟡🟢🔴⚫⚪•\-*]?\s*(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)[:\s]/i);
+      const mDir = l.match(/^[\S]*\s*(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)\s*[:\s]/i);
       if (mDir) {
         const nome = mDir[1];
         const dk = dirClass(nome);
         let ev=0, econ=0, mun='', area='';
         for (let j=i+1; j<Math.min(i+6, linhas.length); j++) {
           const sub = linhas[j].trim();
-          if (!sub || sub.startsWith('---') || /^(Leste|Norte|Central|Oeste|Sul|Sem)/i.test(sub)) break;
+          if (sub.startsWith('---') || /^[\S]*\s*(Leste|Norte|Central|Oeste|Sul|Sem)/i.test(sub)) break;
+          if (!sub) continue;
           const mEv = sub.match(/[Ee]ventos?[:\s]+([\d]+)/);
           const mEc = sub.match(/[Ee]conomias?[^:]*:[\s]*([-\d.,]+)/);
           const mMu = sub.match(/[Cc]r[íi]tico[^:]*:[\s]*([^(\n,]+)/);
@@ -292,7 +293,7 @@ function parseTextoIA(texto) {
     }
 
     if (section === 'rec') {
-      const m = l.match(/^[🔵🟡🟢🔴⚫⚪•\-*]?\s*(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)[:\s]+(.+)/i);
+      const m = l.match(/^[\S]*\s*(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)\s*[:\s]+(.+)/i);
       if (m) data.recomendacoes.push({ nome:m[1], dk:dirClass(m[1]), texto:m[2].trim() });
     }
   }
