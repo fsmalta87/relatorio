@@ -402,17 +402,27 @@ document.getElementById('app').innerHTML = '<div class="empty"><h2>Carregando da
 
 fetch(JSON_URL + '?t=' + Date.now())
   .then(r => {
-    if (!r.ok) throw new Error('Arquivo não encontrado');
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' ao buscar ' + JSON_URL);
     return r.text();
   })
   .then(texto => {
+    if (!texto || texto.trim() === '') throw new Error('Arquivo vazio');
     const parsed = parseTextoIA(texto);
-    render(parsed || DEMO);
+    if (!parsed || (!parsed.diretorias.length && !parsed.top10.length)) {
+      throw new Error('Formato nao reconhecido — verifique o arquivo dados-relatorio.json');
+    }
+    render(parsed);
   })
   .catch(err => {
-    console.warn('Usando dados de demonstração:', err);
-    render(DEMO);
+    document.getElementById('app').innerHTML =
+      '<div class="empty">' +
+      '<h2>Erro ao carregar</h2>' +
+      '<p style="color:var(--muted);margin-top:8px;font-size:13px">' + err.message + '</p>' +
+      '<p style="color:var(--muted);margin-top:10px;font-size:11px">URL: ' + JSON_URL + '</p>' +
+      '<button onclick="render(DEMO)" style="margin-top:16px;padding:7px 18px;border:1px solid rgba(255,255,255,.2);border-radius:6px;background:transparent;color:var(--text);cursor:pointer;font-size:13px">Ver demo</button>' +
+      '</div>';
   });
+
 </script>
 </body>
 </html>
