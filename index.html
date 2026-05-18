@@ -319,10 +319,10 @@ function render(data) {
     </div>
   `).join('');
 
-  const chartLabels = JSON.stringify(data.top10.map(t => t.nome));
-  const chartData   = JSON.stringify(data.top10.map(t => t.econ));
-  const chartColors = JSON.stringify(data.top10.map(t => barColors[dirClass(t.dir)] + 'cc'));
-  const chartBorders= JSON.stringify(data.top10.map(t => barColors[dirClass(t.dir)]));
+  const chartLabels = data.top10.map(t => t.nome);
+  const chartData   = data.top10.map(t => t.econ);
+  const chartColors = data.top10.map(t => barColors[dirClass(t.dir)] + 'cc');
+  const chartBorders= data.top10.map(t => barColors[dirClass(t.dir)]);
 
   document.getElementById('app').innerHTML = `
     <div class="header">
@@ -370,11 +370,11 @@ function render(data) {
   new Chart(document.getElementById('myChart'), {
     type: 'bar',
     data: {
-      labels: ${chartLabels},
+      labels: chartLabels,
       datasets: [{
-        data: ${chartData},
-        backgroundColor: ${chartColors},
-        borderColor: ${chartBorders},
+        data: chartData,
+        backgroundColor: chartColors,
+        borderColor: chartBorders,
         borderWidth: 1,
         borderRadius: 4,
       }]
@@ -400,34 +400,28 @@ const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/mai
 
 document.getElementById('app').innerHTML = '<div class="empty"><h2>Carregando dados...</h2><p style="color:var(--muted);margin-top:8px;font-size:13px">Buscando relatório mais recente...</p></div>';
 
-function carregarDados() {
-  const urls = [
-    JSON_URL + '?t=' + Date.now(),
-    'dados-relatorio.json?t=' + Date.now()
-  ];
-  function tentarUrl(idx) {
-    if (idx >= urls.length) {
-      document.getElementById('app').innerHTML =
-        '<div class="empty">' +
-        '<h2>Erro ao carregar dados</h2>' +
-        '<p style="color:var(--muted);margin-top:8px;font-size:13px">Nao foi possivel buscar o arquivo. Verifique se dados-relatorio.json esta no repositorio.</p>' +
-        '<button onclick="render(DEMO)" style="margin-top:16px;padding:7px 18px;border:1px solid rgba(255,255,255,.2);border-radius:6px;background:transparent;color:var(--text);cursor:pointer;font-size:13px">Ver demonstracao</button>' +
-        '</div>';
-      return;
+fetch(JSON_URL + '?t=' + Date.now())
+  .then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' ao buscar ' + JSON_URL);
+    return r.text();
+  })
+  .then(texto => {
+    if (!texto || texto.trim() === '') throw new Error('Arquivo vazio');
+    const parsed = parseTextoIA(texto);
+    if (!parsed || (!parsed.diretorias.length && !parsed.top10.length)) {
+      throw new Error('Formato nao reconhecido — verifique o arquivo dados-relatorio.json');
     }
-    fetch(urls[idx])
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
-      .then(texto => {
-        if (!texto || !texto.trim()) throw new Error('vazio');
-        const parsed = parseTextoIA(texto);
-        if (!parsed || (!parsed.diretorias.length && !parsed.top10.length)) throw new Error('sem dados');
-        render(parsed);
-      })
-      .catch(() => tentarUrl(idx + 1));
-  }
-  tentarUrl(0);
-}
-carregarDados();
+    render(parsed);
+  })
+  .catch(err => {
+    document.getElementById('app').innerHTML =
+      '<div class="empty">' +
+      '<h2>Erro ao carregar</h2>' +
+      '<p style="color:var(--muted);margin-top:8px;font-size:13px">' + err.message + '</p>' +
+      '<p style="color:var(--muted);margin-top:10px;font-size:11px">URL: ' + JSON_URL + '</p>' +
+      '<button onclick="render(DEMO)" style="margin-top:16px;padding:7px 18px;border:1px solid rgba(255,255,255,.2);border-radius:6px;background:transparent;color:var(--text);cursor:pointer;font-size:13px">Ver demo</button>' +
+      '</div>';
+  });
 
 </script>
 </body>
