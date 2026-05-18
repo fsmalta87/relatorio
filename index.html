@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Relatório — Falta de Água</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
     --bg: #0a0f1e;
@@ -107,8 +106,6 @@
   }
   .card-title-icon { font-size: 14px; }
 
-  /* CHART */
-  .chart-wrap { position: relative; height: 240px; }
 
   /* TOP 10 LIST */
   .top10-list { display: flex; flex-direction: column; gap: 6px; }
@@ -250,13 +247,13 @@ function parseTextoIA(texto) {
     const l = linhas[i].trim();
     if (!l) continue;
     if (l.startsWith('---')) continue;
-    if (l.includes('RESUMO') || (l.includes('DIRETORIA') && !l.includes('SEM'))) { section='dir'; continue; }
+    if (l.includes('RESUMO') || l.includes('DIRETORIA')) { section='dir'; continue; }
     if (l.includes('TOP 10') || l.includes('TOP10')) { section='top'; continue; }
     if (l.toUpperCase().includes('ALERT') && l.toUpperCase().includes('CR')) { section='alert'; continue; }
     if (l.includes('RECOMEND')) { section='rec'; continue; }
 
     if (section === 'dir') {
-      const mDir = l.match(/^(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)[:\s]/i);
+      const mDir = l.match(/^[🔵🟡🟢🔴⚫⚪•\-*]?\s*(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)[:\s]/i);
       if (mDir) {
         const nome = mDir[1];
         const dk = dirClass(nome);
@@ -295,7 +292,7 @@ function parseTextoIA(texto) {
     }
 
     if (section === 'rec') {
-      const m = l.match(/^(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)[:\s]+(.+)/i);
+      const m = l.match(/^[🔵🟡🟢🔴⚫⚪•\-*]?\s*(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)[:\s]+(.+)/i);
       if (m) data.recomendacoes.push({ nome:m[1], dk:dirClass(m[1]), texto:m[2].trim() });
     }
   }
@@ -356,10 +353,6 @@ function render(data) {
     </div>
   `).join('');
 
-  const chartLabels = data.top10.map(t => t.nome);
-  const chartData   = data.top10.map(t => t.econ);
-  const chartColors = data.top10.map(t => barColors[dirClass(t.dir)] + 'cc');
-  const chartBorders= data.top10.map(t => barColors[dirClass(t.dir)]);
 
   document.getElementById('app').innerHTML = `
     <div class="header">
@@ -382,10 +375,7 @@ function render(data) {
         <div class="top10-list">${top10Items}</div>
       </div>
 
-      <div class="card card-full">
-        <div class="card-title"><span class="card-title-icon">📈</span>Gráfico comparativo</div>
-        <div class="chart-wrap"><canvas id="myChart"></canvas></div>
-      </div>
+
 
       <div class="card">
         <div class="card-title"><span class="card-title-icon">⚠️</span>Alertas críticos</div>
@@ -404,33 +394,6 @@ function render(data) {
     </div>
   `;
 
-  new Chart(document.getElementById('myChart'), {
-    type: 'bar',
-    data: {
-      labels: chartLabels,
-      datasets: [{
-        data: chartData,
-        backgroundColor: chartColors,
-        borderColor: chartBorders,
-        borderWidth: 1,
-        borderRadius: 4,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: {
-          ticks: { color: '#64748b', font: { family: 'DM Sans', size: 11 }, maxRotation: 35 },
-          grid: { color: 'rgba(99,179,237,0.06)' }
-        },
-        y: {
-          ticks: { color: '#64748b', font: { family: 'DM Mono', size: 11 }, callback: v => v.toLocaleString('pt-BR') },
-          grid: { color: 'rgba(99,179,237,0.06)' }
-        }
-      }
-    }
-  });
 }
 
 const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-relatorio.json';
