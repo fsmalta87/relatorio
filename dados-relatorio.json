@@ -3,12 +3,12 @@
 
 🔵 Norte:
 - Eventos: 18
-- Economias afetadas: 55541
+- Economias afetadas: 55339
 - Município mais crítico: Vacaria (43.96%)
 
 🟡 Central:
-- Eventos: 13
-- Economias afetadas: 52368
+- Eventos: 14
+- Economias afetadas: 46289
 - Município mais crítico: Santa Maria (24.11%)
 
 🟢 Oeste:
@@ -17,13 +17,13 @@
 - Município mais crítico: Santo Ângelo (2.96%)
 
 🔴 Leste:
-- Eventos: 6
-- Economias afetadas: 25801
+- Eventos: 7
+- Economias afetadas: 29381
 - Município mais crítico: Viamão (11.12%)
 
 ⚫ Sul:
-- Eventos: 9
-- Economias afetadas: 11527
+- Eventos: 10
+- Economias afetadas: 11518
 - Município mais crítico: Taquara (27.89%)
 
 ⚪ Sem Diretoria:
@@ -34,16 +34,16 @@
 ---
 🏆 TOP 10 MUNICÍPIOS
 
-Vacaria (Norte) — 37275 econ. — 43.96%  
-Bento Gonçalves (Norte) — 13871 econ. — 17.18%  
-Santa Maria (Central) — 39963 econ. — 24.11%  
-Viamão (Leste) — 18340 econ. — 11.12%  
-Sapucaia do Sul (Leste) — 6677 econ. — 10.23%  
-Carlos Barbosa (Norte) — 7265 econ. — 59.97%  
-Torres (Leste) — 5167 econ. — 14.52%  
-Taquara (Sul) — 5769 econ. — 27.89%  
-Canguçu (Sul) — 1951 econ. — 16.42%  
-Arroio do Meio (Central) — 2526 econ. — 30.12%
+Vacaria (Norte) — 37275 econ. — 43.96%
+Bento Gonçalves (Norte) — 13246 econ. — 17.16%
+Santa Maria (Central) — 39923 econ. — 24.11%
+Viamão (Leste) — 19300 econ. — 11.12%
+Sapucaia do Sul (Leste) — 6677 econ. — 10.23%
+Torres (Leste) — 5167 econ. — 14.52%
+Carlos Barbosa (Norte) — 7265 econ. — 59.97%
+Panambi (Central) — 3849 econ. — 20.76%
+Canguçu (Sul) — 1951 econ. — 16.42%
+São Jerônimo (Sul) — 2313 econ. — 25.65%
 
 ---
 ⚠️ ALERTAS CRÍTICOS
@@ -54,20 +54,19 @@ Arroio do Meio (Central) — 2526 econ. — 30.12%
 🔴 Passo Fundo — 11.5h — Vazamento identificado na região causando oscilação no abastecimento  
 🔴 Feliz — 11.5h — Manutenção Corretiva/Emergêncial - Mecânica  
 🔴 Vacaria — 8.5h — Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região  
-🔴 Panambi — 8.25h — Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região  
 🔴 Vacaria — 8h — Manutenção Corretiva - Adutora  
-🔴 Montenegro — 8h — Manutenção Corretiva - Rede de abastecimento  
-🔴 Arvorezinha — 9.5h — Vazamento identificado na região causando oscilação no abastecimento  
-🔴 Gravataí — 9.5h — Manutenção Corretiva - Adutora  
+🔴 Panambi — 8.25h — Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região  
+🔴 Arroio do Meio — 8.5h — Intermitência no Abastecimento devido ao alto consumo  
+🔴 Santa Maria — 11.75h — Manutenção Corretiva - Rede de abastecimento  
 
 ---
 💡 RECOMENDAÇÕES
 
-🔵 Norte: Intensificar monitoramento e manutenção preventiva nas adutoras e redes para reduzir eventos prolongados.  
-🟡 Central: Priorizar reparos rápidos em Santa Maria e ampliar comunicação para minimizar impactos.  
-🟢 Oeste: Melhorar detecção precoce de vazamentos para evitar oscilações no abastecimento.  
-🔴 Leste: Investir em infraestrutura elétrica para evitar paralisações por oscilações de energia.  
-⚫ Sul: Fortalecer parcerias com concessionárias para mitigar impactos de oscilações elétricas.  
-⚪ Sem Diretoria: Avaliar classificação e registro para garantir controle adequado dos eventos.
+🔵 Norte: Intensificar monitoramento e manutenção preventiva em Vacaria e Bento Gonçalves para reduzir eventos críticos.  
+🟡 Central: Priorizar reparos rápidos em Santa Maria e Panambi para minimizar impacto nas economias afetadas.  
+🟢 Oeste: Melhorar infraestrutura em Santo Ângelo para evitar vazamentos e oscilações no abastecimento.  
+🔴 Leste: Reforçar ações de controle de consumo e manutenção em Viamão e Sapucaia do Sul para evitar interrupções.  
+⚫ Sul: Implementar planos de contingência para eventos de alta duração em Taquara e São Jerônimo.  
+⚪ Sem Diretoria: Manter registro e classificação adequada para futuros eventos sem diretoria definida.  
 
 ---
