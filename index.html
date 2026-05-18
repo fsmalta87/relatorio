@@ -74,12 +74,15 @@
   .dir-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   }
-  .dir-card.norte::before { background: var(--norte); }
+  .dir-card.leste::before { background: var(--leste); }
+.dir-card.norte::before { background: var(--norte); }
   .dir-card.central::before { background: var(--central); }
   .dir-card.oeste::before { background: var(--oeste); }
   .dir-card.sem::before { background: var(--sem); }
   .dir-name { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
-  .dir-card.norte .dir-name { color: var(--norte); }
+  .dir-card.leste .dir-name { color: var(--leste); }
+.dir-card.leste .dir-name { color: var(--leste); }
+.dir-card.norte .dir-name { color: var(--norte); }
   .dir-card.central .dir-name { color: var(--central); }
   .dir-card.oeste .dir-name { color: var(--oeste); }
   .dir-card.sem .dir-name { color: var(--sem); }
@@ -190,10 +193,12 @@ const DEMO = {
   gerado: new Date().toLocaleString('pt-BR'),
   totalEconomias: '99.171',
   diretorias: [
-    { id:'norte', nome:'Norte', eventos:48, economias:'46.003', municipio:'Gramado', area:'95,20%' },
-    { id:'central', nome:'Central', eventos:56, economias:'29.888', municipio:'Santa Maria', area:'89,23%' },
-    { id:'oeste', nome:'Oeste', eventos:22, economias:'8.170', municipio:'São Martinho', area:'97,42%' },
-    { id:'sem', nome:'Sem Diretoria', eventos:33, economias:'15.532', municipio:'Encruzilhada do Sul', area:'95,27%' },
+    { id:'leste', nome:'Leste', eventos:5, economias:'201.450', municipio:'Viamão', area:'47,89%' },
+    { id:'norte', nome:'Norte', eventos:1, economias:'26.543', municipio:'Gramado', area:'95,20%' },
+    { id:'central', nome:'Central', eventos:4, economias:'253.013', municipio:'Santa Maria', area:'89,23%' },
+    { id:'oeste', nome:'Oeste', eventos:1, economias:'21.330', municipio:'Santa Rosa', area:'60,10%' },
+    { id:'sul', nome:'Sul', eventos:0, economias:'0', municipio:'N/A', area:'0%' },
+    { id:'sem', nome:'Sem Diretoria', eventos:0, economias:'0', municipio:'N/A', area:'0%' },
   ],
   top10: [
     { nome:'Gramado', dir:'norte', econ:26543 },
@@ -229,52 +234,84 @@ function parseDados(texto) {
 }
 
 function parseTextoIA(texto) {
-  const data = { ...DEMO, gerado: new Date().toLocaleString('pt-BR') };
+  const data = {
+    gerado: new Date().toLocaleString('pt-BR'),
+    totalEconomias: '0',
+    diretorias: [],
+    top10: [],
+    alertas: [],
+    recomendacoes: []
+  };
   const linhas = texto.split('\n');
+  let section = '';
+  let totalEcon = 0;
 
-  // Extrai top 10
-  const top10Start = linhas.findIndex(l => l.includes('TOP 10'));
-  if (top10Start > -1) {
-    const top10Lines = [];
-    for (let i = top10Start + 1; i < linhas.length; i++) {
-      const l = linhas[i].trim();
-      if (!l || l.startsWith('---') || l.includes('ALERT') || l.includes('RECOM')) break;
-      const match = l.match(/^(.+?)\s*\((.+?)\)\s*[—–-]+\s*([\d.,]+)\s*econ/i);
-      if (match) {
-        const dirMap = {'norte':'norte','central':'central','oeste':'oeste'};
-        const dirRaw = match[2].toLowerCase().trim();
-        const dir = dirMap[dirRaw] || 'sem';
-        top10Lines.push({ nome: match[1].trim(), dir, econ: parseInt(match[3].replace(/\./g,'').replace(',','')) });
+  for (let i = 0; i < linhas.length; i++) {
+    const l = linhas[i].trim();
+    if (!l) continue;
+    if (l.startsWith('---')) continue;
+    if (l.includes('RESUMO') || (l.includes('DIRETORIA') && !l.includes('SEM'))) { section='dir'; continue; }
+    if (l.includes('TOP 10') || l.includes('TOP10')) { section='top'; continue; }
+    if (l.toUpperCase().includes('ALERT') && l.toUpperCase().includes('CR')) { section='alert'; continue; }
+    if (l.includes('RECOMEND')) { section='rec'; continue; }
+
+    if (section === 'dir') {
+      const mDir = l.match(/^(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)[:\s]/i);
+      if (mDir) {
+        const nome = mDir[1];
+        const dk = dirClass(nome);
+        let ev=0, econ=0, mun='', area='';
+        for (let j=i+1; j<Math.min(i+6, linhas.length); j++) {
+          const sub = linhas[j].trim();
+          if (!sub || sub.startsWith('---') || /^(Leste|Norte|Central|Oeste|Sul|Sem)/i.test(sub)) break;
+          const mEv = sub.match(/[Ee]ventos?[:\s]+([\d]+)/);
+          const mEc = sub.match(/[Ee]conomias?[^:]*:[\s]*([-\d.,]+)/);
+          const mMu = sub.match(/[Cc]r[íi]tico[^:]*:[\s]*([^(\n,]+)/);
+          const mAr = sub.match(/\(([\d.,]+%?)\)/);
+          if (mEv) ev = parseInt(mEv[1]);
+          if (mEc) { econ = parseInt(mEc[1].replace(/\./g,'').replace(',','')); }
+          if (mMu) mun = mMu[1].trim();
+          if (mAr) area = mAr[1];
+        }
+        data.diretorias.push({ id:dk, nome, dk, ev, eventos:ev, economias:econ.toLocaleString('pt-BR'), econ, municipio:mun, area });
+        totalEcon += econ;
       }
     }
-    if (top10Lines.length > 0) data.top10 = top10Lines;
-  }
 
-  // Extrai alertas
-  const alertStart = linhas.findIndex(l => l.includes('ALERT') && l.includes('CR'));
-  if (alertStart > -1) {
-    const alertas = [];
-    for (let i = alertStart + 1; i < linhas.length; i++) {
-      const l = linhas[i].trim().replace(/^🔴\s*/,'');
-      if (!l || l.startsWith('---') || l.includes('RECOM')) break;
-      if (l.includes('Nenhum')) { data.alertas = []; break; }
-      const parts = l.split(/[—–-]+/).map(s => s.trim());
-      if (parts.length >= 2) alertas.push({ municipio: parts[0], duracao: parts[1], categoria: parts[2] || '' });
+    if (section === 'top') {
+      const clean = l.replace(/^[🔴•\-*\d.]+\s*/, '');
+      const m = clean.match(/^(.+?)\s*\((.+?)\)\s*[—–-]+\s*([\d.,]+)\s*econ/i);
+      if (m) {
+        const econ = parseInt(m[3].replace(/\./g,'').replace(',',''));
+        if (econ > 0) data.top10.push({ nome:m[1].trim(), dir:m[2].trim(), dk:dirClass(m[2]), econ });
+      }
     }
-    if (alertas.length > 0) data.alertas = alertas;
+
+    if (section === 'alert') {
+      const clean = l.replace(/^[🔴⚠️•\-*]\s*/, '');
+      if (clean.toLowerCase().includes('nenhum')) { data.alertas = []; continue; }
+      const parts = clean.split(/\s*[—–-]+\s*/);
+      if (parts.length >= 2) data.alertas.push({ municipio:parts[0].trim(), duracao:parts[1]||'', categoria:parts[2]||'' });
+    }
+
+    if (section === 'rec') {
+      const m = l.match(/^(Leste|Norte|Central|Oeste|Sul|Sem Diretoria)[:\s]+(.+)/i);
+      if (m) data.recomendacoes.push({ nome:m[1], dk:dirClass(m[1]), texto:m[2].trim() });
+    }
   }
 
+  data.totalEconomias = totalEcon.toLocaleString('pt-BR');
   return data;
 }
 
 function dirClass(d) {
-  const m = {'norte':'norte','central':'central','oeste':'oeste'};
+  const m = {'norte':'norte','central':'central','oeste':'oeste','leste':'leste','sul':'sul'};
   return m[d?.toLowerCase()] || 'sem';
 }
 
 function render(data) {
   const max = Math.max(...data.top10.map(t => t.econ));
-  const barColors = { norte:'#38bdf8', central:'#fbbf24', oeste:'#34d399', sem:'#94a3b8' };
+  const barColors = { leste:'#818cf8', norte:'#38bdf8', central:'#fbbf24', oeste:'#34d399', sul:'#f87171', sem:'#94a3b8' };
 
   const dirCards = data.diretorias.map(d => `
     <div class="dir-card ${d.id}">
