@@ -1,64 +1,73 @@
 ---
-RESUMO POR DIRETORIA
+📊 RESUMO POR DIRETORIA
 
-Leste:
-- Eventos: 5
-- Economias afetadas: 201450
-- Município mais crítico: Viamão (47.89%)
+🔵 Norte:
+- Eventos: 18
+- Economias afetadas: 55541
+- Município mais crítico: Vacaria (43.96%)
 
-Norte:
-- Eventos: 1
-- Economias afetadas: 26543
-- Município mais crítico: Gramado (95.20%)
+🟡 Central:
+- Eventos: 13
+- Economias afetadas: 52368
+- Município mais crítico: Santa Maria (24.11%)
 
-Central:
-- Eventos: 4
-- Economias afetadas: 253013
-- Município mais crítico: Santa Maria (89.23%)
+🟢 Oeste:
+- Eventos: 3
+- Economias afetadas: 1731
+- Município mais crítico: Santo Ângelo (2.96%)
 
-Oeste:
-- Eventos: 1
-- Economias afetadas: 21330
-- Município mais crítico: Santa Rosa (60.10%)
+🔴 Leste:
+- Eventos: 6
+- Economias afetadas: 25801
+- Município mais crítico: Viamão (11.12%)
 
-Sul:
+⚫ Sul:
+- Eventos: 9
+- Economias afetadas: 11527
+- Município mais crítico: Taquara (27.89%)
+
+⚪ Sem Diretoria:
 - Eventos: 0
 - Economias afetadas: 0
-- Município mais crítico: N/A (0%)
-
-Sem Diretoria:
-- Eventos: 0
-- Economias afetadas: 0
-- Município mais crítico: N/A (0%)
+- Município mais crítico: -
 
 ---
-TOP 10 MUNICÍPIOS
+🏆 TOP 10 MUNICÍPIOS
 
-Santa Maria (CENTRAL) — 208180 econ. — 89.23%
-Gravataí (LESTE) — 85052 econ. — 34.10%
-Viamão (LESTE) — 47308 econ. — 47.89%
-Guaíba (LESTE) — 41695 econ. — 88.87%
-Sapucaia do Sul (LESTE) — 27413 econ. — 42.01%
-Gramado (NORTE) — 26543 econ. — 95.20%
-Santa Cruz do Sul (CENTRAL) — 26032 econ. — 37.91%
-Cruz Alta (CENTRAL) — 21801 econ. — 72.27%
-Santa Rosa (OESTE) — 21330 econ. — 60.10%
-Gravataí (LESTE) — 42178 econ. — 33.77%
-
----
-ALERTAS CRÍTICOS
-
-Gramado — 725.25h — Paralisação devido alteração da qualidade de água bruta (alta turbidez)
-Santa Maria — 14.5h — Paralisação devido interrupção/oscilação no fornecimento de energia elétrica
-Santa Rosa — 11h — Paralisação devido alteração da qualidade de água bruta (alta turbidez)
-Gravataí — 7.5h — Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região
-Cruz Alta — 7.5h — Manutenção Corretiva/Emergencial - Elétrica
-Gravataí — 6h — Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região
+Vacaria (Norte) — 37275 econ. — 43.96%  
+Bento Gonçalves (Norte) — 13871 econ. — 17.18%  
+Santa Maria (Central) — 39963 econ. — 24.11%  
+Viamão (Leste) — 18340 econ. — 11.12%  
+Sapucaia do Sul (Leste) — 6677 econ. — 10.23%  
+Carlos Barbosa (Norte) — 7265 econ. — 59.97%  
+Torres (Leste) — 5167 econ. — 14.52%  
+Taquara (Sul) — 5769 econ. — 27.89%  
+Canguçu (Sul) — 1951 econ. — 16.42%  
+Arroio do Meio (Central) — 2526 econ. — 30.12%
 
 ---
-RECOMENDAÇÕES
+⚠️ ALERTAS CRÍTICOS
 
-Norte: Priorizar ações para controle da qualidade da água e mitigação da turbidez em Gramado.
-Central: Intensificar manutenção preventiva para reduzir eventos por falhas elétricas e operacionais.
-Oeste: Monitorar reservação e turbidez para evitar paralisações prolongadas em Santa Rosa.
-Sem Diretoria: Não aplicável, pois não há eventos registrados sem diretoria.
+🔴 Bento Gonçalves — 15.5h — Manutenção Corretiva - Adutora  
+🔴 Casca — 13.25h — Manutenção Corretiva - Rede de abastecimento  
+🔴 Santa Maria — 11.75h — Manutenção Corretiva - Rede de abastecimento  
+🔴 Passo Fundo — 11.5h — Vazamento identificado na região causando oscilação no abastecimento  
+🔴 Feliz — 11.5h — Manutenção Corretiva/Emergêncial - Mecânica  
+🔴 Vacaria — 8.5h — Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região  
+🔴 Panambi — 8.25h — Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região  
+🔴 Vacaria — 8h — Manutenção Corretiva - Adutora  
+🔴 Montenegro — 8h — Manutenção Corretiva - Rede de abastecimento  
+🔴 Arvorezinha — 9.5h — Vazamento identificado na região causando oscilação no abastecimento  
+🔴 Gravataí — 9.5h — Manutenção Corretiva - Adutora  
+
+---
+💡 RECOMENDAÇÕES
+
+🔵 Norte: Intensificar monitoramento e manutenção preventiva nas adutoras e redes para reduzir eventos prolongados.  
+🟡 Central: Priorizar reparos rápidos em Santa Maria e ampliar comunicação para minimizar impactos.  
+🟢 Oeste: Melhorar detecção precoce de vazamentos para evitar oscilações no abastecimento.  
+🔴 Leste: Investir em infraestrutura elétrica para evitar paralisações por oscilações de energia.  
+⚫ Sul: Fortalecer parcerias com concessionárias para mitigar impactos de oscilações elétricas.  
+⚪ Sem Diretoria: Avaliar classificação e registro para garantir controle adequado dos eventos.
+
+---
