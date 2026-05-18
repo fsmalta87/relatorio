@@ -396,11 +396,23 @@ function render(data) {
   });
 }
 
-// Lê query string ?dados=...
-const params = new URLSearchParams(window.location.search);
-const dadosParam = params.get('dados');
-const parsed = dadosParam ? parseDados(dadosParam) : null;
-render(parsed || DEMO);
+const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-relatorio.json';
+
+document.getElementById('app').innerHTML = '<div class="empty"><h2>Carregando dados...</h2><p style="color:var(--muted);margin-top:8px;font-size:13px">Buscando relatório mais recente...</p></div>';
+
+fetch(JSON_URL + '?t=' + Date.now())
+  .then(r => {
+    if (!r.ok) throw new Error('Arquivo não encontrado');
+    return r.text();
+  })
+  .then(texto => {
+    const parsed = parseTextoIA(texto);
+    render(parsed || DEMO);
+  })
+  .catch(err => {
+    console.warn('Usando dados de demonstração:', err);
+    render(DEMO);
+  });
 </script>
 </body>
 </html>
