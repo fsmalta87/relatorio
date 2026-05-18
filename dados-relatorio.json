@@ -1,1 +1,64 @@
-{"texto": "aguardando dados do Power Automate"}
+---
+RESUMO POR DIRETORIA
+
+Leste:
+- Eventos: 5
+- Economias afetadas: 201450
+- Município mais crítico: Viamão (47.89%)
+
+Norte:
+- Eventos: 1
+- Economias afetadas: 26543
+- Município mais crítico: Gramado (95.20%)
+
+Central:
+- Eventos: 4
+- Economias afetadas: 253013
+- Município mais crítico: Santa Maria (89.23%)
+
+Oeste:
+- Eventos: 1
+- Economias afetadas: 21330
+- Município mais crítico: Santa Rosa (60.10%)
+
+Sul:
+- Eventos: 0
+- Economias afetadas: 0
+- Município mais crítico: N/A (0%)
+
+Sem Diretoria:
+- Eventos: 0
+- Economias afetadas: 0
+- Município mais crítico: N/A (0%)
+
+---
+TOP 10 MUNICÍPIOS
+
+Santa Maria (CENTRAL) — 208180 econ. — 89.23%
+Gravataí (LESTE) — 85052 econ. — 34.10%
+Viamão (LESTE) — 47308 econ. — 47.89%
+Guaíba (LESTE) — 41695 econ. — 88.87%
+Sapucaia do Sul (LESTE) — 27413 econ. — 42.01%
+Gramado (NORTE) — 26543 econ. — 95.20%
+Santa Cruz do Sul (CENTRAL) — 26032 econ. — 37.91%
+Cruz Alta (CENTRAL) — 21801 econ. — 72.27%
+Santa Rosa (OESTE) — 21330 econ. — 60.10%
+Gravataí (LESTE) — 42178 econ. — 33.77%
+
+---
+ALERTAS CRÍTICOS
+
+Gramado — 725.25h — Paralisação devido alteração da qualidade de água bruta (alta turbidez)
+Santa Maria — 14.5h — Paralisação devido interrupção/oscilação no fornecimento de energia elétrica
+Santa Rosa — 11h — Paralisação devido alteração da qualidade de água bruta (alta turbidez)
+Gravataí — 7.5h — Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região
+Cruz Alta — 7.5h — Manutenção Corretiva/Emergencial - Elétrica
+Gravataí — 6h — Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região
+
+---
+RECOMENDAÇÕES
+
+Norte: Priorizar ações para controle da qualidade da água e mitigação da turbidez em Gramado.
+Central: Intensificar manutenção preventiva para reduzir eventos por falhas elétricas e operacionais.
+Oeste: Monitorar reservação e turbidez para evitar paralisações prolongadas em Santa Rosa.
+Sem Diretoria: Não aplicável, pois não há eventos registrados sem diretoria.
