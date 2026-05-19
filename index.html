@@ -364,18 +364,20 @@ function parseReclamacoes(texto) {
       if (mA) { const mN = l.match(/(\d+)$/); if(mN) data.amanha = parseInt(mN[1]); }
     }
     if (section === 'regional') {
-      const m = l.match(/^[\S\s]*?([A-Za-zÀ-ú\s]+?)\s*[—–\-]+\s*(\d+)/);
-      if (m && m[2]) data.porRegional.push({ nome:m[1].trim(), total:parseInt(m[2]) });
+      const m = l.match(/^([A-ZÀ-Úa-zà-ú\s]+?)\s*[—–\-]+\s*(\d+)/);
+      if (m && m[2] && parseInt(m[2]) > 0) data.porRegional.push({ nome:m[1].trim(), total:parseInt(m[2]) });
     }
     if (section === 'top') {
-      const m = l.match(/^(.+?)\s*\((.+?)\)\s*[—–\-]+\s*(\d+)\s*rec/i);
+      const clean = l.replace(/\s+/g, ' ').trim();
+      const m = clean.match(/^(.+?)\s*\((.+?)\)\s*[—–]+\s*(\d+)\s*rec/i);
       if (m) data.top10.push({ nome:m[1].trim(), regional:m[2].trim(), total:parseInt(m[3]) });
     }
     if (section === 'prazo') {
-      const parts = l.split(/\s*[—–\-]+\s*/);
+      const clean = l.replace(/\s+/g, ' ').trim();
+      const parts = clean.split(/\s*[—–]+\s*/);
       if (parts.length >= 2) {
         const label = parts[0].trim();
-        const total = parseInt(parts[1]);
+        const total = parseInt(parts[1].trim());
         let cor = '#94a3b8';
         if (/vencida/i.test(label)) cor = '#f87171';
         else if (/hoje/i.test(label)) cor = '#fbbf24';
