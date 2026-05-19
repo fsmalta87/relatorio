@@ -1,256 +1,106 @@
-[{"@odata.etag":"","ItemInternalId":"4093a7d3-f042-4f21-90fc-7a465b5aec4b","ID do Evento":"1059893","Diretoria":"CENTRAL","Município":"Santa Maria","Economias Afetadas":"35569","Área Afetada":"0.2411","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Rompimento De Rede  Dn5125 Fc Na Rua Borges De Medeiros, Registro Fechado Na Rua Tuiuti, Bairros Nossa Sra De Fatima, Centro E Vila Militar. Das 08:15 As 20:00","Duração":"11.75","Tempo Utilizado":"0.9792","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.34375","Término Serviço":"46158.7916666667","Normalização":"46158.8333333333","Agente Responsável":"Aegea","Bairro":"Bonfim, Centro, Noal, Nossa Senhora De Fátima, Nossa Senhora Do Rosário"},{"@odata.etag":"","ItemInternalId":"9c160561-d9f5-4b77-bc67-9cc4b06c3804","ID do Evento":"1059913","Diretoria":"NORTE","Município":"Vacaria","Economias Afetadas":"13202","Área Afetada":"0.4396","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Maicon/ Rompimento De Rede - Fc 60mm Na Rua Itararé Número 33/ 3000 Economias","Duração":"4.25","Tempo Utilizado":"0.3542","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.5729166667","Término Serviço":"46158.75","Normalização":"46158.75","Agente Responsável":"Aegea","Bairro":"Aeroporto, Barcellos, Boeira, Borges, Chácara Das Palmeiras, Chico Mendes, Cristal, Cristina, Gaúcha, Gertrudes, Giacomet, Jardim Dos Pampas, Jardim Toscano, Kennedy, Lindoca, Lomba Chata, Minuano, Monte Claro, Nossa Senhora De Fátima, Petrópolis, Pinheiros, Planalto, Pradense, Santa Terezinha, Santana, São Francisco, São João, São José, Vêneto, Vista Alegre"},{"@odata.etag":"","ItemInternalId":"c989b8a5-32cb-4570-b476-65e3f616b7a0","ID do Evento":"1060851","Diretoria":"NORTE","Município":"Vacaria","Economias Afetadas":"13180","Área Afetada":"0.4389","Categoria":"Manutenção Corretiva - Adutora","Parecer":"Maicon/ Rompimento De Adutora - Defofo Dn 150mm Na Rua Edson/ Causado Por Terceiros, Terraplanagem Xerife/ 3000 Economias","Duração":"8","Tempo Utilizado":"0.6667","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6458333333","Término Serviço":"46158.8333333333","Normalização":"46158.9791666667","Agente Responsável":"Outro","Bairro":"Aeroporto, Barcellos, Boeira, Borges, Chácara Das Palmeiras, Chico Mendes, Cristal, Cristina, Gaúcha, Gertrudes, Giacomet, Jardim Dos Pampas, Jardim Toscano, Kennedy, Lindoca, Lomba Chata, Minuano, Monte Claro, Nossa Senhora De Fátima, Petrópolis, Pinheiros, Planalto, Pradense, Santa Terezinha, Santana, São Francisco, São João, São José, Vêneto, Vista Alegre"},{"@odata.etag":"","ItemInternalId":"01c29f38-0ff4-4abf-9694-275e8f0d1e30","ID do Evento":"1060870","Diretoria":"LESTE","Município":"Viamão","Economias Afetadas":"10984","Área Afetada":"0.1112","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Diogo/ Desabastecimento Em Decorrência De Rompimento De Rede Pvc Dn60 Na Rua Guaíba. Registro Da Avenida Placido Do Carmo Fechado.","Duração":"3.25","Tempo Utilizado":"0.2708","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.8645833333","Término Serviço":"46158.9583333333","Normalização":"46159","Agente Responsável":"Outro","Bairro":"Augusta Fiel, Augusta Marina, Augusta Marina, Florença, Parque Arbon, Santa Cecília, Santa Cecília"},{"@odata.etag":"","ItemInternalId":"364de448-9c07-4908-a36b-ba74d936a33e","ID do Evento":"1061176","Diretoria":"NORTE","Município":"Vacaria","Economias Afetadas":"10827","Área Afetada":"0.3605","Categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","Parecer":"Maicon/Manobra Operacional, Fechamento Dos Registros Da Marechal Deodoro, Da Borges/Teodoro Camargo E O Dos Fundos Da Eta/ Bairro Atingidos: Franciosi, Flora, Centro, Gloria, Vitoria, Municipal, Maua, Lindoia, Altos Da Gloria, Jardim América/ 3000 Economi","Duração":"8.5","Tempo Utilizado":"0.7083","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.9791666667","Término Serviço":"46159.2916666667","Normalização":"46159.3333333333","Agente Responsável":"Aegea","Bairro":"Altos Da Glória, Centro, Diamantina, Flora, Franciosi, Gasparetto, Glória, Haideé, Imperial, Jardim América, Lindóia, Mauá, Municipal, Nossa Senhora De Oliveira, Porcínio Pinto, Samuel Guazzelli, Seminário, Vitória"},{"@odata.etag":"","ItemInternalId":"a0e91bef-206c-4513-abbc-ae7b17d68542","ID do Evento":"1059269","Diretoria":"NORTE","Município":"Bento Gonçalves","Economias Afetadas":"10580","Área Afetada":"0.1718","Categoria":"Manutenção Corretiva - Adutora","Parecer":"Wilsoin / Rompimento De Adutora Dn200 Defofo Na Estrada Buarque De Macedo, 3810 / Bairros São Roque, Tuyuti, Km2, Veríssimo De Matos","Duração":"15.5","Tempo Utilizado":"1.2917","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.3541666667","Término Serviço":"46158.5625","Normalização":"46159","Agente Responsável":"Aegea","Bairro":"Aparecida, Faria Lemos, Km 2, Linha Demari, Linha Ferri, Nossa Senhora Do Carmo, Ouro Verde, Passo Velho, Pradel, São Roque, São Valentin, São Vendelino, Tuiuty, Veríssimo De Matos, Zatt"},{"@odata.etag":"","ItemInternalId":"5362d77a-8482-4ef0-9e43-faef56b18196","ID do Evento":"1059579","Diretoria":"LESTE","Município":"Gravataí","Economias Afetadas":"9500","Área Afetada":"0.0761","Categoria":"Manutenção Corretiva - Adutora","Parecer":"Rompimento De Adutora Fc400mm, Por Terceiros, Bairros Bom Sucesso, Cohab B E C, Marrocos, São Geraldo, São Jerônimo E Barnabé, Avenida Dorival Cândido Luz De Oliveira","Duração":"9.5","Tempo Utilizado":"0.7917","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.59375","Término Serviço":"46158.9583333333","Normalização":"46158.9895833333","Agente Responsável":"Outro","Bairro":"Barnabé, Boa Vista, Bonsucesso, Cohab B, Cohab C, São Geraldo, Vila Marrocos, Vila Marrocos 2, Vila São Jeronimo"},{"@odata.etag":"","ItemInternalId":"01b6b293-b2cb-42c2-8dd8-9529652d07f9","ID do Evento":"1058620","Diretoria":"NORTE","Município":"Carlos Barbosa","Economias Afetadas":"7265","Área Afetada":"0.5997","Categoria":"Intermitência no Abastecimento devido ao alto consumo","Parecer":"Raphaela/ Alto Consumo - Baixa Produção Dos Poços/ Bairros: Ponte Seca, Planalto, Vila Nova E Navegantes","Duração":"7.75","Tempo Utilizado":"0.6458","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6354166667","Término Serviço":"46158.9583333333","Normalização":"46158.9583333333","Agente Responsável":"Aegea","Bairro":"Centro, Navegantes, Nossa Senhora De Fátima, Planalto, Ponte Sêca, Vila Nova"},{"@odata.etag":"","ItemInternalId":"e5fc5ee9-2067-48f6-9944-ef96ca9b0127","ID do Evento":"1059263","Diretoria":"LESTE","Município":"Sapucaia do Sul","Economias Afetadas":"6677","Área Afetada":"0.1023","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Éderson Sup. Serv.. Boa Vista. - Registros Fechados | Rua Américo Vespucio X 118. Rua Quintino Bocaiuva Esq 118. 150mm Fofo","Duração":"1.25","Tempo Utilizado":"0.2083","Limite Reguladora":"6","Reguladora":"AGESAN","Início":"46158.7083333333","Término Serviço":"46158.7604166667","Normalização":"46158.8333333333","Agente Responsável":"Aegea","Bairro":"Boa Vista, Ipiranga, Passo De Sapucaia"},{"@odata.etag":"","ItemInternalId":"1f27a0d0-47ff-4727-a1de-a14cb105b7ab","ID do Evento":"1059578","Diretoria":"SUL","Município":"Taquara","Economias Afetadas":"5769","Área Afetada":"0.2789","Categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","Parecer":"Adilson -  Empresa, Tucanos, Santa Rosa, Petrópolis,  Santa Teresinha, Medianeira, Mundo Novo - Oscilação De Energia | 📍Taquara - Captação  | Uc: 3082467083 | Protocolo: 2109854746","Duração":"3","Tempo Utilizado":"0.5","Limite Reguladora":"6","Reguladora":"AGESAN","Início":"46158.5833333333","Término Serviço":"46158.7083333333","Normalização":"46158.8125","Agente Responsável":"Concessionária de Energia","Bairro":"Empresa, Medianeira, Mundo Novo, Petrópolis, Santa Terezinha, Tucanos"},{"@odata.etag":"","ItemInternalId":"6ad1409d-7dfc-4435-87f2-7f780f8c0607","ID do Evento":"1059591","Diretoria":"CENTRAL","Município":"Santa Maria","Economias Afetadas":"5321","Área Afetada":"0.0361","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Rompimento De Rede Fc 75mm Na Rua Farrapos\\Bairro Medianeira\\Registro Fechado Na Rua Farrapos\\Início: 9:15h - Normalização: 21h","Duração":"11.75","Tempo Utilizado":"0.9792","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.3854166667","Término Serviço":"46158.8333333333","Normalização":"46158.875","Agente Responsável":"Aegea","Bairro":"Nonoai, Nossa Senhora Medianeira, Uglione"},{"@odata.etag":"","ItemInternalId":"350fe739-d96f-4f6b-a188-b536d9059dd1","ID do Evento":"1058624","Diretoria":"LESTE","Município":"Torres","Economias Afetadas":"5167","Área Afetada":"0.1452","Categoria":"Manutenção Corretiva - Adutora","Parecer":"Ruffino Gestor - Estrada Dos Cunha, S/Nr - Adutora 200mm Fofo - Economias Afetadas: 800 - Vazamento Espontâneo.","Duração":"6.5","Tempo Utilizado":"0.5417","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6875","Término Serviço":"46158.9166666667","Normalização":"46158.9583333333","Agente Responsável":"Aegea","Bairro":"Estrela Do Mar, Itapeva Norte, Itapeva Sul, Jardim Monte Carlo, Ocean Side, Paraíso, Parque Da Itapeva, Petrópolis, Ponta Da Itapeva, Porteira Do Faxinal, Praia Gaúcha, Praia Lagoa Do Jardim, Praia Real, Recreio, Riviera, Santa Helena, Torres Tur, Tupynambá, Weber, Yara"},{"@odata.etag":"","ItemInternalId":"bc959713-4d8a-4054-8848-79a370a371c5","ID do Evento":"1059577","Diretoria":"LESTE","Município":"Viamão","Economias Afetadas":"4783","Área Afetada":"0.0484","Categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","Parecer":"Coi. Desarme Na Ebat 07 Causado Por Pico De Energia, Ocasionando Também O Desarme Das Ebats 24 E 14 Devido À Baixa Sucção, Afetando Os Bairros: Santa Isabel, Jardim Universitário, Nsa. Sra. Aparecida, Campus Da Colina, Nova Esperança. Uc 37910329 | Protoc","Duração":"3","Tempo Utilizado":"0.25","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.5208333333","Término Serviço":"46158.5416666667","Normalização":"46158.6458333333","Agente Responsável":"Concessionária de Energia","Bairro":"Campus Da Colina, Monte Castelo, Nossa Senhora Aparecida, Nova Esperança, Santa Cecília, União, Universitário"},{"@odata.etag":"","ItemInternalId":"1fa27d61-bc31-44c5-982a-35181aa88d74","ID do Evento":"1059906","Diretoria":"NORTE","Município":"Vacaria","Economias Afetadas":"4166","Área Afetada":"0.1387","Categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","Parecer":"Maicon/ Manobra De Rede Para Priorizar O R3 Lomba Chata/ Bairro: Jardim América","Duração":"2.5","Tempo Utilizado":"0.2083","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.2916666667","Término Serviço":"46158.3958333333","Normalização":"46158.3958333333","Agente Responsável":"Aegea","Bairro":"Altos Da Glória, Glória, Jardim América, Lindóia, Mauá, Seminário"},{"@odata.etag":"","ItemInternalId":"e5524cbb-6266-4e02-a492-ee795fc02c04","ID do Evento":"1060213","Diretoria":"CENTRAL","Município":"Panambi","Economias Afetadas":"3849","Área Afetada":"0.2076","Categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","Parecer":"Informante: Gilson Supervisor De Opr. / Manobra Emergencial Operacional - Registro Da Rua Porto Alegre Fechado / Bairros Afetados: Alvorada, Frisch, Becker, Trentini, Jaciandi E Zona Norte / 3400 Economias Afetadas.","Duração":"8.25","Tempo Utilizado":"0.6875","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6666666667","Término Serviço":"46158.9166666667","Normalização":"46159.0104166667","Agente Responsável":"Aegea","Bairro":"Alvorada, Becker, Fritsch, Jaciandi, Kuhn, Trentini, Zona Norte"},{"@odata.etag":"","ItemInternalId":"46136604-cb8a-479e-a1df-c6fc6292418f","ID do Evento":"1058937","Diretoria":"LESTE","Município":"Viamão","Economias Afetadas":"3333","Área Afetada":"0.0337","Categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","Parecer":"Coi, Ocorrência Potencial Aberta Devido A Pico De Energia Na Ebat 07, Causando Baixa Pressão Na Unidade E Desarme Da Ebat 24 Por Baixa Sucção.","Duração":"1","Tempo Utilizado":"0.0833","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.3958333333","Término Serviço":"46158.4375","Normalização":"46158.4375","Agente Responsável":"Concessionária de Energia","Bairro":"Campus Da Colina, Nossa Senhora Aparecida, Nova Esperança, Universitário"},{"@odata.etag":"","ItemInternalId":"fa69e3a2-44b2-45cc-a916-2cd9538c2d6d","ID do Evento":"1060242","Diretoria":"NORTE","Município":"Gramado","Economias Afetadas":"2719","Área Afetada":"0.0975","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Cesar/ Rompimento De Rede - Pvc 60mm Na Rua Cristóvão Colombo/ Bairro: Piratini E Estrada Da Linha Ávila/ 600 Economias","Duração":"2.5","Tempo Utilizado":"0.2083","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.7083333333","Término Serviço":"46158.7708333333","Normalização":"46158.8125","Agente Responsável":"Aegea","Bairro":"Bavária, Piratini, Prinstrop"},{"@odata.etag":"","ItemInternalId":"9706f592-85db-4127-bf69-f10793af7b73","ID do Evento":"1058634","Diretoria":"NORTE","Município":"Casca","Economias Afetadas":"2624","Área Afetada":"0.7392","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Maycon / Rompimento De Rede Dn100 Amianto Na Rua Tiradentes, Esquina Com Barão Do Rio Branco / Bairros Centro, Consoladora E Pôr Do Sol","Duração":"13.25","Tempo Utilizado":"1.1042","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.40625","Término Serviço":"46158.7708333333","Normalização":"46158.9583333333","Agente Responsável":"Aegea","Bairro":"APS - Área Prestação Serviço"},{"@odata.etag":"","ItemInternalId":"4bcfb8a4-9907-443d-a396-eef169146731","ID do Evento":"1058613","Diretoria":"NORTE","Município":"Passo Fundo","Economias Afetadas":"2552","Área Afetada":"0.0224","Categoria":"Vazamento identificado na região causando oscilação no abastecimento","Parecer":"Alisson- Rompimento Rede Fechamento:Castro Alvez | Bairro Petropolis- Rede: Fibrocimento Dn 200- Economias: 800","Duração":"11.5","Tempo Utilizado":"0.9583","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.3020833333","Término Serviço":"46158.7708333333","Normalização":"46158.78125","Agente Responsável":"Aegea","Bairro":"Petrópolis"},{"@odata.etag":"","ItemInternalId":"21e53e15-e75d-4308-a3c8-38750fc0afe7","ID do Evento":"1059292","Diretoria":"CENTRAL","Município":"Arroio do Meio","Economias Afetadas":"2526","Área Afetada":"0.3012","Categoria":"Intermitência no Abastecimento devido ao alto consumo","Parecer":"Michel/ Alto Consumo/ Bairros: Dona Rita, Novo Horizonte, Dom Pedro E São Caetano/ Inicio 17:30 Até 00hs","Duração":"8.5","Tempo Utilizado":"0.7083","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.7291666667","Término Serviço":"46158.9583333333","Normalização":"46159.0833333333","Agente Responsável":"Aegea","Bairro":"Dom Pedro Ii, Dona Rita, Novo Horizonte, São Caetano"},{"@odata.etag":"","ItemInternalId":"c6946ab0-90d4-4204-91e9-64b0ffc83d73","ID do Evento":"1061186","Diretoria":"SUL","Município":"São Jerônimo","Economias Afetadas":"2313","Área Afetada":"0.2565","Categoria":"Intermitência no Abastecimento devido ao alto consumo","Parecer":"Desabastecimento Por Conta De Alto Consumo | Bairros: Centro, Scherer, Bandeira Branca, Sao Thomas, Chananeco, Fátima, Quinininho, Passo Da Areia | 1200 Economias | Por: Coi","Duração":"1.5","Tempo Utilizado":"0.125","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.7708333333","Término Serviço":"46158.8229166667","Normalização":"46158.8333333333","Agente Responsável":"Aegea","Bairro":"Bandeira Branca, Cidade Alta, Fátima, Passo D'Areia, Quininho, São Thomas"},{"@odata.etag":"","ItemInternalId":"8bff96c7-a614-4e71-a916-c23536fd3d07","ID do Evento":"1059894","Diretoria":"NORTE","Município":"Bento Gonçalves","Economias Afetadas":"2044","Área Afetada":"0.0332","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Wilson / Rompimento De Rede Dn50 Pvc Por Obra De Esgotamento Da Engenharia, Na Rua Luiz Milan / Bairro Vila Nova","Duração":"6","Tempo Utilizado":"0.5","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.3333333333","Término Serviço":"46158.4166666667","Normalização":"46158.5833333333","Agente Responsável":"Outro","Bairro":"Vila Nova, Vila Nova Ii"},{"@odata.etag":"","ItemInternalId":"0713b68f-ba6a-41b9-80ba-a0e46ea26d52","ID do Evento":"1059261","Diretoria":"SUL","Município":"Canguçu","Economias Afetadas":"1951","Área Afetada":"0.1642","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Daniel /Local Da Ocorrência: Avenida 21 De Abril 350 | ·  Tipo De Instalação: Pvc 110 |  |   Bairros Atingidos Pelo Desabastecimento: Centro, Vila Fonseca, Uruguai","Duração":"2.58","Tempo Utilizado":"0.2153","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6736111111","Término Serviço":"46158.75","Normalização":"46158.78125","Agente Responsável":"Aegea","Bairro":"Uruguai, Vila Fonseca, Vila Nova"},{"@odata.etag":"","ItemInternalId":"9938278c-33d5-43a9-b01e-812cd762f537","ID do Evento":"1058945","Diretoria":"NORTE","Município":"São Marcos","Economias Afetadas":"1920","Área Afetada":"0.2151","Categoria":"Intermitência no Abastecimento devido ao alto consumo","Parecer":"Kerlin/ Problema No Registro Do Filtro 1 Da Eta Junto A Consumo Muito Alto, Interferindo Nos Níveis Do Henrique Pante","Duração":"3.25","Tempo Utilizado":"0.3611","Limite Reguladora":"9","Reguladora":"AGESAN","Início":"46158.6145833333","Término Serviço":"46158.75","Normalização":"46158.875","Agente Responsável":"Aegea","Bairro":"Henrique Pante"},{"@odata.etag":"","ItemInternalId":"aa5199dd-84d6-44e1-bd2a-0eef5d8d941b","ID do Evento":"1059598","Diretoria":"NORTE","Município":"Seberi","Economias Afetadas":"1776","Área Afetada":"0.4444","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Roberto- Rompimento Rede Pvc 60mm  | Rua Evaristo Do Amaral  Bairro: Centro 300econ.","Duração":"2.25","Tempo Utilizado":"0.1875","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6145833333","Término Serviço":"46158.6875","Normalização":"46158.7083333333","Agente Responsável":"Aegea","Bairro":"Centro"},{"@odata.etag":"","ItemInternalId":"4b1f0d34-0bab-4652-ac4c-41f57d34e8ee","ID do Evento":"1059288","Diretoria":"NORTE","Município":"Garibaldi","Economias Afetadas":"1418","Área Afetada":"0.0875","Categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","Parecer":"Suzana/ Realizado Manobra De Rede Na Madrugada Para Recuperar O São Francisco, R13 Chacaras Foi Afetado Por Conta Disso/ Bairros: Juventude, Chacaras E Vale Dos Pinhieros","Duração":"6","Tempo Utilizado":"0.4286","Limite Reguladora":"14","Reguladora":"AGESAN","Início":"46158.6041666667","Término Serviço":"46158.8541666667","Normalização":"46158.8541666667","Agente Responsável":"Aegea","Bairro":"Chácaras, Juventude, Vale Dos Pinheiros"},{"@odata.etag":"","ItemInternalId":"5fe12c47-a516-4058-bcf2-9ae6d323a1fb","ID do Evento":"1059271","Diretoria":"SUL","Município":"Jaguarão","Economias Afetadas":"1370","Área Afetada":"0.0967","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Cristiano /  Rompimento Joaquim Caetano / Rede 75mm Amianto.","Duração":"2.67","Tempo Utilizado":"0.2222","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.4305555556","Término Serviço":"46158.5416666667","Normalização":"46158.5416666667","Agente Responsável":"Aegea","Bairro":""},{"@odata.etag":"","ItemInternalId":"53a23a4c-939d-49cc-8673-8342a06ebe52","ID do Evento":"1059281","Diretoria":"NORTE","Município":"Erechim","Economias Afetadas":"1277","Área Afetada":"0.0225","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Joao-Rede Fechada Rua Francisco Skowroski, Rede Dn 50 Pvc.150 Economi","Duração":"1.25","Tempo Utilizado":"0.1786","Limite Reguladora":"7","Reguladora":"AGER","Início":"46158.7395833333","Término Serviço":"46158.7916666667","Normalização":"46158.8125","Agente Responsável":"Aegea","Bairro":"Jabuticabal, Paiol Grande"},{"@odata.etag":"","ItemInternalId":"122625e5-d4a9-47ee-9f27-c24fc0788beb","ID do Evento":"1061171","Diretoria":"OESTE","Município":"Santo Ângelo","Economias Afetadas":"1101","Área Afetada":"0.0296","Categoria":"Vazamento identificado na região causando oscilação no abastecimento","Parecer":"Solicitante: Alex Sandri / Motivo: Vazamaneto Rede Pvc 50 /  | Endereço: Av Universidade Das Missões /  | Bairro: Dorneles E Menezes / | Economias: 600","Duração":"3.5","Tempo Utilizado":"0.2917","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.7916666667","Término Serviço":"46158.875","Normalização":"46158.9375","Agente Responsável":"Aegea","Bairro":"Centro Norte, Dornelles, Loteamento Menezes, Rosenthal Ii, Schirmer"},{"@odata.etag":"","ItemInternalId":"44eebfc4-b0c2-43f2-8874-8047fcfd5ed1","ID do Evento":"1060871","Diretoria":"NORTE","Município":"Passo Fundo","Economias Afetadas":"1025","Área Afetada":"0.009","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Alisson - Rompimento De Rede Causado Por Terceiro Empresa Mpx Na Rua Alvares Cabral. Rede Pvc Dn 50mm, 100 Economias Afetadas. Bairro Petrópolis.","Duração":"2.5","Tempo Utilizado":"0.2083","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.8958333333","Término Serviço":"46158.9583333333","Normalização":"46159","Agente Responsável":"Outro","Bairro":""},{"@odata.etag":"","ItemInternalId":"1f9ce3c8-c695-4da4-96d5-48a719d898e2","ID do Evento":"1058623","Diretoria":"NORTE","Município":"Bento Gonçalves","Economias Afetadas":"1022","Área Afetada":"0.0166","Categoria":"Vazamento identificado na região causando oscilação no abastecimento","Parecer":"Coi Provisório / 5 Vfas / Devido À Manobra De Rede Realizada Ontem, Setor Estava Estrangulado","Duração":"1","Tempo Utilizado":"0.0833","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6875","Término Serviço":"46158.7083333333","Normalização":"46158.7291666667","Agente Responsável":"Aegea","Bairro":"Jardim Glória, Municipal"},{"@odata.etag":"","ItemInternalId":"108fdf55-b56a-4773-abfd-263b974143a0","ID do Evento":"1060228","Diretoria":"CENTRAL","Município":"Salto do Jacuí","Economias Afetadas":"1011","Área Afetada":"0.2111","Categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","Parecer":"Informante: Coi / Manobra Operacional Emergencial - Operação Do Pato Macho Realizada Devido Ao Alto Consumo Causado Pelas Festividades Na Cidade  / Bairro: Menino Deus / 1130 Economias Afetadas.","Duração":"5","Tempo Utilizado":"0.4167","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.625","Término Serviço":"46158.7916666667","Normalização":"46158.8333333333","Agente Responsável":"Aegea","Bairro":"Menino Deus"},{"@odata.etag":"","ItemInternalId":"e1c23073-ef00-41fe-b24c-882c9f8c1b15","ID do Evento":"1059584","Diretoria":"NORTE","Município":"Antônio Prado","Economias Afetadas":"998","Área Afetada":"0.1836","Categoria":"Intermitência no Abastecimento devido ao alto consumo","Parecer":"Kérlin / Alto Consumo Afetando O Abastecimento Pelo Reservatório Industrial","Duração":"4.75","Tempo Utilizado":"0.5937","Limite Reguladora":"8","Reguladora":"AGESAN","Início":"46158.6770833333","Término Serviço":"46158.875","Normalização":"46158.9166666667","Agente Responsável":"Aegea","Bairro":"Centro, Cidade Alta, Colina Do Prado, Imigrante, Paese Novo, Panorâmico"},{"@odata.etag":"","ItemInternalId":"4457f366-655d-437c-a245-5206db28d837","ID do Evento":"1059257","Diretoria":"CENTRAL","Município":"Tapera","Economias Afetadas":"959","Área Afetada":"0.213","Categoria":"Manutenção Corretiva/Emergêncial - Mecânica","Parecer":"Informante: Coi / Falha De Acionamento - Tap-09 Resetado E Funcionado Novamente / Bairros: Vila Brasília, Promorar E Cohab / 901 Economias Afetadas.","Duração":"2","Tempo Utilizado":"0.3333","Limite Reguladora":"6","Reguladora":"AGESAN","Início":"46158.5416666667","Término Serviço":"46158.625","Normalização":"46158.6666666667","Agente Responsável":"Aegea","Bairro":"Vila Brasília, Vila Cohab, Vila Promorar, Vila São Judas Tadeu"},{"@odata.etag":"","ItemInternalId":"f7c6b71e-6706-4b7f-b4f3-48a35cf8c573","ID do Evento":"1058934","Diretoria":"SUL","Município":"Feliz","Economias Afetadas":"893","Área Afetada":"0.1339","Categoria":"Manutenção Corretiva/Emergêncial - Mecânica","Parecer":"Booster Não Está Acionando | Cidade: Feliz | Unidade: Booster Colina | Planta:  Pl-Cor-Res1565 | Problema Apresentado: Booster Não Está Ligando No Local, Aqui Pra Nós ,Mostra Ligado Mas Não Está | *Ordem Sap:*Ordem 900302193 Com Nota 100404441 Gravada | 1","Duração":"11.5","Tempo Utilizado":"0.9583","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.3854166667","Término Serviço":"46158.6666666667","Normalização":"46158.8645833333","Agente Responsável":"Aegea","Bairro":""},{"@odata.etag":"","ItemInternalId":"896464a3-a761-468e-88c5-16c61f1453e6","ID do Evento":"1059898","Diretoria":"CENTRAL","Município":"Ijuí","Economias Afetadas":"864","Área Afetada":"0.0215","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Solicitante: Edson/Motivo: Rompimento De Rede/Material: Rede 60 Mm Pvc/Endereço: Rua Dos Imigrantes/Registros: Frederico Flick/Economias:300/","Duração":"4.5","Tempo Utilizado":"0.375","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.5833333333","Término Serviço":"46158.75","Normalização":"46158.7708333333","Agente Responsável":"Aegea","Bairro":"Mundstock"},{"@odata.etag":"","ItemInternalId":"da772ab5-c2de-4ad9-911e-7ba85be241b4","ID do Evento":"1060853","Diretoria":"NORTE","Município":"Flores da Cunha","Economias Afetadas":"859","Área Afetada":"0.0593","Categoria":"Manutenção Corretiva/Emergêncial - Mecânica","Parecer":"Coi Provisório / Problema No Acionamento Do Poço 7 Sgo","Duração":"2","Tempo Utilizado":"0.25","Limite Reguladora":"8","Reguladora":"AGESAN","Início":"46158.7916666667","Término Serviço":"46158.875","Normalização":"46158.9583333333","Agente Responsável":"Aegea","Bairro":""},{"@odata.etag":"","ItemInternalId":"1992f6b0-10a2-4cf3-b38f-b47184e2cb81","ID do Evento":"1059251","Diretoria":"CENTRAL","Município":"Santa Maria","Economias Afetadas":"833","Área Afetada":"0.0056","Categoria":"Vazamento identificado na região causando oscilação no abastecimento","Parecer":"Vazamento Não Detectado\\Bairro Pé De Platano. Das 06:15 As 15:00","Duração":"8.75","Tempo Utilizado":"0.7292","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.2604166667","Término Serviço":"46158.4166666667","Normalização":"46158.625","Agente Responsável":"Aegea","Bairro":"Pé De Platano"},{"@odata.etag":"","ItemInternalId":"dd78b037-ef82-40e2-8594-9136bb425daa","ID do Evento":"1059907","Diretoria":"CENTRAL","Município":"Não-Me-Toque","Economias Afetadas":"745","Área Afetada":"0.0896","Categoria":"Manutenção Corretiva/Emergêncial - Mecânica","Parecer":"Informante: Coi / Falha Eletromecânica - Nmt-11 Não Está Acionando Remotamente, Podendo Ser Falha No Painel / Ordem 900302187 Com Nota 100404405 Gravada / Bairros Afetados: Stara, Vargas, Viau E Ipiranga / 604 Economias Afetadas.","Duração":"4","Tempo Utilizado":"0.8","Limite Reguladora":"5","Reguladora":"AGESAN","Início":"46158.25","Término Serviço":"46158.4166666667","Normalização":"46158.5","Agente Responsável":"Aegea","Bairro":"Ipiranga, Stara, Vargas, Viau"},{"@odata.etag":"","ItemInternalId":"a3d77901-b4ed-48d1-b2a9-f2e319404d16","ID do Evento":"1060231","Diretoria":"CENTRAL","Município":"Arvorezinha","Economias Afetadas":"694","Área Afetada":"0.1779","Categoria":"Vazamento identificado na região causando oscilação no abastecimento","Parecer":"Rafael Informou - Suposto Vazamento Na Região Do Reservatório R03 - Economias 200 - Normalização As 8h","Duração":"9.5","Tempo Utilizado":"0.7917","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.9791666667","Término Serviço":"46159.1666666667","Normalização":"46159.375","Agente Responsável":"Aegea","Bairro":""},{"@odata.etag":"","ItemInternalId":"a98d5a50-018a-4c0e-a5c3-0bfb2b148f63","ID do Evento":"1059896","Diretoria":"CENTRAL","Município":"Rio Pardo","Economias Afetadas":"690","Área Afetada":"0.0468","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Marco/ Rompimento De Rede Amianto 60mm Rua Gomes Freire/ 300 Economias/ Bairro Centro/ Inicio 10hs Até 11:45/ Registro Fechado","Duração":"1.75","Tempo Utilizado":"0.1458","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.4166666667","Término Serviço":"46158.4791666667","Normalização":"46158.4895833333","Agente Responsável":"Aegea","Bairro":"Centro, São Jorge"},{"@odata.etag":"","ItemInternalId":"7030db48-5588-49d0-bab8-714f6f88e0dd","ID do Evento":"1058942","Diretoria":"CENTRAL","Município":"Lajeado","Economias Afetadas":"563","Área Afetada":"0.0128","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Micheli/ Localizado Vazamento Na Rua Aury Sturmer Pvc 85mm/ Bairro Moinhos D' Água/ 500 Economias/ Inicio 12:30 Até 20hs","Duração":"7.5","Tempo Utilizado":"0.625","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.5208333333","Término Serviço":"46158.7916666667","Normalização":"46158.8333333333","Agente Responsável":"Aegea","Bairro":"Moinhos D'Água"},{"@odata.etag":"","ItemInternalId":"2944827a-81d8-45a6-8a30-66553384b735","ID do Evento":"1058622","Diretoria":"OESTE","Município":"Alegrete","Economias Afetadas":"552","Área Afetada":"0.0166","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Solicitante: Jorge Paim, Rompimento De Rede Fc 60mm., Endereço Da Ocorrência: Rua Joaquim Antonio, Registro Fechado: Rua Matriz De Barros, Esquina Rua Tiradentes, 300 Economias.","Duração":"1.25","Tempo Utilizado":"0.1042","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6666666667","Término Serviço":"46158.7083333333","Normalização":"46158.71875","Agente Responsável":"Aegea","Bairro":""},{"@odata.etag":"","ItemInternalId":"ad1b7448-5a51-4c80-abe7-efd017e32e9d","ID do Evento":"1061187","Diretoria":"SUL","Município":"Montenegro","Economias Afetadas":"552","Área Afetada":"0.0202","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Endereço Do Rompimento: Rua Sergipe | Registro Fechado: Rua Santa Catarina","Duração":"2","Tempo Utilizado":"0.1667","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.7916666667","Término Serviço":"46158.8333333333","Normalização":"46158.875","Agente Responsável":"Outro","Bairro":"Santa Rita"},{"@odata.etag":"","ItemInternalId":"9be944de-a40b-435f-85c5-18d611be70a3","ID do Evento":"1061810","Diretoria":"NORTE","Município":"Salvador do Sul","Economias Afetadas":"527","Área Afetada":"0.2041","Categoria":"Vazamento identificado na região causando oscilação no abastecimento","Parecer":"Suzana/ Possível Vazamento/ Bairros Atingidos: Bela Vista, Linha Do Meio/ 450 Economias","Duração":"7","Tempo Utilizado":"0.5833","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.9791666667","Término Serviço":"46159.1875","Normalização":"46159.2708333333","Agente Responsável":"Aegea","Bairro":"Bela Vista, Linha Do Meio"},{"@odata.etag":"","ItemInternalId":"2752e491-8245-4742-8aa7-f830b452fd90","ID do Evento":"1058935","Diretoria":"CENTRAL","Município":"Estrela","Economias Afetadas":"468","Área Afetada":"0.0345","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Eduardo/ Rompimento De Rede Fibrocimento Dn100 Rua Júlio De Castilhos, 1204/ Inicio 09:20 Até 14hs/ Registro Fechado Na Mesma Rua.","Duração":"4.67","Tempo Utilizado":"0.3889","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.3888888889","Término Serviço":"46158.5","Normalização":"46158.5833333333","Agente Responsável":"Aegea","Bairro":"Chacrinha, Cristo Rei"},{"@odata.etag":"","ItemInternalId":"7e310656-cd48-411a-821f-a4eef0f26eef","ID do Evento":"1059255","Diretoria":"SUL","Município":"Campo Bom","Economias Afetadas":"449","Área Afetada":"0.016","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Ricardo - Rompimento De Rede Na Rua Vitor Graeff 549 - Rede Pvc 60mm - 100 Economias - Bairro: Cohab","Duração":"2","Tempo Utilizado":"0.125","Limite Reguladora":"16","Reguladora":"AGESAN","Início":"46158.4166666667","Término Serviço":"46158.5","Normalização":"46158.5416666667","Agente Responsável":"Aegea","Bairro":"Celeste"},{"@odata.etag":"","ItemInternalId":"7c3af09d-c235-44a0-aa12-b690fa0b1e2b","ID do Evento":"1061172","Diretoria":"NORTE","Município":"Ciríaco","Economias Afetadas":"400","Área Afetada":"0.2697","Categoria":"Manutenção Corretiva/Emergencial - Elétrica","Parecer":"Coi Preventivo / Falta De Fase No Poço 1, Equipe Eletromecânica Terceirizada A Caminho Para Verificar. Protocolo Rge 2109968425 Gerado Pela Consultora.","Duração":"2.75","Tempo Utilizado":"0.2292","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.8020833333","Término Serviço":"46158.875","Normalização":"46158.9166666667","Agente Responsável":"Aegea","Bairro":"APS - Área Prestação Serviço"},{"@odata.etag":"","ItemInternalId":"fa6a6272-8499-4c99-ace5-3d1b1ed62aae","ID do Evento":"1058617","Diretoria":"CENTRAL","Município":"Sobradinho","Economias Afetadas":"281","Área Afetada":"0.0438","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Informante: Paulo Brixter / Rompimento De Rede - Fc 60mm / Endereço Do Rompimento: Rua Ângelo Serena, N° 300 / 1 Registro Fechado Informado / Bairro: Centro / 260 Economias Afetadas.","Duração":"4.5","Tempo Utilizado":"0.375","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.5625","Término Serviço":"46158.7083333333","Normalização":"46158.75","Agente Responsável":"Aegea","Bairro":"Centro"},{"@odata.etag":"","ItemInternalId":"d3f24f6d-de59-4876-9d43-95b64e8b57e0","ID do Evento":"1058619","Diretoria":"NORTE","Município":"São Francisco de Paula","Economias Afetadas":"240","Área Afetada":"0.025","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Hullissis/ Rompimento De Rede - Dn 60mm Na Rua Serra Velha/ Registro Fechado Na Serra Velha","Duração":"2.25","Tempo Utilizado":"0.1875","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6145833333","Término Serviço":"46158.7083333333","Normalização":"46158.7083333333","Agente Responsável":"Aegea","Bairro":"São Bernardo, Serra Alta"},{"@odata.etag":"","ItemInternalId":"2458d443-3334-44d3-a913-50b54cfc0aef","ID do Evento":"1060214","Diretoria":"CENTRAL","Município":"Rio Pardo","Economias Afetadas":"217","Área Afetada":"0.0147","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Marco/ Rompimento De Rede Pvc 60mm Fechado Registro Av Perimetral/ 200 Economias/ Inicio 16:25 Até 18:30","Duração":"2.08","Tempo Utilizado":"0.1736","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6840277778","Término Serviço":"46158.7395833333","Normalização":"46158.7708333333","Agente Responsável":"Aegea","Bairro":""},{"@odata.etag":"","ItemInternalId":"5b617600-5475-4b2e-87d7-ee4738b07113","ID do Evento":"1059595","Diretoria":"SUL","Município":"Minas do Leão","Economias Afetadas":"162","Área Afetada":"0.0415","Categoria":"Vazamento identificado na região causando oscilação no abastecimento","Parecer":"Rompimento De Rede 60mm Pvc Por Prefeitura | 150 Economias | Por :Iago","Duração":"4.5","Tempo Utilizado":"","Limite Reguladora":"","Reguladora":"SEM AG.","Início":"46158.5416666667","Término Serviço":"46158.625","Normalização":"46158.7291666667","Agente Responsável":"Prefeitura","Bairro":"São José"},{"@odata.etag":"","ItemInternalId":"27982e7a-a205-4628-b55c-62b319284b1b","ID do Evento":"1058938","Diretoria":"SUL","Município":"Montenegro","Economias Afetadas":"160","Área Afetada":"0.0059","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Conserto De Rede Pvc 50mm | Rua Valdir De Souza Nunes | Rompimento Causados Pela Prefeitura | 80 Economias | Por: Felipe Rangel","Duração":"8","Tempo Utilizado":"0.6667","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.4166666667","Término Serviço":"46158.4791666667","Normalização":"46158.75","Agente Responsável":"Prefeitura","Bairro":"Porto Dos Pereiras"},{"@odata.etag":"","ItemInternalId":"4492c405-2675-4876-ba5f-369a2e427d96","ID do Evento":"1059592","Diretoria":"NORTE","Município":"Farroupilha","Economias Afetadas":"152","Área Afetada":"0.0049","Categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","Parecer":"Paulo/ Manutenção De Vrp Na Rua Veneto/ Registro Fechado Na Rua Veneto","Duração":"2.75","Tempo Utilizado":"0.2292","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.46875","Término Serviço":"46158.5833333333","Normalização":"46158.5833333333","Agente Responsável":"Aegea","Bairro":""},{"@odata.etag":"","ItemInternalId":"116ea429-f4dd-49ab-94ad-47885faed2e1","ID do Evento":"1058632","Diretoria":"OESTE","Município":"Santo Ângelo","Economias Afetadas":"78","Área Afetada":"0.0021","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Solicitante: Alex Sandri/Motivo: Vazamaneto Rede/Material: Rede Pvc 50/Endereço: Rs 344 - Travessia /Economias: 120/","Duração":"2.5","Tempo Utilizado":"0.2083","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.375","Término Serviço":"46158.4583333333","Normalização":"46158.4791666667","Agente Responsável":"Aegea","Bairro":"São João"},{"@odata.etag":"","ItemInternalId":"e9a6245f-c297-4df3-bde2-67dafcc1355c","ID do Evento":"1057657","Diretoria":"NORTE","Município":"Ciríaco","Economias Afetadas":"74","Área Afetada":"0.0499","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Rompimento De Rede Dn60. Rua Hermelindo Alieve,5","Duração":"10","Tempo Utilizado":"0.8333","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.2083333333","Término Serviço":"46158.4583333333","Normalização":"46158.625","Agente Responsável":"Aegea","Bairro":""},{"@odata.etag":"","ItemInternalId":"2bf4ee9c-3554-4163-882b-9f2be06b7d75","ID do Evento":"1060230","Diretoria":"LESTE","Município":"Osório","Economias Afetadas":"24","Área Afetada":"0.001","Categoria":"Manutenção Corretiva/Emergencial - Elétrica","Parecer":"Poço 9 Com Provável Problema Eletrico Ocasionando Em Baixa Pressão E Falta De Agua","Duração":"3.5","Tempo Utilizado":"0.35","Limite Reguladora":"10","Reguladora":"AGESAN","Início":"46158.8333333333","Término Serviço":"46158.9791666667","Normalização":"46159.0208333333","Agente Responsável":"Aegea","Bairro":""},{"@odata.etag":"","ItemInternalId":"0a0d8222-cf32-4096-b364-6b1ef9ebebd4","ID do Evento":"1059917","Diretoria":"CENTRAL","Município":"Rio Pardo","Economias Afetadas":"6","Área Afetada":"0.0004","Categoria":"Manutenção Corretiva - Rede de abastecimento","Parecer":"Marco/ Rompimento De Rede Br 471 Por Terceiros (Wr Cassol Empresa Que Está Fazendo A Duplicação Da Br) Dn 110mm/ Registro Fechado Na Br 471/ Inicio 14:35, Fim 15:30 E Normalização 17hs","Duração":"2.42","Tempo Utilizado":"0.2014","Limite Reguladora":"12","Reguladora":"AGERGS","Início":"46158.6076388889","Término Serviço":"46158.6458333333","Normalização":"46158.7083333333","Agente Responsável":"Outro","Bairro":""}] \n\n Regional: CENTRAL | Município: CACAPAVA DO SUL | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: CACHOEIRA DO SUL | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: DONA FRANCISCA | Prazo: c) Vence Hoje
-Regional: CENTRAL | Município: RESTINGA SECA | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: ARROIO DO MEIO | Prazo: d) 1-10 dias
-Regional: CENTRAL | Município: BOM RETIRO DO SUL | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: LAJEADO | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: NOVA BRESCIA | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: PAVERAMA | Prazo: d) 1-10 dias
-Regional: CENTRAL | Município: TAQUARI | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: RIO PARDO | Prazo: d) 1-10 dias
-Regional: CENTRAL | Município: SANTA CRUZ DO SUL | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: SANTA CRUZ DO SUL | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: SANTA CRUZ DO SUL | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: ITAARA | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: ITAARA | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: SAO PEDRO DO SUL | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: CARAZINHO | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: CARAZINHO | Prazo: c) Vence Hoje
-Regional: CENTRAL | Município: CARAZINHO | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: CHAPADA | Prazo: d) 1-10 dias
-Regional: CENTRAL | Município: CHAPADA | Prazo: d) 1-10 dias
-Regional: CENTRAL | Município: CHAPADA | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: NAO-ME-TOQUE | Prazo: c) Vence Hoje
-Regional: CENTRAL | Município: TAPERA | Prazo: d) 1-10 dias
-Regional: CENTRAL | Município: TAPERA | Prazo: d) 1-10 dias
-Regional: CENTRAL | Município: CRUZ ALTA | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: SALTO DO JACUI | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: SALTO DO JACUI | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: IJUI | Prazo: c) Vence Hoje
-Regional: CENTRAL | Município: IJUI | Prazo: c) Vence Hoje
-Regional: CENTRAL | Município: IJUI | Prazo: b) Vence Amanhã
-Regional: CENTRAL | Município: BARROS CASSAL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CAPAO DA CANOA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: BALNEARIO PINHAL | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CIDREIRA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CIDREIRA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: TERRA DE AREIA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: IMBE | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: IMBE | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ALVORADA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ALVORADA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ALVORADA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ALVORADA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ALVORADA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: c) Vence Hoje
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: VIAMAO | Prazo: c) Vence Hoje
-Regional: LESTE | Município: CANOAS | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CANOAS | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CANOAS | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CANOAS | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CANOAS | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CANOAS | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CANOAS | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CANOAS | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CANOAS | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CANOAS | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CANOAS | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CANOAS | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CANOAS | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CANOAS | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CANOAS | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CANOAS | Prazo: c) Vence Hoje
-Regional: LESTE | Município: CANOAS | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CANOAS | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: c) Vence Hoje
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: CACHOEIRINHA | Prazo: c) Vence Hoje
-Regional: LESTE | Município: GRAVATAI | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GRAVATAI | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GRAVATAI | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GRAVATAI | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GRAVATAI | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GRAVATAI | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GRAVATAI | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GRAVATAI | Prazo: c) Vence Hoje
-Regional: LESTE | Município: GRAVATAI | Prazo: c) Vence Hoje
-Regional: LESTE | Município: GRAVATAI | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GRAVATAI | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GRAVATAI | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GRAVATAI | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GRAVATAI | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GRAVATAI | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GRAVATAI | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GRAVATAI | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GRAVATAI | Prazo: c) Vence Hoje
-Regional: LESTE | Município: GRAVATAI | Prazo: c) Vence Hoje
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ELDORADO DO SUL | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GUAIBA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GUAIBA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GUAIBA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GUAIBA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GUAIBA | Prazo: c) Vence Hoje
-Regional: LESTE | Município: GUAIBA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GUAIBA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GUAIBA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: GUAIBA | Prazo: b) Vence Amanhã
-Regional: LESTE | Município: GUAIBA | Prazo: d) 1-10 dias
-Regional: LESTE | Município: ESTEIO | Prazo: d) 1-10 dias
-Regional: LESTE | Município: SAPUCAIA DO SUL | Prazo: c) Vence Hoje
-Regional: NORTE | Município: MARAU | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: MARAU | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: MARAU | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: PASSO FUNDO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: CARLOS BARBOSA | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: FARROUPILHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FARROUPILHA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: FARROUPILHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FARROUPILHA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: FARROUPILHA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: FARROUPILHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FARROUPILHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: SALVADOR DO SUL | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: CANELA | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: GRAMADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: GRAMADO | Prazo: c) Vence Hoje
-Regional: NORTE | Município: GRAMADO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: GRAMADO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: GRAMADO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: GRAMADO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: NOVA PETROPOLIS | Prazo: c) Vence Hoje
-Regional: NORTE | Município: SAO FRANCISCO DE PAULA | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: SAO FRANCISCO DE PAULA | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: SAO FRANCISCO DE PAULA | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: SAO FRANCISCO DE PAULA | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: c) Vence Hoje
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: c) Vence Hoje
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: c) Vence Hoje
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: c) Vence Hoje
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: c) Vence Hoje
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: c) Vence Hoje
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: c) Vence Hoje
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: c) Vence Hoje
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: BENTO GONCALVES | Prazo: d) 1-10 dias
-Regional: NORTE | Município: PINTO BANDEIRA | Prazo: f) 21-30 dias
-Regional: NORTE | Município: PINTO BANDEIRA | Prazo: f) 21-30 dias
-Regional: NORTE | Município: PINTO BANDEIRA | Prazo: e) 11-20 dias
-Regional: NORTE | Município: PINTO BANDEIRA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: c) Vence Hoje
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: d) 1-10 dias
-Regional: NORTE | Município: ANTONIO PRADO | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: FLORES DA CUNHA | Prazo: c) Vence Hoje
-Regional: NORTE | Município: SAO MARCOS | Prazo: c) Vence Hoje
-Regional: NORTE | Município: SAO MARCOS | Prazo: d) 1-10 dias
-Regional: NORTE | Município: FAGUNDES VARELA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: FAGUNDES VARELA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: FAGUNDES VARELA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: FAGUNDES VARELA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: GUAPORE | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: NOVA ARACA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: NOVA PRATA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: PARAI | Prazo: c) Vence Hoje
-Regional: NORTE | Município: PARAI | Prazo: c) Vence Hoje
-Regional: NORTE | Município: PARAI | Prazo: c) Vence Hoje
-Regional: NORTE | Município: PARAI | Prazo: c) Vence Hoje
-Regional: NORTE | Município: PARAI | Prazo: c) Vence Hoje
-Regional: NORTE | Município: SERAFINA CORREA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: PAIM FILHO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: SAO JOSE DO OURO | Prazo: b) Vence Amanhã
-Regional: NORTE | Município: TAPEJARA | Prazo: d) 1-10 dias
-Regional: NORTE | Município: TAPEJARA | Prazo: d) 1-10 dias
+---
+📊 RESUMO POR DIRETORIA
+
+🔵 Norte:
+- Eventos: 20
+- Economias afetadas: 102,870
+- Município mais crítico: Vacaria (43.96%)
+
+🟡 Central:
+- Eventos: 13
+- Economias afetadas: 53,991
+- Município mais crítico: Santa Maria (24.11%)
+
+🟢 Oeste:
+- Eventos: 3
+- Economias afetadas: 1,731
+- Município mais crítico: Santo Ângelo (2.96%)
+
+🔴 Leste:
+- Eventos: 7
+- Economias afetadas: 38,468
+- Município mais crítico: Viamão (11.12%)
+
+⚫ Sul:
+- Eventos: 8
+- Economias afetadas: 12,510
+- Município mais crítico: Taquara (27.89%)
+
+⚪ Sem Diretoria:
+- Eventos: 0
+- Economias afetadas: 0
+- Município mais crítico: -
+
+---
+🏆 TOP 10 MUNICÍPIOS
+
+Santa Maria (Central) — 36,723 econ. — 24.11%  
+Vacaria (Norte) — 37,375 econ. — 43.96%  
+Viamão (Leste) — 18,100 econ. — 11.12%  
+Bento Gonçalves (Norte) — 13,646 econ. — 17.84%  
+Gravataí (Leste) — 9,500 econ. — 7.61%  
+Sapucaia do Sul (Leste) — 6,677 econ. — 10.23%  
+Taquara (Sul) — 5,769 econ. — 27.89%  
+Panambi (Central) — 3,849 econ. — 20.76%  
+Torres (Leste) — 5,167 econ. — 14.52%  
+Carlos Barbosa (Norte) — 7,265 econ. — 59.97%
+
+---
+⚠️ ALERTAS CRÍTICOS
+
+🔴 Bento Gonçalves — 15.5h — Manutenção Corretiva - Adutora  
+🔴 Casca — 13.25h — Manutenção Corretiva - Rede de abastecimento  
+🔴 Santa Maria — 11.75h — Manutenção Corretiva - Rede de abastecimento  
+🔴 Santa Maria — 11.75h — Manutenção Corretiva - Rede de abastecimento  
+🔴 Passo Fundo — 11.5h — Vazamento identificado na região causando oscilação no abastecimento  
+🔴 Feliz — 11.5h — Manutenção Corretiva/Emergêncial - Mecânica  
+✅ Nenhum outro evento crítico identificado.
+
+---
+💡 RECOMENDAÇÕES
+
+🔵 Norte: Intensificar monitoramento preventivo em Vacaria para reduzir impactos de manutenções corretivas.  
+🟡 Central: Priorizar ações rápidas em Santa Maria para minimizar duração dos eventos.  
+🟢 Oeste: Melhorar infraestrutura em Santo Ângelo para evitar vazamentos e oscilações.  
+🔴 Leste: Reforçar manutenção preventiva em Viamão para reduzir ocorrências por energia elétrica.  
+⚫ Sul: Estabelecer parcerias com concessionárias de energia para evitar paralisações em Taquara.  
+⚪ Sem Diretoria: Monitorar e classificar corretamente eventos para melhor gestão.
+
+--- \n\n ---
+RECLAMAÇÕES CLIENTES
+
+MÉTRICAS GERAIS  
+Total: 172  
+Vencidas: 0  
+Vence Hoje: 38  
+Vence Amanhã: 74  
+
+---  
+RECLAMAÇÕES POR REGIONAL  
+CENTRAL — 33  
+LESTE — 90  
+NORTE — 49  
+
+---  
+TOP 10 MUNICÍPIOS RECLAMAÇÕES  
+ALVORADA (LESTE) — 17 rec.  
+VIAMÃO (LESTE) — 22 rec.  
+CANOS (LESTE) — 18 rec.  
+CACHOEIRINHA (LESTE) — 18 rec.  
+GRAVATAÍ (LESTE) — 18 rec.  
+BENTO GONÇALVES (NORTE) — 20 rec.  
+FLORES DA CUNHA (NORTE) — 15 rec.  
+PASSO FUNDO (NORTE) — 14 rec.  
+SANTA CRUZ DO SUL (CENTRAL) — 4 rec.  
+CARAZINHO (CENTRAL) — 4 rec.  
+
+---  
+RECLAMAÇÕES POR PRAZO  
+Vence Amanhã — 74  
+Vence Hoje — 38  
+1-10 dias — 58  
+11-20 dias — 1  
+21-30 dias — 2  
+Vencidas — 0  
+
+---
