@@ -182,6 +182,30 @@
     text-align: center; padding: 60px 20px; color: var(--muted);
   }
   .empty h2 { font-size: 16px; color: var(--text); margin-bottom: 8px; }
+  .section-divider { border: none; border-top: 1px solid var(--border); margin: 32px 0 24px; }
+  .section-tag { font-size: 10px; font-weight: 600; letter-spacing: .12em; color: #f87171; text-transform: uppercase; background: rgba(248,113,113,.08); border: 1px solid rgba(248,113,113,.2); display: inline-block; padding: 3px 10px; border-radius: 4px; margin-bottom: 10px; }
+  .rec-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .rec-metric { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .rec-metric-val { font-size: 22px; font-weight: 600; font-family: 'DM Mono', monospace; }
+  .rec-metric-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .prazo-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .prazo-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .prazo-label { font-size: 12px; color: var(--text); flex: 1; }
+  .prazo-bar-wrap { width: 100px; height: 5px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; }
+  .prazo-bar { height: 100%; border-radius: 3px; }
+  .prazo-val { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); min-width: 24px; text-align: right; }
+  .reg2-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .reg2-name { font-size: 12px; color: var(--text); min-width: 70px; }
+  .reg2-bar-wrap { flex: 1; height: 5px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; }
+  .reg2-bar { height: 100%; border-radius: 3px; background: #f87171; }
+  .reg2-val { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); min-width: 24px; text-align: right; }
+  .top2-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .top2-rank { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; min-width: 18px; text-align: right; }
+  .top2-name { font-size: 12px; color: var(--text); flex: 1; }
+  .top2-reg { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 500; background: rgba(248,113,113,.12); color: #f87171; }
+  .top2-bar-wrap { width: 80px; height: 5px; background: rgba(255,255,255,.06); border-radius: 3px; overflow: hidden; }
+  .top2-bar { height: 100%; border-radius: 3px; background: #f87171; }
+  .top2-val { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); min-width: 32px; text-align: right; }
   .empty code {
     font-family: 'DM Mono', monospace; font-size: 12px;
     background: var(--surface2); padding: 4px 10px; border-radius: 6px;
@@ -317,6 +341,53 @@ function dirClass(d) {
   return m[d?.toLowerCase()] || 'sem';
 }
 
+function parseReclamacoes(texto) {
+  const data = { total:0, vencidas:0, hoje:0, amanha:0, porPrazo:[], porRegional:[], top10:[] };
+  const linhas = texto.split('\n');
+  let section = '';
+  for (let i=0; i<linhas.length; i++) {
+    const l = linhas[i].trim();
+    if (!l || l.startsWith('---')) continue;
+    if (l.includes('METRICAS GERAIS') || l.includes('MÉTRICAS GERAIS')) { section='metrics'; continue; }
+    if (l.includes('POR REGIONAL')) { section='regional'; continue; }
+    if (l.includes('TOP 10') && l.includes('RECLAMAC')) { section='top'; continue; }
+    if (l.includes('POR PRAZO')) { section='prazo'; continue; }
+    if (l.includes('RECLAMAC')) { section='rec'; continue; }
+    if (section === 'metrics') {
+      const mT = l.match(/Total[:\s]+([\d.,]+)/i);
+      const mV = l.match(/Vencidas[:\s]+([\d.,]+)/i);
+      const mH = l.match(/Vence Hoje[:\s]+([\d.,]+)/i);
+      const mA = l.match(/Vence Amanh/i);
+      if (mT) data.total = parseInt(mT[1].replace(/\./g,''));
+      if (mV) data.vencidas = parseInt(mV[1].replace(/\./g,''));
+      if (mH) data.hoje = parseInt(mH[1].replace(/\./g,''));
+      if (mA) { const mN = l.match(/(\d+)$/); if(mN) data.amanha = parseInt(mN[1]); }
+    }
+    if (section === 'regional') {
+      const m = l.match(/^[\S\s]*?([A-Za-zÀ-ú\s]+?)\s*[—–\-]+\s*(\d+)/);
+      if (m && m[2]) data.porRegional.push({ nome:m[1].trim(), total:parseInt(m[2]) });
+    }
+    if (section === 'top') {
+      const m = l.match(/^(.+?)\s*\((.+?)\)\s*[—–\-]+\s*(\d+)\s*rec/i);
+      if (m) data.top10.push({ nome:m[1].trim(), regional:m[2].trim(), total:parseInt(m[3]) });
+    }
+    if (section === 'prazo') {
+      const parts = l.split(/\s*[—–\-]+\s*/);
+      if (parts.length >= 2) {
+        const label = parts[0].trim();
+        const total = parseInt(parts[1]);
+        let cor = '#94a3b8';
+        if (/vencida/i.test(label)) cor = '#f87171';
+        else if (/hoje/i.test(label)) cor = '#fbbf24';
+        else if (/amanh/i.test(label)) cor = '#38bdf8';
+        else if (/1-10/i.test(label)) cor = '#34d399';
+        if (!isNaN(total)) data.porPrazo.push({ label, total, cor });
+      }
+    }
+  }
+  return data;
+}
+
 function render(data) {
   const top10Sorted = [...data.top10].sort((a, b) => b.econ - a.econ);
   const max = Math.max(...top10Sorted.map(t => t.econ), 1);
@@ -366,6 +437,57 @@ function render(data) {
   `).join('');
 
 
+  function renderReclamacoes(rec) {
+    if (!rec || !rec.total) return '';
+    const maxPrazo = Math.max(...rec.porPrazo.map(p => p.total), 1);
+    const maxReg = Math.max(...rec.porRegional.map(r => r.total), 1);
+    const maxTop = Math.max(...rec.top10.map(t => t.total), 1);
+    const prazoRows = rec.porPrazo.map(p => `
+      <div class="prazo-row">
+        <div class="prazo-dot" style="background:${p.cor}"></div>
+        <span class="prazo-label">${p.label}</span>
+        <div class="prazo-bar-wrap"><div class="prazo-bar" style="width:${Math.round(p.total/maxPrazo*100)}%;background:${p.cor}"></div></div>
+        <span class="prazo-val">${p.total}</span>
+      </div>`).join('');
+    const regRows = rec.porRegional.map(r => `
+      <div class="reg2-row">
+        <span class="reg2-name">${r.nome}</span>
+        <div class="reg2-bar-wrap"><div class="reg2-bar" style="width:${Math.round(r.total/maxReg*100)}%"></div></div>
+        <span class="reg2-val">${r.total}</span>
+      </div>`).join('');
+    const topRows = rec.top10.map((t,i) => `
+      <div class="top2-row">
+        <span class="top2-rank">${String(i+1).padStart(2,'0')}</span>
+        <span class="top2-name">${t.nome}</span>
+        <span class="top2-reg">${t.regional}</span>
+        <div class="top2-bar-wrap"><div class="top2-bar" style="width:${Math.round(t.total/maxTop*100)}%"></div></div>
+        <span class="top2-val">${t.total}</span>
+      </div>`).join('');
+    return `
+      <hr class="section-divider">
+      <div><span class="section-tag">Reclamações de clientes</span></div>
+      <div class="rec-metrics">
+        <div class="rec-metric"><div class="rec-metric-val" style="color:#f87171">${rec.total}</div><div class="rec-metric-label">total de reclamações</div></div>
+        <div class="rec-metric"><div class="rec-metric-val" style="color:#f87171">${rec.vencidas}</div><div class="rec-metric-label">vencidas</div></div>
+        <div class="rec-metric"><div class="rec-metric-val" style="color:#fbbf24">${rec.hoje}</div><div class="rec-metric-label">vencem hoje</div></div>
+        <div class="rec-metric"><div class="rec-metric-val" style="color:#38bdf8">${rec.amanha}</div><div class="rec-metric-label">vencem amanhã</div></div>
+      </div>
+      <div class="main-grid">
+        <div class="card">
+          <div class="card-title"><span class="card-title-icon">⏱</span>Por prazo OS backlog</div>
+          ${prazoRows}
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-icon">📍</span>Por regional</div>
+          ${regRows}
+        </div>
+        <div class="card card-full">
+          <div class="card-title"><span class="card-title-icon">🏆</span>Top 10 municípios — reclamações</div>
+          ${topRows}
+        </div>
+      </div>`;
+  }
+
   document.getElementById('app').innerHTML = `
     <div class="header">
       <div class="header-left">
@@ -400,6 +522,7 @@ function render(data) {
       </div>
     </div>
 
+    ${renderReclamacoes(data.reclamacoes)}
     <div class="footer">
       <span>Dados inseridos manualmente pela equipe. Confirme na planilha antes de acionar campo.</span>
       <span class="footer-badge">AI Builder · Power Automate</span>
@@ -423,6 +546,7 @@ fetch(JSON_URL + '?t=' + Date.now())
     if (!parsed || (!parsed.diretorias.length && !parsed.top10.length)) {
       throw new Error('Formato nao reconhecido — verifique o arquivo dados-relatorio.json');
     }
+    parsed.reclamacoes = parseReclamacoes(texto);
     render(parsed);
   })
   .catch(err => {
