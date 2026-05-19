@@ -82,7 +82,7 @@
   <div id="app"><div class="empty"><h2>Carregando dados...</h2><p style="font-size:13px;margin-top:6px">Buscando análise mais recente...</p></div></div>
 </div>
 <script>
-const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio/main/dados-solicitacoes.json';
+const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio/main/solicitacoes.json';
 const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#f87171'];
 const MESES  = ['Jan','Fev','Mar','Abr','Atual'];
 
@@ -106,9 +106,9 @@ function parseAnomalia(txt) {
     const lt = l.trim();
     if (!lt) continue;
 
-    if (lt.includes('NARRAÇÃO') || lt.includes('NARRACAO')) { section='narracao'; continue; }
     if (lt.includes('ANOMALIAS DETECTADAS')) { section='dados'; continue; }
-    if (lt.startsWith('---') && section === 'narracao') { section='dados'; continue; }
+    if (lt.includes('NARRAÇÃO') || lt.includes('NARRACAO')) { section='narracao'; continue; }
+    if (lt.startsWith('---')) { if(section==='narracao') section='dados'; continue; }
 
     if (section === 'narracao') {
       data.narracao += (data.narracao ? '\n' : '') + lt;
@@ -116,22 +116,24 @@ function parseAnomalia(txt) {
     }
 
     const cols = l.split('\t');
-    if (cols.length < 10) continue;
+    if (cols.length < 9) continue;
 
-    const cidade  = cols[0].trim();
-    const motivo  = cols[1].trim();
-    if (!cidade || cidade === 'CIDADE' || cidade === 'Unidade') continue;
+    // Detecta se primeira coluna está vazia (coluna extra no início)
+    const offset = cols[0].trim() === '' ? 1 : 0;
 
-    const jan    = parseNum(cols[2]);
-    const fev    = parseNum(cols[3]);
-    const mar    = parseNum(cols[4]);
-    const abr    = parseNum(cols[5]);
-    const atual  = parseNum(cols[6]);
-    const hist   = parseNum(cols[7]);
-    const varStr = (cols[8] || '').trim().replace('%','').replace('+','');
+    const cidade  = (cols[0 + offset] || '').trim();
+    const motivo  = (cols[1 + offset] || '').trim();
+    if (!cidade || cidade === 'CIDADE' || cidade === 'Unidade' || cidade === 'RS') continue;
+
+    const jan    = parseNum(cols[2 + offset]);
+    const fev    = parseNum(cols[3 + offset]);
+    const mar    = parseNum(cols[4 + offset]);
+    const abr    = parseNum(cols[5 + offset]);
+    const atual  = parseNum(cols[6 + offset]);
+    const hist   = parseNum(cols[7 + offset]);
+    const varStr = (cols[8 + offset] || '').trim().replace('%','').replace('+','');
     const delta  = parseFloat(varStr) || 0;
-    const statusCol = (cols[9] || cols[10] || '').trim();
-    const rankCol   = (cols[10] || cols[11] || '').trim();
+    const statusCol = (cols[9 + offset] || cols[10 + offset] || '').trim();
 
     const isAlta  = statusCol.includes('ALTA')  || statusCol.includes('🔴');
     const isQueda = statusCol.includes('QUEDA') || statusCol.includes('🟢');
