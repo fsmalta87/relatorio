@@ -344,45 +344,43 @@ function dirClass(d) {
 function parseReclamacoes(texto) {
   const data = { total:0, vencidas:0, hoje:0, amanha:0, porPrazo:[], porRegional:[], top10:[] };
   const linhas = texto.split('\n');
-  let section = '';
+  let section = '', inRec = false;
   for (let i=0; i<linhas.length; i++) {
     const l = linhas[i].trim();
-    if (!l || l.startsWith('---')) continue;
-    if (l.includes('METRICAS GERAIS') || l.includes('MÉTRICAS GERAIS')) { section='metrics'; continue; }
+    if (!l) continue;
+    if (l.includes('RECLAMAÇÕES CLIENTES') || l.includes('RECLAMACOES CLIENTES')) { inRec=true; section='rec'; continue; }
+    if (!inRec) continue;
+    if (l.startsWith('---')) continue;
+    if (l.includes('MÉTRICAS GERAIS') || l.includes('METRICAS GERAIS')) { section='metrics'; continue; }
     if (l.includes('POR REGIONAL')) { section='regional'; continue; }
-    if (l.includes('TOP 10') && l.includes('RECLAMAC')) { section='top'; continue; }
+    if (l.includes('TOP 10') && (l.includes('RECLAMAÇÕES') || l.includes('RECLAMACOES') || l.includes('MUNICÍPIOS RECLAMA'))) { section='top'; continue; }
     if (l.includes('POR PRAZO')) { section='prazo'; continue; }
-    if (l.includes('RECLAMAC')) { section='rec'; continue; }
+    const clean = l.replace(/\s+/g, ' ').trim();
     if (section === 'metrics') {
-      const mT = l.match(/Total[:\s]+([\d.,]+)/i);
-      const mV = l.match(/Vencidas[:\s]+([\d.,]+)/i);
-      const mH = l.match(/Vence Hoje[:\s]+([\d.,]+)/i);
-      const mA = l.match(/Vence Amanh/i);
-      if (mT) data.total = parseInt(mT[1].replace(/\./g,''));
-      if (mV) data.vencidas = parseInt(mV[1].replace(/\./g,''));
-      if (mH) data.hoje = parseInt(mH[1].replace(/\./g,''));
-      if (mA) { const mN = l.match(/(\d+)$/); if(mN) data.amanha = parseInt(mN[1]); }
+      const mT=clean.match(/Total[:\s]+([\d.,]+)/i), mV=clean.match(/Vencidas[:\s]+([\d.,]+)/i);
+      const mH=clean.match(/Vence Hoje[:\s]+([\d.,]+)/i), mA=clean.match(/Vence Amanh/i);
+      if (mT) data.total=parseInt(mT[1].replace(/\./g,''));
+      if (mV) data.vencidas=parseInt(mV[1].replace(/\./g,''));
+      if (mH) data.hoje=parseInt(mH[1].replace(/\./g,''));
+      if (mA) { const mN=clean.match(/(\d+)\s*$/); if(mN) data.amanha=parseInt(mN[1]); }
     }
     if (section === 'regional') {
-      const m = l.match(/^([A-ZÀ-Úa-zà-ú\s]+?)\s*[—–\-]+\s*(\d+)/);
-      if (m && m[2] && parseInt(m[2]) > 0) data.porRegional.push({ nome:m[1].trim(), total:parseInt(m[2]) });
+      const m=clean.match(/^([A-ZÀ-Úa-zà-ú\s]+?)\s*[—–]+\s*(\d+)/);
+      if (m && parseInt(m[2])>0) data.porRegional.push({ nome:m[1].trim(), total:parseInt(m[2]) });
     }
     if (section === 'top') {
-      const clean = l.replace(/\s+/g, ' ').trim();
-      const m = clean.match(/^(.+?)\s*\((.+?)\)\s*[—–]+\s*(\d+)\s*rec/i);
+      const m=clean.match(/^(.+?)\s*\((.+?)\)\s*[—–]+\s*(\d+)\s*rec/i);
       if (m) data.top10.push({ nome:m[1].trim(), regional:m[2].trim(), total:parseInt(m[3]) });
     }
     if (section === 'prazo') {
-      const clean = l.replace(/\s+/g, ' ').trim();
-      const parts = clean.split(/\s*[—–]+\s*/);
-      if (parts.length >= 2) {
-        const label = parts[0].trim();
-        const total = parseInt(parts[1].trim());
-        let cor = '#94a3b8';
-        if (/vencida/i.test(label)) cor = '#f87171';
-        else if (/hoje/i.test(label)) cor = '#fbbf24';
-        else if (/amanh/i.test(label)) cor = '#38bdf8';
-        else if (/1-10/i.test(label)) cor = '#34d399';
+      const parts=clean.split(/\s*[—–]+\s*/);
+      if (parts.length>=2) {
+        const label=parts[0].trim(), total=parseInt(parts[1].trim());
+        let cor='#94a3b8';
+        if (/vencida/i.test(label)) cor='#f87171';
+        else if (/hoje/i.test(label)) cor='#fbbf24';
+        else if (/amanh/i.test(label)) cor='#38bdf8';
+        else if (/1-10/i.test(label)) cor='#34d399';
         if (!isNaN(total)) data.porPrazo.push({ label, total, cor });
       }
     }
