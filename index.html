@@ -511,18 +511,19 @@ function render(data) {
 
 
 
+    </div>
+
+    ${renderReclamacoes(data.reclamacoes)}
+    <div class="main-grid">
       <div class="card">
         <div class="card-title"><span class="card-title-icon">⚠️</span>Alertas críticos</div>
         <div class="alert-list">${alertItems}</div>
       </div>
-
       <div class="card">
         <div class="card-title"><span class="card-title-icon">💡</span>Recomendações</div>
         <div class="rec-list">${recItems}</div>
       </div>
     </div>
-
-    ${renderReclamacoes(data.reclamacoes)}
     <div class="footer">
       <span>Dados inseridos manualmente pela equipe. Confirme na planilha antes de acionar campo.</span>
       <span class="footer-badge">AI Builder · Power Automate</span>
