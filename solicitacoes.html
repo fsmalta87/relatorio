@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anomalias — Contatos por Cidade</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0f1e;--surface:#111827;--surface2:#1a2235;
+    --border:rgba(99,179,237,0.12);--accent:#38bdf8;
+    --danger:#f87171;--success:#34d399;--warning:#fbbf24;
+    --text:#e2e8f0;--muted:#64748b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;padding:24px}
+  .grid-bg{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+  .container{max-width:960px;margin:0 auto;position:relative;z-index:1}
+  .header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+  .header-left img{height:72px;margin-bottom:10px;display:block;filter:brightness(0) invert(1)}
+  h1{font-size:18px;font-weight:500;color:#f1f5f9}
+  .header-meta{font-size:12px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace}
+  .header-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:right}
+  .header-stat-val{font-size:22px;font-weight:600;font-family:'DM Mono',monospace}
+  .header-stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+  .metric{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+  .metric-val{font-size:22px;font-weight:600;font-family:'DM Mono',monospace}
+  .metric-label{font-size:11px;color:var(--muted);margin-top:2px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  @media(max-width:640px){.two{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+  .card-full{grid-column:1/-1}
+  .card-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+  .filter-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+  .fbtn{font-size:11px;padding:4px 12px;border:0.5px solid rgba(255,255,255,0.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+  .fbtn.on-high{background:rgba(248,113,113,.12);color:#f87171;border-color:rgba(248,113,113,.3)}
+  .fbtn.on-low{background:rgba(52,211,153,.12);color:#34d399;border-color:rgba(52,211,153,.3)}
+  .fbtn.on-all{background:rgba(56,189,248,.08);color:var(--accent);border-color:rgba(56,189,248,.25)}
+  .anom-item{display:flex;align-items:stretch;margin-bottom:6px;border-radius:8px;overflow:hidden;border:0.5px solid rgba(255,255,255,.08)}
+  .anom-item.high{border-color:rgba(248,113,113,.2)}
+  .anom-item.low{border-color:rgba(52,211,153,.2)}
+  .anom-accent{width:3px;flex-shrink:0}
+  .high .anom-accent{background:#f87171}
+  .low .anom-accent{background:#34d399}
+  .anom-body{display:flex;align-items:center;gap:8px;padding:9px 12px;flex:1;min-width:0;background:rgba(255,255,255,.02)}
+  .anom-city{font-size:12px;font-weight:500;color:#f1f5f9;min-width:110px;flex-shrink:0}
+  .anom-motivo{font-size:12px;color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .anom-nums{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;gap:1px}
+  .anom-atual{font-size:12px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9}
+  .anom-delta{font-size:10px;font-family:'DM Mono',monospace;font-weight:500}
+  .high .anom-delta{color:#f87171}
+  .low .anom-delta{color:#34d399}
+  .anom-avg{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
+  .spark-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;padding:9px 12px;border-radius:8px;border:0.5px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
+  .spark-city{font-size:12px;font-weight:500;color:#f1f5f9;min-width:100px;flex-shrink:0}
+  .spark-motivo{font-size:11px;color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .spark{display:flex;align-items:flex-end;gap:2px;height:28px;flex-shrink:0}
+  .spark-b{width:9px;border-radius:2px 2px 0 0;flex-shrink:0}
+  .spark-val{font-size:11px;font-family:'DM Mono',monospace;min-width:40px;text-align:right;font-weight:500;color:#f1f5f9;flex-shrink:0}
+  .spark-badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500;flex-shrink:0}
+  .badge-up{background:rgba(248,113,113,.12);color:#f87171}
+  .badge-down{background:rgba(52,211,153,.12);color:#34d399}
+  .legend{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+  .legend-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+  .ia-box{background:rgba(56,189,248,.04);border:0.5px solid rgba(56,189,248,.15);border-radius:8px;padding:12px 14px}
+  .ia-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .ia-text{font-size:13px;color:var(--text);line-height:1.7;white-space:pre-wrap}
+  .footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);flex-wrap:wrap;gap:8px}
+  .footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600}
+  .empty{text-align:center;padding:48px 20px;color:var(--muted)}
+  .empty h2{font-size:16px;color:#f1f5f9;margin-bottom:8px}
+  .city-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+  .cfbtn{font-size:11px;padding:3px 10px;border:0.5px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer}
+  .cfbtn.active{background:rgba(56,189,248,.1);color:var(--accent);border-color:rgba(56,189,248,.3)}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="container">
+  <div id="app"><div class="empty"><h2>Carregando dados...</h2><p style="font-size:13px;margin-top:6px">Buscando análise mais recente...</p></div></div>
+</div>
+<script>
+const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/anomalias.json';
+const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#f87171'];
+const MESES  = ['Jan','Fev','Mar','Abr','Atual'];
+
+function parseNum(s) {
+  if (!s || s.trim() === '') return 0;
+  return parseFloat(s.trim().replace(/\./g,'').replace(',','.')) || 0;
+}
+
+function parseAnomalia(txt) {
+  const data = {
+    gerado: new Date().toLocaleString('pt-BR'),
+    totalAltas: 0, totalQuedas: 0, maiorDesvio: '',
+    narracao: '', anomalias: []
+  };
+  const linhas = txt.split('\n');
+  let section = 'dados';
+  let maiorAbs = 0;
+
+  for (let i = 0; i < linhas.length; i++) {
+    const l = linhas[i];
+    const lt = l.trim();
+    if (!lt) continue;
+
+    if (lt.includes('NARRAÇÃO') || lt.includes('NARRACAO')) { section='narracao'; continue; }
+    if (lt.includes('ANOMALIAS DETECTADAS')) { section='dados'; continue; }
+    if (lt.startsWith('---') && section === 'narracao') { section='dados'; continue; }
+
+    if (section === 'narracao') {
+      data.narracao += (data.narracao ? '\n' : '') + lt;
+      continue;
+    }
+
+    const cols = l.split('\t');
+    if (cols.length < 10) continue;
+
+    const cidade  = cols[0].trim();
+    const motivo  = cols[1].trim();
+    if (!cidade || cidade === 'CIDADE' || cidade === 'Unidade') continue;
+
+    const jan    = parseNum(cols[2]);
+    const fev    = parseNum(cols[3]);
+    const mar    = parseNum(cols[4]);
+    const abr    = parseNum(cols[5]);
+    const atual  = parseNum(cols[6]);
+    const hist   = parseNum(cols[7]);
+    const varStr = (cols[8] || '').trim().replace('%','').replace('+','');
+    const delta  = parseFloat(varStr) || 0;
+    const statusCol = (cols[9] || cols[10] || '').trim();
+    const rankCol   = (cols[10] || cols[11] || '').trim();
+
+    const isAlta  = statusCol.includes('ALTA')  || statusCol.includes('🔴');
+    const isQueda = statusCol.includes('QUEDA') || statusCol.includes('🟢');
+    if (!isAlta && !isQueda) continue;
+
+    const tipo = isAlta ? 'high' : 'low';
+    if (isAlta)  data.totalAltas++;
+    if (isQueda) data.totalQuedas++;
+
+    if (Math.abs(delta) > maiorAbs) {
+      maiorAbs = Math.abs(delta);
+      const sinal = delta > 0 ? '+' : '';
+      data.maiorDesvio = `${sinal}${delta.toFixed(0)}%`;
+    }
+
+    const avgVals = [jan,fev,mar,abr].filter(v=>v>0);
+    const avg = avgVals.length ? avgVals.reduce((a,b)=>a+b,0)/avgVals.length : hist;
+
+    data.anomalias.push({
+      cidade, motivo,
+      vals: [jan, fev, mar, abr, atual],
+      hist: hist || avg,
+      delta, tipo
+    });
+  }
+  return data;
+}
+
+let anomalias_global = [];
+let filtros = { high: true, low: true };
+let cidadeFiltro = 'todas';
+
+function filtrar(tipo) {
+  filtros[tipo] = !filtros[tipo];
+  const allOn = filtros.high && filtros.low;
+  document.querySelectorAll('.fbtn').forEach(b => {
+    const t = b.dataset.tipo;
+    if (t === 'all') b.className = 'fbtn' + (allOn ? ' on-all' : '');
+    else b.className = 'fbtn' + (filtros[t] ? ` on-${t}` : '');
+  });
+  renderAnom();
+}
+
+function filtrarAll() {
+  const novoEstado = !(filtros.high && filtros.low);
+  filtros = { high: novoEstado, low: novoEstado };
+  document.querySelectorAll('.fbtn').forEach(b => {
+    const t = b.dataset.tipo;
+    if (t === 'all') b.className = 'fbtn' + (novoEstado ? ' on-all' : '');
+    else b.className = 'fbtn' + (filtros[t] ? ` on-${t}` : '');
+  });
+  renderAnom();
+}
+
+function filtrarCidade(cidade) {
+  cidadeFiltro = cidade;
+  document.querySelectorAll('.cfbtn').forEach(b => {
+    b.classList.toggle('active', b.dataset.cidade === cidade);
+  });
+  renderAnom();
+  renderSparks(anomalias_global);
+}
+
+function renderAnom() {
+  const visiveis = anomalias_global
+    .filter(a => filtros[a.tipo] && (cidadeFiltro === 'todas' || a.cidade === cidadeFiltro))
+    .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+
+  document.getElementById('anom-list').innerHTML = visiveis.length === 0
+    ? '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nenhuma anomalia no filtro selecionado.</p>'
+    : visiveis.map(a => {
+        const sinal = a.delta > 0 ? '+' : '';
+        return `<div class="anom-item ${a.tipo}">
+          <div class="anom-accent"></div>
+          <div class="anom-body">
+            <span class="anom-city">${a.cidade}</span>
+            <span class="anom-motivo">${a.motivo}</span>
+            <div class="anom-nums">
+              <span class="anom-atual">${a.vals[4].toFixed(1)}</span>
+              <span class="anom-delta">${sinal}${a.delta.toFixed(0)}%</span>
+              <span class="anom-avg">méd ${a.hist.toFixed(1)}</span>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+}
+
+function renderSparks(anomalias) {
+  const filtradas = cidadeFiltro === 'todas' ? anomalias : anomalias.filter(a => a.cidade === cidadeFiltro);
+  const top = [...filtradas].sort((a,b) => Math.abs(b.delta)-Math.abs(a.delta)).slice(0,8);
+  document.getElementById('spark-list').innerHTML = top.map(a => {
+    const maxV = Math.max(...a.vals, 0.1);
+    const sinal = a.delta > 0 ? '+' : '';
+    const cls = a.delta > 0 ? 'badge-up' : 'badge-down';
+    const bars = a.vals.map((v,i) => {
+      const h = Math.max(3, Math.round(v/maxV*26));
+      const isAnomalia = i === 4 && Math.abs(a.delta) > 30;
+      const cor = isAnomalia ? (a.delta > 0 ? '#f87171' : '#34d399') : MCORES[i];
+      return `<div class="spark-b" style="height:${h}px;background:${cor}" title="${MESES[i]}: ${v.toFixed(1)}"></div>`;
+    }).join('');
+    return `<div class="spark-row">
+      <span class="spark-city">${a.cidade}</span>
+      <span class="spark-motivo">${a.motivo}</span>
+      <div class="spark">${bars}</div>
+      <span class="spark-val">${a.vals[4].toFixed(1)}</span>
+      <span class="spark-badge ${cls}">${sinal}${a.delta.toFixed(0)}%</span>
+    </div>`;
+  }).join('');
+}
+
+function render(data) {
+  anomalias_global = data.anomalias;
+
+  const cidades = ['todas', ...new Set(data.anomalias.map(a => a.cidade))];
+  const cidadeBtns = cidades.map(c =>
+    `<button class="cfbtn${c==='todas'?' active':''}" data-cidade="${c}" onclick="filtrarCidade('${c}')">${c==='todas'?'Todas':c}</button>`
+  ).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <div class="header-left">
+        <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
+        <h1>Análise de Anomalias — Média de Contatos por Cidade</h1>
+        <div class="header-meta">Top 10 motivos por cidade · Gerado em ${data.gerado}</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-val" style="color:var(--danger)">${data.totalAltas + data.totalQuedas}</div>
+        <div class="header-stat-label">anomalias detectadas</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-val" style="color:var(--danger)">${data.totalAltas}</div>
+        <div class="metric-label">altas atípicas</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val" style="color:var(--success)">${data.totalQuedas}</div>
+        <div class="metric-label">quedas atípicas</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val">30%</div>
+        <div class="metric-label">limiar de anomalia</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val" style="color:var(--warning)">${data.maiorDesvio || '—'}</div>
+        <div class="metric-label">maior desvio</div>
+      </div>
+    </div>
+
+    ${data.narracao ? `
+    <div class="two" style="margin-bottom:14px">
+      <div class="card card-full">
+        <div class="card-title">Narração — AI Builder</div>
+        <div class="ia-box">
+          <div class="ia-label">Análise gerada por IA</div>
+          <div class="ia-text">${data.narracao}</div>
+        </div>
+      </div>
+    </div>` : ''}
+
+    <div class="two">
+      <div class="card card-full">
+        <div class="card-title">Filtrar por cidade</div>
+        <div class="city-filter">${cidadeBtns}</div>
+      </div>
+
+      <div class="card card-full">
+        <div class="card-title">Anomalias detectadas — cidade + motivo</div>
+        <div class="filter-row">
+          <button class="fbtn on-all" data-tipo="all" onclick="filtrarAll()">Todos</button>
+          <button class="fbtn on-high" data-tipo="high" onclick="filtrar('high')">Altas</button>
+          <button class="fbtn on-low" data-tipo="low" onclick="filtrar('low')">Quedas</button>
+        </div>
+        <div id="anom-list"></div>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px">Mês atual vs. média histórica Jan–Abr. Limiar: desvio acima de 30%.</p>
+      </div>
+
+      <div class="card card-full">
+        <div class="card-title">Evolução mensal — top anomalias com contexto de cidade</div>
+        <div id="spark-list"></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-sq" style="background:#378ADD"></span>Jan</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#BA7517"></span>Fev</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#1D9E75"></span>Mar</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#534AB7"></span>Abr</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#f87171"></span>Atual (alta)</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#34d399"></span>Atual (queda)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Abr. Calculado no Excel.</span>
+      <span class="footer-badge">AI Builder · Power Automate</span>
+    </div>`;
+
+  renderAnom();
+  renderSparks(data.anomalias);
+}
+
+fetch(JSON_URL + '?t=' + Date.now())
+  .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+  .then(txt => {
+    if (!txt || !txt.trim()) throw new Error('Arquivo vazio');
+    const data = parseAnomalia(txt);
+    if (!data.anomalias.length) throw new Error('Nenhuma anomalia encontrada — verifique o arquivo anomalias.json');
+    render(data);
+  })
+  .catch(err => {
+    document.getElementById('app').innerHTML =
+      `<div class="empty"><h2>Erro ao carregar</h2>
+       <p style="font-size:13px;margin-top:6px">${err.message}</p>
+       <p style="font-size:11px;margin-top:8px;color:var(--muted)">URL: ${JSON_URL}</p></div>`;
+  });
+</script>
+</body>
+</html>
