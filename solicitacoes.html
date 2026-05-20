@@ -17,7 +17,7 @@
   .grid-bg{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
   .container{max-width:960px;margin:0 auto;position:relative;z-index:1}
   .header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
-  .header-left img{height:72px;margin-bottom:10px;display:block;filter:brightness(0) invert(1)}
+  .header-left img{height:96px;margin-bottom:10px;display:block;filter:brightness(0) invert(1)}
   h1{font-size:18px;font-weight:500;color:#f1f5f9}
   .header-meta{font-size:12px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace}
   .header-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:right}
@@ -261,7 +261,7 @@ function render(data) {
     <div class="header">
       <div class="header-left">
         <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
-        <h1>Análise de Variação — Média de Contatos por Cidade</h1>
+        <h1>Análise de Variaçãos — Média de Contatos por Cidade</h1>
         <div class="header-meta">Top 10 motivos por cidade · Gerado em ${data.gerado}</div>
       </div>
       <div class="header-stat">
@@ -292,11 +292,8 @@ function render(data) {
     ${data.narracao ? `
     <div class="two" style="margin-bottom:14px">
       <div class="card card-full">
-        <div class="card-title">Narração — AI Builder</div>
-        <div class="ia-box">
-          <div class="ia-label">Análise gerada por IA</div>
-          <div class="ia-text">${data.narracao}</div>
-        </div>
+        <div class="ia-label">Análise gerada por IA</div>
+        <div class="ia-text" style="margin-top:8px">${data.narracao}</div>
       </div>
     </div>` : ''}
 
