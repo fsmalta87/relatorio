@@ -1,10 +1,13 @@
 ---
 NARRAÇÃO
-As maiores altas nas médias de contatos por cidade e motivo foram: Falta d'água em Lagoa Vermelha com 13,44%, Santo Ângelo 5,83%, Cidreira 5,81%, Itaqui 6,13% e Santa Rosa 5,22%. Essas variações indicam possíveis problemas operacionais relacionados ao abastecimento e distribuição de água nessas localidades, demandando atenção para evitar impactos maiores.
+🔴 MAIORES ALTAS  
+As maiores altas nas variações percentuais foram: Lagoa Vermelha com "Falta d'água" (+1.343,71%), Santo Ângelo em "Falta d'água" (+582,94%) e Itaqui também em "Falta d'água" (+612,53%). Essas cidades apresentam aumentos expressivos nos contatos relacionados à falta de água, indicando possíveis problemas emergentes nessa área.
 
-As quedas expressivas mais relevantes ocorreram em Tramandaí (Falta d'água, -90,80%), Arroio do Sal (Falta d'água, -91,35%), São Luiz Gonzaga (Falta d'água, -90,97%), Ijuí (Rota leitura, -84,44%) e Estância Velha (Falta d'água, -73,23%). Essas reduções são positivas, sugerindo melhorias no fornecimento e na gestão dos serviços, especialmente no atendimento a faltas de água.
+🟢 QUEDAS EXPRESSIVAS  
+As quedas mais significativas ocorreram em Tramandaí para "Falta d'água" (-90,80%), Arroio do Sal em "Falta d'água" (-91,35%) e Canoas em "Negociação de Débitos" (-41,33%). Essas reduções podem indicar melhorias ou menor demanda nesses serviços, mas merecem monitoramento para confirmar a tendência.
 
-As três cidades com maiores variações positivas somando todos os motivos são Lagoa Vermelha, Santo Ângelo e Itaqui, refletindo aumento geral nos contatos que pode indicar maior demanda ou desafios operacionais. Já os três assuntos com maiores variações positivas em todas as cidades são Falta d'água, Fatura Digital e Contestação e Cancelamento de Fatura, apontando áreas que merecem foco para aprimorar a experiência do cliente e a eficiência do atendimento.
+📋 PADRÃO E RECOMENDAÇÃO  
+Observa-se um padrão de aumento nos contatos relacionados a "Falta d'água" em várias cidades, enquanto os motivos financeiros como "Negociação de Débitos" e "Contestação e Cancelamento de Fatura" tendem a apresentar quedas. Recomenda-se que a equipe priorize ações para investigar e mitigar os problemas de abastecimento nas cidades com altas variações positivas em falta d'água, além de manter o acompanhamento das demandas financeiras para garantir a continuidade da redução.
 
 ---
 ANOMALIAS DETECTADAS
@@ -674,11 +677,9 @@ ANOMALIAS DETECTADAS
 {"Cidade":"SAO SEPE","Motivo":"Processos","Jan":"2.66666666666667","Fev":"2","Mar":"1.14285714285714","Abr":"1.22222222222222","Atual":"1.2","Media":"1.75793650793651","Variacao":"-0.317381489841986","Status":"🟢 QUEDA"}
 {"Cidade":"SAO SEPE","Motivo":"Atualização Cadastral","Jan":"1.46153846153846","Fev":"1.53846153846154","Mar":"1.2","Abr":"1.33333333333333","Atual":"2.11111111111111","Media":"1.38333333333333","Variacao":"0.526104417670683","Status":"🔴 ALTA"}
 {"Cidade":"BUTIA","Motivo":"Falta d'água","Jan":"38.875","Fev":"35.3076923076923","Mar":"2.73333333333333","Abr":"8.47058823529412","Atual":"2.66666666666667","Media":"21.3466534690799","Variacao":"-0.875077998969287","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"BUTIA","Motivo":"Negociação de Débitos","Jan":"7.37931034482759","Fev":"8.75","Mar":"10.3793103448276","Abr":"6.46428571428571","Atual":"6.5625","Media":"8.24322660098522","Variacao":"-0.203891835362665","Status":"🟢 QUEDA"}
 {"Cidade":"BUTIA","Motivo":"Informar Vazamento","Jan":"3.76923076923077","Fev":"4.04","Mar":"3.72","Abr":"4.34615384615385","Atual":"4.6875","Media":"3.96884615384615","Variacao":"0.181073747456149","Status":"🔴 ALTA"}
 {"Cidade":"BUTIA","Motivo":"Religação","Jan":"1.90909090909091","Fev":"4.36363636363636","Mar":"3.94736842105263","Abr":"2.33333333333333","Atual":"2","Media":"3.13835725677831","Variacao":"-0.36272392326261","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"BUTIA","Motivo":"Troca de Titularidade","Jan":"1.4","Fev":"2.76470588235294","Mar":"1.875","Abr":"1.4","Atual":"2.5","Media":"1.85992647058824","Variacao":"0.344139157936351","Status":"🔴 ALTA"}
 {"Cidade":"BUTIA","Motivo":"Contestação e Cancelamento de Fatura","Jan":"2.06666666666667","Fev":"2.26666666666667","Mar":"1.76470588235294","Abr":"1.5","Atual":"1.5","Media":"1.89950980392157","Variacao":"-0.210322580645161","Status":"🟢 QUEDA"}
 {"Cidade":"BUTIA","Motivo":"Processos","Jan":"3.5","Fev":"1.5","Mar":"1.25","Abr":"1","Atual":"3","Media":"1.8125","Variacao":"0.655172413793103","Status":"🔴 ALTA"}
@@ -686,14 +687,10 @@ ANOMALIAS DETECTADAS
 {"Cidade":"BUTIA","Motivo":"Corte","Jan":"1.46153846153846","Fev":"1.36363636363636","Mar":"1.3125","Abr":"1.18181818181818","Atual":"2","Media":"1.32987325174825","Variacao":"0.503902719579328","Status":"🔴 ALTA"}
 {"Cidade":"BUTIA","Motivo":"Calendário de Leitura","Jan":"1.5","Fev":"1","Mar":"1.2","Abr":"1","Atual":"2","Media":"1.175","Variacao":"0.702127659574468","Status":"🔴 ALTA"}
 {"Cidade":"ARROIO DOS RATOS","Motivo":"2ª Via de Fatura","Jan":"21.0967741935484","Fev":"26.9642857142857","Mar":"28.4838709677419","Abr":"27.0666666666667","Atual":"30.3157894736842","Media":"25.9028993855607","Variacao":"0.170362785356123","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"ARROIO DOS RATOS","Motivo":"Demonstrativo de Débitos","Jan":"12.36","Fev":"11.75","Mar":"12.2903225806452","Abr":"14.5333333333333","Atual":"15.9444444444444","Media":"12.7334139784946","Variacao":"0.252173570369495","Status":"🔴 ALTA"}
 {"Cidade":"ARROIO DOS RATOS","Motivo":"Falta d'água","Jan":"5.07692307692308","Fev":"2.875","Mar":"9.625","Abr":"10","Atual":"8.33333333333333","Media":"6.89423076923077","Variacao":"0.208740120874012","Status":"🔴 ALTA"}
 {"Cidade":"ARROIO DOS RATOS","Motivo":"Religação","Jan":"2.94736842105263","Fev":"3.66666666666667","Mar":"4.28","Abr":"3.29166666666667","Atual":"2.44444444444444","Media":"3.54642543859649","Variacao":"-0.310730061362339","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"ARROIO DOS RATOS","Motivo":"Contestação e Cancelamento de Fatura","Jan":"2.80952380952381","Fev":"2.25","Mar":"1.66666666666667","Abr":"1.53846153846154","Atual":"1.25","Media":"2.066163003663","Variacao":"-0.395013850415512","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"ARROIO DOS RATOS","Motivo":"Atualização Cadastral","Jan":"1.53333333333333","Fev":"1.44444444444444","Mar":"1.22222222222222","Abr":"1.94117647058824","Atual":"1.77777777777778","Media":"1.53529411764706","Variacao":"0.157939548744146","Status":"🔴 ALTA"}
 {"Cidade":"ARROIO DOS RATOS","Motivo":"Processos","Jan":"1","Fev":"1.5","Mar":"1.4","Abr":"1.4","Atual":"1.8","Media":"1.325","Variacao":"0.358490566037736","Status":"🔴 ALTA"}
 {"Cidade":"NAO-ME-TOQUE","Motivo":"2ª Via de Fatura","Jan":"19.1290322580645","Fev":"21.7857142857143","Mar":"43.5483870967742","Abr":"39.9","Atual":"39.6111111111111","Media":"31.0907834101383","Variacao":"0.27404673560572","Status":"🔴 ALTA"}
@@ -709,117 +706,78 @@ ANOMALIAS DETECTADAS
 {"Cidade":"NAO-ME-TOQUE","Motivo":"Fatura Digital","Jan":"1","Fev":"1","Mar":"1.125","Abr":"1.75","Atual":"2","Media":"1.21875","Variacao":"0.641025641025641","Status":"🔴 ALTA"}
 {"Cidade":"NAO-ME-TOQUE","Motivo":"Consumo Final","Jan":"1","Fev":"1.58333333333333","Mar":"1","Abr":"1.14285714285714","Atual":"2","Media":"1.18154761904762","Variacao":"0.692695214105793","Status":"🔴 ALTA"}
 {"Cidade":"NAO-ME-TOQUE","Motivo":"Serviços manutenção","Jan":"1.5","Fev":"1","Mar":"1.1","Abr":"1.28571428571429","Atual":"2","Media":"1.22142857142857","Variacao":"0.637426900584795","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Negociação de Débitos","Jan":"5.1304347826087","Fev":"9.42857142857143","Mar":"6.89655172413793","Abr":"15.8333333333333","Atual":"17.0769230769231","Media":"9.32222281716285","Variacao":"0.831850987887062","Status":"🔴 ALTA"}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Religação","Jan":"4","Fev":"3.28571428571429","Mar":"2.4375","Abr":"6","Atual":"7","Media":"3.93080357142857","Variacao":"0.780806360022715","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Fatura Digital","Jan":"1","Fev":"1","Mar":"1","Abr":"1.22222222222222","Atual":"6.83333333333333","Media":"1.05555555555556","Variacao":"5.47368421052632","Status":"🔴 ALTA"}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Troca de Titularidade","Jan":"2","Fev":"2.125","Mar":"1.94736842105263","Abr":"3.07692307692308","Atual":"2.66666666666667","Media":"2.28732287449393","Variacao":"0.165846193557903","Status":"🔴 ALTA"}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Contestação e Cancelamento de Fatura","Jan":"2.11111111111111","Fev":"2","Mar":"2.05882352941176","Abr":"1.33333333333333","Atual":"1","Media":"1.87581699346405","Variacao":"-0.466898954703833","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Fatura não entregue","Jan":"","Fev":"3","Mar":"2","Abr":"1.16666666666667","Atual":"1.6","Media":"2.05555555555556","Variacao":"-0.221621621621622","Status":"🟢 QUEDA"}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Consumo Elevado","Jan":"1.4","Fev":"1.42857142857143","Mar":"1","Abr":"2","Atual":"2.14285714285714","Media":"1.45714285714286","Variacao":"0.470588235294118","Status":"🔴 ALTA"}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Confirmação de leitura","Jan":"","Fev":"1","Mar":"","Abr":"1","Atual":"2","Media":"1","Variacao":"1","Status":"🔴 ALTA"}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Débito Automático","Jan":"1","Fev":"1","Mar":"1","Abr":"1","Atual":"1.71428571428571","Media":"1","Variacao":"0.714285714285714","Status":"🔴 ALTA"}
 {"Cidade":"JULIO DE CASTILHOS","Motivo":"Ligação nova","Jan":"1","Fev":"1.28571428571429","Mar":"1","Abr":"1.375","Atual":"2","Media":"1.16517857142857","Variacao":"0.716475095785441","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"SAO MARCOS","Motivo":"Falta d'água","Jan":"3.57142857142857","Fev":"8.1875","Mar":"19.9583333333333","Abr":"1.77777777777778","Atual":"2","Media":"8.37375992063492","Variacao":"-0.761158664810591","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"SAO MARCOS","Motivo":"Informar Vazamento","Jan":"3.10714285714286","Fev":"3.04166666666667","Mar":"2.96296296296296","Abr":"3.11111111111111","Atual":"2.09090909090909","Media":"3.0557208994709","Variacao":"-0.315739506421829","Status":"🟢 QUEDA"}
 {"Cidade":"SAO MARCOS","Motivo":"Contestação e Cancelamento de Fatura","Jan":"2.95454545454545","Fev":"2.57894736842105","Mar":"1.54545454545455","Abr":"1.125","Atual":"1.5","Media":"2.05098684210526","Variacao":"-0.268644747393745","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"SAO MARCOS","Motivo":"Processos","Jan":"1","Fev":"2.5","Mar":"","Abr":"","Atual":"","Media":"1.75","Variacao":"-1","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"SAO MARCOS","Motivo":"Consumo Final","Jan":"1.57142857142857","Fev":"1.33333333333333","Mar":"2","Abr":"1.28571428571429","Atual":"1","Media":"1.54761904761905","Variacao":"-0.353846153846154","Status":"🟢 QUEDA"}
 {"Cidade":"SAO MARCOS","Motivo":"Ligação nova","Jan":"1.25","Fev":"1.6","Mar":"1.33333333333333","Abr":"1.66666666666667","Atual":"1","Media":"1.4625","Variacao":"-0.316239316239316","Status":"🟢 QUEDA"}
 {"Cidade":"SAO MARCOS","Motivo":"Outros Serviços Financeiros","Jan":"1","Fev":"1","Mar":"1.25","Abr":"2","Atual":"1.66666666666667","Media":"1.3125","Variacao":"0.26984126984127","Status":"🔴 ALTA"}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"2ª Via de Fatura","Jan":"11.8387096774194","Fev":"20.5714285714286","Mar":"30.7096774193548","Abr":"30.3","Atual":"27.3888888888889","Media":"23.3549539170507","Variacao":"0.172722882955173","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Fatura não entregue","Jan":"","Fev":"","Mar":"21.8571428571429","Abr":"4.3","Atual":"5","Media":"13.0785714285714","Variacao":"-0.617695248498089","Status":"🟢 QUEDA"}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Demonstrativo de Débitos","Jan":"6.45833333333333","Fev":"8.33333333333333","Mar":"11.7741935483871","Abr":"16.3666666666667","Atual":"13.4444444444444","Media":"10.7331317204301","Variacao":"0.252611520536309","Status":"🔴 ALTA"}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Falta d'água","Jan":"2","Fev":"4.14285714285714","Mar":"2.66666666666667","Abr":"1.16666666666667","Atual":"6.6","Media":"2.49404761904762","Variacao":"1.64630071599045","Status":"🔴 ALTA"}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Troca de Titularidade","Jan":"2.66666666666667","Fev":"2.375","Mar":"3.5","Abr":"3.22222222222222","Atual":"2.36363636363636","Media":"2.94097222222222","Variacao":"-0.196307824406998","Status":"🟢 QUEDA"}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Atualização Cadastral","Jan":"1.36363636363636","Fev":"1.90909090909091","Mar":"2.0625","Abr":"5.38095238095238","Atual":"1","Media":"2.67904491341991","Variacao":"-0.626732648269245","Status":"🟢 QUEDA"}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Informar Vazamento","Jan":"2.53846153846154","Fev":"2.7","Mar":"2.31578947368421","Abr":"2.22222222222222","Atual":"1.66666666666667","Media":"2.44411830859199","Variacao":"-0.318090838398572","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Contestação e Cancelamento de Fatura","Jan":"1.22222222222222","Fev":"1.86666666666667","Mar":"2.52380952380952","Abr":"1.71428571428571","Atual":"1.2","Media":"1.83174603174603","Variacao":"-0.344887348353553","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Consultar Status da Solicitação","Jan":"1","Fev":"1.33333333333333","Mar":"1.25","Abr":"1.71428571428571","Atual":"2","Media":"1.32440476190476","Variacao":"0.510112359550562","Status":"🔴 ALTA"}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Serviços manutenção","Jan":"1","Fev":"1","Mar":"1.33333333333333","Abr":"1.25","Atual":"2","Media":"1.14583333333333","Variacao":"0.745454545454546","Status":"🔴 ALTA"}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Substituição de Hidrômetro","Jan":"1","Fev":"1","Mar":"1","Abr":"1","Atual":"1.66666666666667","Media":"1","Variacao":"0.666666666666667","Status":"🔴 ALTA"}
 {"Cidade":"SAO PEDRO DO SUL","Motivo":"Outros Serviços Financeiros","Jan":"1","Fev":"1","Mar":"1.14285714285714","Abr":"1.2","Atual":"2","Media":"1.08571428571429","Variacao":"0.842105263157895","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"NOVA PETROPOLIS","Motivo":"Demonstrativo de Débitos","Jan":"8.92592592592593","Fev":"9.96428571428571","Mar":"11.0322580645161","Abr":"11.4666666666667","Atual":"13","Media":"10.3472840928486","Variacao":"0.25636832654327","Status":"🔴 ALTA"}
 {"Cidade":"NOVA PETROPOLIS","Motivo":"Falta d'água","Jan":"14.3888888888889","Fev":"2.47058823529412","Mar":"5.64","Abr":"2.55555555555556","Atual":"2.33333333333333","Media":"6.26375816993464","Variacao":"-0.627486682909778","Status":"🟢 QUEDA"}
 {"Cidade":"NOVA PETROPOLIS","Motivo":"Negociação de Débitos","Jan":"4.09523809523809","Fev":"2.05263157894737","Mar":"2.04545454545455","Abr":"5.38888888888889","Atual":"7.07692307692308","Media":"3.39555327713222","Variacao":"1.0841737706145","Status":"🔴 ALTA"}
 {"Cidade":"NOVA PETROPOLIS","Motivo":"Contestação e Cancelamento de Fatura","Jan":"2.73684210526316","Fev":"4.13636363636364","Mar":"1.94444444444444","Abr":"1.9","Atual":"1.2","Media":"2.67941254651781","Variacao":"-0.552140635618232","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"NOVA PETROPOLIS","Motivo":"Religação","Jan":"1.41176470588235","Fev":"2.06666666666667","Mar":"1.85","Abr":"1.71428571428571","Atual":"1.2","Media":"1.76067927170868","Variacao":"-0.31844486427364","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"NOVA PETROPOLIS","Motivo":"Certidão Negativa Débitos","Jan":"1","Fev":"2","Mar":"1","Abr":"1.5","Atual":"","Media":"1.375","Variacao":"-1","Status":"🟢 QUEDA"}
 {"Cidade":"NOVA PETROPOLIS","Motivo":"Informar Pagamento","Jan":"1.75","Fev":"1.42857142857143","Mar":"1.6","Abr":"1","Atual":"","Media":"1.44464285714286","Variacao":"-1","Status":"🟢 QUEDA"}
 {"Cidade":"NOVA PETROPOLIS","Motivo":"Atualização Cadastral","Jan":"1.81818181818182","Fev":"1.30769230769231","Mar":"1.58333333333333","Abr":"1.26666666666667","Atual":"2","Media":"1.49396853146853","Variacao":"0.338716283424024","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"NOVA PETROPOLIS","Motivo":"Débito Automático","Jan":"1","Fev":"1","Mar":"1.33333333333333","Abr":"1.2","Atual":"1.8","Media":"1.13333333333333","Variacao":"0.588235294117647","Status":"🔴 ALTA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"2ª Via de Fatura","Jan":"13.6774193548387","Fev":"27.5","Mar":"49.6774193548387","Abr":"24.7","Atual":"19.6111111111111","Media":"28.8887096774194","Variacao":"-0.321149634923294","Status":"🟢 QUEDA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Demonstrativo de Débitos","Jan":"4.95833333333333","Fev":"13.1785714285714","Mar":"22.5806451612903","Abr":"14.8333333333333","Atual":"9","Media":"13.8877208141321","Variacao":"-0.35194549772043","Status":"🟢 QUEDA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Rota leitura","Jan":"","Fev":"21","Mar":"12.8461538461538","Abr":"5.6","Atual":"1.5","Media":"13.1487179487179","Variacao":"-0.885920436817473","Status":"🟢 QUEDA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Contestação e Cancelamento de Fatura","Jan":"1.93333333333333","Fev":"1.66666666666667","Mar":"3.9375","Abr":"21.3","Atual":"14.7","Media":"7.209375","Variacao":"1.03901170351105","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Informações","Jan":"1","Fev":"","Mar":"4.83333333333333","Abr":"","Atual":"","Media":"2.91666666666667","Variacao":"-1","Status":"🟢 QUEDA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Falta d'água","Jan":"2","Fev":"2.25","Mar":"3.5","Abr":"4.6","Atual":"","Media":"3.0875","Variacao":"-1","Status":"🟢 QUEDA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Confirmação de leitura","Jan":"1","Fev":"3.16666666666667","Mar":"5.42857142857143","Abr":"1.88888888888889","Atual":"2.4","Media":"2.87103174603175","Variacao":"-0.164063579820318","Status":"🟢 QUEDA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Fatura não entregue","Jan":"","Fev":"","Mar":"1","Abr":"2.16666666666667","Atual":"3.71428571428571","Media":"1.58333333333333","Variacao":"1.34586466165414","Status":"🔴 ALTA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Troca de Titularidade","Jan":"1.71428571428571","Fev":"2.23076923076923","Mar":"2.1875","Abr":"2.54545454545455","Atual":"3.8","Media":"2.16950237262737","Variacao":"0.751553742436343","Status":"🔴 ALTA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Irregularidade","Jan":"","Fev":"1","Mar":"1","Abr":"1","Atual":"2.85714285714286","Media":"1","Variacao":"1.85714285714286","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Informar Vazamento","Jan":"2.04761904761905","Fev":"2.2","Mar":"1.68421052631579","Abr":"2.25","Atual":"1.625","Media":"2.04545739348371","Variacao":"-0.205556661714478","Status":"🟢 QUEDA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Ação Social","Jan":"1","Fev":"1.9","Mar":"1.625","Abr":"1.33333333333333","Atual":"2.25","Media":"1.46458333333333","Variacao":"0.536273115220484","Status":"🔴 ALTA"}
 {"Cidade":"SANTA BARBARA DO SUL","Motivo":"Outros Serviços Financeiros","Jan":"1","Fev":"1","Mar":"1","Abr":"1","Atual":"3","Media":"1","Variacao":"2","Status":"🔴 ALTA"}
 {"Cidade":"ENCRUZILHADA DO SUL","Motivo":"2ª Via de Fatura","Jan":"16.7741935483871","Fev":"28.8571428571429","Mar":"25","Abr":"27.1666666666667","Atual":"32.2222222222222","Media":"24.4495007680492","Variacao":"0.317909209186411","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"ENCRUZILHADA DO SUL","Motivo":"Negociação de Débitos","Jan":"6.22222222222222","Fev":"8.68","Mar":"8.25","Abr":"9.6","Atual":"17.9285714285714","Media":"8.18805555555556","Variacao":"1.18960060870703","Status":"🔴 ALTA"}
 {"Cidade":"ENCRUZILHADA DO SUL","Motivo":"Falta d'água","Jan":"3.22222222222222","Fev":"22.3","Mar":"2.25","Abr":"4.33333333333333","Atual":"4.28571428571429","Media":"8.02638888888889","Variacao":"-0.466047017526512","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"ENCRUZILHADA DO SUL","Motivo":"Religação","Jan":"1.85714285714286","Fev":"2.86666666666667","Mar":"1.83333333333333","Abr":"1.83333333333333","Atual":"1","Media":"2.09761904761905","Variacao":"-0.523269012485812","Status":"🟢 QUEDA"}
 {"Cidade":"ENCRUZILHADA DO SUL","Motivo":"Rota leitura","Jan":"","Fev":"","Mar":"1.90909090909091","Abr":"1.5","Atual":"1","Media":"1.70454545454545","Variacao":"-0.413333333333333","Status":"🟢 QUEDA"}
 {"Cidade":"ENCRUZILHADA DO SUL","Motivo":"Informar Pagamento","Jan":"1.8","Fev":"1.58333333333333","Mar":"1.33333333333333","Abr":"1.16666666666667","Atual":"2.5","Media":"1.47083333333333","Variacao":"0.69971671388102","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"ENCRUZILHADA DO SUL","Motivo":"Ligação nova","Jan":"1.375","Fev":"1.5","Mar":"1.25","Abr":"1","Atual":"2","Media":"1.28125","Variacao":"0.560975609756098","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"TRES PASSOS","Motivo":"Demonstrativo de Débitos","Jan":"10.8333333333333","Fev":"12.8928571428571","Mar":"12.9032258064516","Abr":"12.6666666666667","Atual":"15.2105263157895","Media":"12.3240207373272","Variacao":"0.234217844969994","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"TRES PASSOS","Motivo":"Informar Vazamento","Jan":"2.88","Fev":"3.04545454545455","Mar":"3.20689655172414","Abr":"2.44444444444444","Atual":"3.375","Media":"2.89419888540578","Variacao":"0.166125803246865","Status":"🔴 ALTA"}
 {"Cidade":"TRES PASSOS","Motivo":"Religação","Jan":"2.5625","Fev":"2.5","Mar":"2.35714285714286","Abr":"1.85714285714286","Atual":"1.66666666666667","Media":"2.31919642857143","Variacao":"-0.281360282322746","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"TRES PASSOS","Motivo":"Contestação e Cancelamento de Fatura","Jan":"2.89473684210526","Fev":"2.41176470588235","Mar":"1.68421052631579","Abr":"1.66666666666667","Atual":"1.83333333333333","Media":"2.16434468524252","Variacao":"-0.152938371677196","Status":"🟢 QUEDA"}
 {"Cidade":"TRES PASSOS","Motivo":"Corte","Jan":"1.625","Fev":"1.66666666666667","Mar":"2","Abr":"1.75","Atual":"1.16666666666667","Media":"1.76041666666667","Variacao":"-0.337278106508876","Status":"🟢 QUEDA"}
 {"Cidade":"TRES PASSOS","Motivo":"Fatura não entregue","Jan":"","Fev":"1","Mar":"1.36363636363636","Abr":"2","Atual":"","Media":"1.45454545454545","Variacao":"-1","Status":"🟢 QUEDA"}
 {"Cidade":"TRES PASSOS","Motivo":"Processos","Jan":"1","Fev":"1.66666666666667","Mar":"1.75","Abr":"1.25","Atual":"","Media":"1.41666666666667","Variacao":"-1","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"VERANOPOLIS","Motivo":"Falta d'água","Jan":"3","Fev":"18.1764705882353","Mar":"21.1","Abr":"14.5454545454545","Atual":"3.5","Media":"14.2054812834225","Variacao":"-0.75361623234234","Status":"🟢 QUEDA"}
 {"Cidade":"VERANOPOLIS","Motivo":"Negociação de Débitos","Jan":"27.125","Fev":"11.6086956521739","Mar":"8.5","Abr":"8.66666666666667","Atual":"3.09090909090909","Media":"13.9750905797101","Variacao":"-0.778827258880407","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"VERANOPOLIS","Motivo":"Fatura não entregue","Jan":"","Fev":"","Mar":"2.11111111111111","Abr":"2.25","Atual":"1","Media":"2.18055555555556","Variacao":"-0.54140127388535","Status":"🟢 QUEDA"}
 {"Cidade":"VERANOPOLIS","Motivo":"Contestação e Cancelamento de Fatura","Jan":"3","Fev":"2.21052631578947","Mar":"1.72222222222222","Abr":"1.46666666666667","Atual":"1.375","Media":"2.09985380116959","Variacao":"-0.345192508528859","Status":"🟢 QUEDA"}
 {"Cidade":"VERANOPOLIS","Motivo":"Atualização Cadastral","Jan":"2.76190476190476","Fev":"2.05882352941176","Mar":"1.4375","Abr":"2","Atual":"1.25","Media":"2.06455707282913","Variacao":"-0.394543257509911","Status":"🟢 QUEDA"}
 {"Cidade":"VERANOPOLIS","Motivo":"Religação","Jan":"1.94444444444444","Fev":"2.30769230769231","Mar":"1.73333333333333","Abr":"2.2","Atual":"3.5","Media":"2.04636752136752","Variacao":"0.710347708050537","Status":"🔴 ALTA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"VERANOPOLIS","Motivo":"Informar Pagamento","Jan":"1.33333333333333","Fev":"1.14285714285714","Mar":"2.1","Abr":"1.46153846153846","Atual":"1.25","Media":"1.50943223443223","Variacao":"-0.171874052053631","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"VERANOPOLIS","Motivo":"Ligação nova","Jan":"1","Fev":"1","Mar":"1","Abr":"1","Atual":"1.5","Media":"1","Variacao":"0.5","Status":"🔴 ALTA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"2ª Via de Fatura","Jan":"21.6333333333333","Fev":"22.1428571428571","Mar":"21.0967741935484","Abr":"19.7666666666667","Atual":"34.7777777777778","Media":"21.1599078341014","Variacao":"0.643569435672578","Status":"🔴 ALTA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Falta d'água","Jan":"5.86363636363636","Fev":"18.24","Mar":"7.03846153846154","Abr":"11.5652173913043","Atual":"8.85714285714286","Media":"10.6768288233506","Variacao":"-0.17043318726137","Status":"🟢 QUEDA"}
@@ -829,13 +787,11 @@ ANOMALIAS DETECTADAS
 {"Cidade":"CARLOS BARBOSA","Motivo":"Consultar Status da Solicitação","Jan":"2.26666666666667","Fev":"2.27777777777778","Mar":"1.33333333333333","Abr":"1.33333333333333","Atual":"1","Media":"1.80277777777778","Variacao":"-0.445300462249615","Status":"🟢 QUEDA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Fatura não entregue","Jan":"","Fev":"","Mar":"1.66666666666667","Abr":"","Atual":"","Media":"1.66666666666667","Variacao":"-1","Status":"🟢 QUEDA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Processos","Jan":"1.25","Fev":"1.4","Mar":"1","Abr":"2.1","Atual":"1","Media":"1.4375","Variacao":"-0.304347826086957","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Atualização Cadastral","Jan":"1.46153846153846","Fev":"1.5","Mar":"2.09090909090909","Abr":"1.75","Atual":"1.36363636363636","Media":"1.70061188811189","Variacao":"-0.198149575944487","Status":"🟢 QUEDA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Consumo Elevado","Jan":"1","Fev":"2.5","Mar":"1.75","Abr":"2","Atual":"1","Media":"1.8125","Variacao":"-0.448275862068966","Status":"🟢 QUEDA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Religação","Jan":"1.81818181818182","Fev":"1.66666666666667","Mar":"1.46153846153846","Abr":"1.46153846153846","Atual":"1","Media":"1.60198135198135","Variacao":"-0.375773008366679","Status":"🟢 QUEDA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Contestação e Cancelamento de Fatura","Jan":"1.9","Fev":"1.64705882352941","Mar":"1.26666666666667","Abr":"1.18181818181818","Atual":"1","Media":"1.49888591800356","Variacao":"-0.332837817749368","Status":"🟢 QUEDA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Confirmação de leitura","Jan":"","Fev":"1","Mar":"1.66666666666667","Abr":"","Atual":"1","Media":"1.33333333333333","Variacao":"-0.25","Status":"🟢 QUEDA"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":""}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Ligação nova","Jan":"1.2","Fev":"1.6","Mar":"1.33333333333333","Abr":"1","Atual":"1.77777777777778","Media":"1.28333333333333","Variacao":"0.385281385281385","Status":"🔴 ALTA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Outros","Jan":"1","Fev":"1.5","Mar":"1.375","Abr":"1","Atual":"1","Media":"1.21875","Variacao":"-0.179487179487179","Status":"🟢 QUEDA"}
 {"Cidade":"CARLOS BARBOSA","Motivo":"Motivos Gerais e Improdutivos","Jan":"1.33333333333333","Fev":"1.66666666666667","Mar":"1.08333333333333","Abr":"1","Atual":"1","Media":"1.27083333333333","Variacao":"-0.213114754098361","Status":"🟢 QUEDA"}
