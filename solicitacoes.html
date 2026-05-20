@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Variaçãos — Contatos por Cidade</title>
+<title>Variação — Contatos por Cidade</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -71,9 +71,22 @@
   .footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600}
   .empty{text-align:center;padding:48px 20px;color:var(--muted)}
   .empty h2{font-size:16px;color:#f1f5f9;margin-bottom:8px}
-  .city-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-  .cfbtn{font-size:11px;padding:3px 10px;border:0.5px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer}
-  .cfbtn.active{background:rgba(56,189,248,.1);color:var(--accent);border-color:rgba(56,189,248,.3)}
+  .city-filter{position:relative;margin-bottom:12px}
+  .city-select-wrap{position:relative;display:flex;align-items:center;gap:8px}
+  .city-search{flex:1;background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;cursor:pointer}
+  .city-search:focus{border-color:var(--accent)}
+  .city-search::placeholder{color:var(--muted)}
+  .city-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:0.5px solid var(--border);border-radius:8px;max-height:220px;overflow-y:auto;z-index:100;display:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  .city-dropdown.open{display:block}
+  .city-opt{padding:8px 14px;font-size:13px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px}
+  .city-opt:hover{background:var(--surface2)}
+  .city-opt.selected{color:var(--accent)}
+  .city-opt.selected::before{content:'✓';font-size:11px;color:var(--accent)}
+  .city-opt:not(.selected)::before{content:'';display:inline-block;width:11px}
+  .city-clear{font-size:12px;padding:6px 12px;border:0.5px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .city-clear:hover{color:var(--text)}
+  .city-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;background:rgba(56,189,248,.1);border:0.5px solid rgba(56,189,248,.3);border-radius:4px;color:var(--accent);margin-top:6px;margin-right:4px}
+  .city-tag button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;line-height:1;padding:0}
 </style>
 </head>
 <body>
@@ -210,12 +223,36 @@ function filtrarAll() {
 
 function filtrarCidade(cidade) {
   cidadeFiltro = cidade;
-  document.querySelectorAll('.cfbtn').forEach(b => {
-    b.classList.toggle('active', b.dataset.cidade === cidade);
-  });
   renderAnom();
   renderSparks(variaçãos_global);
 }
+function selecionarCidade(cidade, el) {
+  cidadeFiltro = cidade;
+  document.querySelectorAll('.city-opt').forEach(o => o.classList.remove('selected'));
+  if (el) el.classList.add('selected');
+  const search = document.getElementById('citySearch');
+  if (search) search.value = cidade === 'todas' ? '' : cidade;
+  fecharDropdown(); atualizarTag();
+  renderAnom(); renderSparks(variaçãos_global);
+}
+function toggleDropdown() { const dd=document.getElementById('cityDropdown'); if(dd) dd.classList.toggle('open'); }
+function fecharDropdown() { const dd=document.getElementById('cityDropdown'); if(dd) dd.classList.remove('open'); }
+function filterDropdown(val) {
+  const dd=document.getElementById('cityDropdown'); if(dd) dd.classList.add('open');
+  document.querySelectorAll('.city-opt').forEach(o => {
+    o.style.display=(o.dataset.cidade==='todas'||o.dataset.cidade.toLowerCase().includes(val.toLowerCase()))?'':'none';
+  });
+}
+function limparCidade() {
+  selecionarCidade('todas', document.querySelector('.city-opt[data-cidade="todas"]'));
+  const s=document.getElementById('citySearch'); if(s) s.value='';
+  document.querySelectorAll('.city-opt').forEach(o => o.style.display='');
+}
+function atualizarTag() {
+  const t=document.getElementById('cityTags'); if(!t) return;
+  t.innerHTML = cidadeFiltro==='todas' ? '' : `<span class="city-tag">${cidadeFiltro}<button onclick="limparCidade()">×</button></span>`;
+}
+document.addEventListener('click', e => { if(!e.target.closest('.city-filter')) fecharDropdown(); });
 
 function renderAnom() {
   const visiveis = variaçãos_global
@@ -267,10 +304,10 @@ function renderSparks(variaçãos) {
 function render(data) {
   variaçãos_global = data.variaçãos;
 
-  const cidades = ['todas', ...new Set(data.variaçãos.map(a => a.cidade))];
-  const cidadeBtns = cidades.map(c =>
-    `<button class="cfbtn${c==='todas'?' active':''}" data-cidade="${c}" onclick="filtrarCidade('${c}')">${c==='todas'?'Todas':c}</button>`
-  ).join('');
+  const cidades = [...new Set(data.anomalias.map(a => a.cidade))].sort();
+  const cidadeOpts = ['<div class="city-opt selected" data-cidade="todas" onclick="selecionarCidade('todas', this)"><span>Todas as cidades</span></div>',
+    ...cidades.map(c => `<div class="city-opt" data-cidade="${c}" onclick="selecionarCidade('${c}', this)">${c}</div>`)
+  ].join('');
 
   document.getElementById('app').innerHTML = `
     <div class="header">
@@ -315,7 +352,18 @@ function render(data) {
     <div class="two">
       <div class="card card-full">
         <div class="card-title">Filtrar por cidade</div>
-        <div class="city-filter">${cidadeBtns}</div>
+        <div class="city-filter">
+          <div class="city-select-wrap">
+            <input type="text" class="city-search" id="citySearch"
+              placeholder="Buscar cidade..."
+              autocomplete="off"
+              onclick="toggleDropdown()"
+              oninput="filterDropdown(this.value)">
+            <button class="city-clear" onclick="limparCidade()">Limpar</button>
+            <div class="city-dropdown" id="cityDropdown">${cidadeOpts}</div>
+          </div>
+          <div id="cityTags"></div>
+        </div>
       </div>
 
       <div class="card card-full">
@@ -345,7 +393,7 @@ function render(data) {
 
     <div class="footer">
       <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Abr. Calculado no Excel.</span>
-      <span class="footer-badge">Corsan · Experiência do Cliente</span>
+      <span class="footer-badge">AI Builder · Power Automate</span>
     </div>`;
 
   renderAnom();
