@@ -88,7 +88,12 @@ const MESES  = ['Jan','Fev','Mar','Abr','Atual'];
 
 function parseNum(s) {
   if (!s || s.trim() === '') return 0;
-  return parseFloat(s.trim().replace(/\./g,'').replace(',','.')) || 0;
+  return parseFloat(s.trim()) || 0;
+}
+
+function fmt(n) {
+  if (!n && n !== 0) return '—';
+  return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function parseAnomalia(txt) {
@@ -146,7 +151,7 @@ function parseAnomalia(txt) {
     if (Math.abs(delta) > maiorAbs) {
       maiorAbs = Math.abs(delta);
       const sinal = delta > 0 ? '+' : '';
-      data.maiorDesvio = `${sinal}${delta.toFixed(0)}%`;
+      data.maiorDesvio = `${sinal}${Math.round(delta * 100)}%`;
     }
 
     const avgVals = [jan,fev,mar,abr].filter(v=>v>0);
@@ -212,9 +217,9 @@ function renderAnom() {
             <span class="anom-city">${a.cidade}</span>
             <span class="anom-motivo">${a.motivo}</span>
             <div class="anom-nums">
-              <span class="anom-atual">${a.vals[4].toFixed(1)}</span>
-              <span class="anom-delta">${sinal}${a.delta.toFixed(0)}%</span>
-              <span class="anom-avg">méd ${a.hist.toFixed(1)}</span>
+              <span class="anom-atual">${fmt(a.vals[4])}</span>
+              <span class="anom-delta">${sinal}${Math.round(a.delta * 100)}%</span>
+              <span class="anom-avg">méd ${fmt(a.hist)}</span>
             </div>
           </div>
         </div>`;
@@ -232,14 +237,14 @@ function renderSparks(anomalias) {
       const h = Math.max(3, Math.round(v/maxV*26));
       const isAnomalia = i === 4 && Math.abs(a.delta) > 30;
       const cor = isAnomalia ? (a.delta > 0 ? '#f87171' : '#34d399') : MCORES[i];
-      return `<div class="spark-b" style="height:${h}px;background:${cor}" title="${MESES[i]}: ${v.toFixed(1)}"></div>`;
+      return `<div class="spark-b" style="height:${h}px;background:${cor}" title="${MESES[i]}: ${fmt(v)}"></div>`;
     }).join('');
     return `<div class="spark-row">
       <span class="spark-city">${a.cidade}</span>
       <span class="spark-motivo">${a.motivo}</span>
       <div class="spark">${bars}</div>
-      <span class="spark-val">${a.vals[4].toFixed(1)}</span>
-      <span class="spark-badge ${cls}">${sinal}${a.delta.toFixed(0)}%</span>
+      <span class="spark-val">${fmt(a.vals[4])}</span>
+      <span class="spark-badge ${cls}">${sinal}${Math.round(a.delta * 100)}%</span>
     </div>`;
   }).join('');
 }
@@ -351,5 +356,4 @@ fetch(JSON_URL + '?t=' + Date.now())
   });
 </script>
 </body>
-  
 </html>
