@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Variaçãos — Contatos por Cidade</title>
+<title>Variações — Contatos por Cidade</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -113,7 +113,7 @@ function parseVariação(txt) {
   const data = {
     gerado: new Date().toLocaleString('pt-BR'),
     totalAltas: 0, totalQuedas: 0, maiorDesvio: '',
-    narracao: '', variaçãos: []
+    narracao: '', anomalias: []
   };
   const linhas = txt.split('\n');
   let section = 'dados';
@@ -278,8 +278,8 @@ function renderAnom() {
       }).join('');
 }
 
-function renderSparks(variaçãos) {
-  const filtradas = cidadeFiltro === 'todas' ? variaçãos : variaçãos.filter(a => a.cidade === cidadeFiltro);
+function renderSparks(variações) {
+  const filtradas = cidadeFiltro === 'todas' ? variações : variações.filter(a => a.cidade === cidadeFiltro);
   const top = [...filtradas].sort((a,b) => Math.abs(b.delta)-Math.abs(a.delta)).slice(0,8);
   document.getElementById('spark-list').innerHTML = top.map(a => {
     const maxV = Math.max(...a.vals, 0.1);
@@ -314,7 +314,7 @@ function render(data) {
     <div class="header">
       <div class="header-left">
         <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
-        <h1>Análise de Variação — Média de Contatos por Cidade</h1>
+        <h1>Análise de Variações — Média de Contatos por Cidade</h1>
         <div class="header-meta">Top 10 motivos por cidade · Gerado em ${data.gerado}</div>
       </div>
       <div class="header-stat">
@@ -333,7 +333,7 @@ function render(data) {
         <div class="metric-label">quedas atípicas</div>
       </div>
       <div class="metric">
-        <div class="metric-val">15%</div>
+        <div class="metric-val">30%</div>
         <div class="metric-label">limiar de variação</div>
       </div>
       <div class="metric">
@@ -368,7 +368,7 @@ function render(data) {
       </div>
 
       <div class="card card-full">
-        <div class="card-title">Evolução mensal — top variação com contexto de cidade</div>
+        <div class="card-title">Evolução mensal — top variações com contexto de cidade</div>
         <div id="spark-list"></div>
         <div class="legend">
           <span class="legend-item"><span class="legend-sq" style="background:#378ADD"></span>Jan</span>
@@ -387,14 +387,14 @@ function render(data) {
           <button class="fbtn on-low" data-tipo="low" onclick="filtrar('low')">Quedas</button>
         </div>
         <div id="anom-list"></div>
-        <p style="font-size:11px;color:var(--muted);margin-top:8px">Mês atual vs. média histórica Jan–Abr. Limiar: desvio acima de 15%.</p>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px">Mês atual vs. média histórica Jan–Abr. Limiar: desvio acima de 30%.</p>
       </div>
 
     </div>
 
     <div class="footer">
-      <span>Top 10 motivos por cidade. Limiar 15% vs. média Jan–Abr. Calculado no Excel.</span>
-      <span class="footer-badge">Corsan · Experiência do Cliente</span>
+      <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Abr. Calculado no Excel.</span>
+      <span class="footer-badge">AI Builder · Power Automate</span>
     </div>`;
 
   renderAnom();
@@ -406,7 +406,7 @@ fetch(JSON_URL + '?t=' + Date.now())
   .then(txt => {
     if (!txt || !txt.trim()) throw new Error('Arquivo vazio');
     const data = parseVariação(txt);
-    if (!data.anomalias.length) throw new Error('Nenhuma variação encontrada — verifique o arquivo variaçãos.json');
+    if (!data.anomalias.length) throw new Error('Nenhuma variação encontrada — verifique o arquivo variações.json');
     render(data);
   })
   .catch(err => {
