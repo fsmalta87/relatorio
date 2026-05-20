@@ -185,7 +185,7 @@ function parseVariação(txt) {
     const avgVals = [jan,fev,mar,abr].filter(v=>v>0);
     const avg = avgVals.length ? avgVals.reduce((a,b)=>a+b,0)/avgVals.length : hist;
 
-    data.variaçãos.push({
+    data.anomalias.push({
       cidade, motivo,
       vals: [jan, fev, mar, abr, atual],
       hist: hist || avg,
@@ -195,7 +195,7 @@ function parseVariação(txt) {
   return data;
 }
 
-let variaçãos_global = [];
+let anomalias_global = [];
 let filtros = { high: true, low: true };
 let cidadeFiltro = 'todas';
 
@@ -224,7 +224,7 @@ function filtrarAll() {
 function filtrarCidade(cidade) {
   cidadeFiltro = cidade;
   renderAnom();
-  renderSparks(variaçãos_global);
+  renderSparks(anomalias_global);
 }
 function selecionarCidade(cidade, el) {
   cidadeFiltro = cidade;
@@ -233,7 +233,7 @@ function selecionarCidade(cidade, el) {
   const search = document.getElementById('citySearch');
   if (search) search.value = cidade === 'todas' ? '' : cidade;
   fecharDropdown(); atualizarTag();
-  renderAnom(); renderSparks(variaçãos_global);
+  renderAnom(); renderSparks(anomalias_global);
 }
 function toggleDropdown() { const dd=document.getElementById('cityDropdown'); if(dd) dd.classList.toggle('open'); }
 function fecharDropdown() { const dd=document.getElementById('cityDropdown'); if(dd) dd.classList.remove('open'); }
@@ -255,7 +255,7 @@ function atualizarTag() {
 document.addEventListener('click', e => { if(!e.target.closest('.city-filter')) fecharDropdown(); });
 
 function renderAnom() {
-  const visiveis = variaçãos_global
+  const visiveis = anomalias_global
     .filter(a => filtros[a.tipo] && (cidadeFiltro === 'todas' || a.cidade === cidadeFiltro))
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
 
@@ -302,7 +302,7 @@ function renderSparks(variaçãos) {
 }
 
 function render(data) {
-  variaçãos_global = data.variaçãos;
+  anomalias_global = data.anomalias;
 
   const cidades = [...new Set(data.anomalias.map(a => a.cidade))].sort();
   const cidadeOpts = [
@@ -333,7 +333,7 @@ function render(data) {
         <div class="metric-label">quedas atípicas</div>
       </div>
       <div class="metric">
-        <div class="metric-val">30%</div>
+        <div class="metric-val">15%</div>
         <div class="metric-label">limiar de variação</div>
       </div>
       <div class="metric">
@@ -387,18 +387,18 @@ function render(data) {
           <button class="fbtn on-low" data-tipo="low" onclick="filtrar('low')">Quedas</button>
         </div>
         <div id="anom-list"></div>
-        <p style="font-size:11px;color:var(--muted);margin-top:8px">Mês atual vs. média histórica Jan–Abr. Limiar: desvio acima de 30%.</p>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px">Mês atual vs. média histórica Jan–Abr. Limiar: desvio acima de 15%.</p>
       </div>
 
     </div>
 
     <div class="footer">
-      <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Abr. Calculado no Excel.</span>
+      <span>Top 10 motivos por cidade. Limiar 15% vs. média Jan–Abr. Calculado no Excel.</span>
       <span class="footer-badge">Corsan · Experiência do Cliente</span>
     </div>`;
 
   renderAnom();
-  renderSparks(data.variaçãos);
+  renderSparks(data.anomalias);
 }
 
 fetch(JSON_URL + '?t=' + Date.now())
@@ -406,7 +406,7 @@ fetch(JSON_URL + '?t=' + Date.now())
   .then(txt => {
     if (!txt || !txt.trim()) throw new Error('Arquivo vazio');
     const data = parseVariação(txt);
-    if (!data.variaçãos.length) throw new Error('Nenhuma variação encontrada — verifique o arquivo variaçãos.json');
+    if (!data.anomalias.length) throw new Error('Nenhuma variação encontrada — verifique o arquivo variaçãos.json');
     render(data);
   })
   .catch(err => {
