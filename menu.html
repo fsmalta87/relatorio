@@ -27,10 +27,10 @@
   .wrap{
     position:relative;z-index:1;
     display:flex;flex-direction:column;align-items:center;
-    gap:48px;padding:40px 24px;max-width:640px;width:100%;
+    gap:48px;padding:40px 24px;max-width:900px;width:100%;
   }
   .logo-area{display:flex;flex-direction:column;align-items:center;gap:16px}
-  .logo-area img{height:80px;filter:brightness(0) invert(1);display:block}
+  .logo-area img{height:240px;filter:brightness(0) invert(1);display:block}
   .subtitle{
     font-size:13px;color:var(--muted);letter-spacing:.08em;
     text-transform:uppercase;font-weight:500;
@@ -38,8 +38,8 @@
   .divider{
     width:1px;height:32px;background:linear-gradient(to bottom,transparent,var(--border),transparent);
   }
-  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
-  @media(max-width:480px){.cards{grid-template-columns:1fr}}
+  .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;width:100%}
+  @media(max-width:640px){.cards{grid-template-columns:1fr}}
   .card{
     background:var(--surface);border:1px solid var(--border);
     border-radius:16px;padding:28px 24px;
@@ -58,6 +58,10 @@
   .card:hover::before{opacity:1}
   .card:hover.agua{border-color:rgba(56,189,248,.3)}
   .card:hover.solicitacoes{border-color:rgba(248,113,113,.3)}
+  .card.servicos::before{background:linear-gradient(90deg,#34d399,#fbbf24)}
+  .card:hover.servicos{border-color:rgba(52,211,153,.3)}
+  .card.servicos .card-icon{background:rgba(52,211,153,.1)}
+  .card.servicos .card-arrow{color:#34d399}
   .card-icon{
     width:44px;height:44px;border-radius:12px;
     display:flex;align-items:center;justify-content:center;
@@ -97,7 +101,7 @@
         <div class="card-title">Falta de água</div>
         <div class="card-desc">Eventos operacionais, alertas críticos e recomendações por diretoria</div>
       </div>
-      <div class="card-arrow">Acessar relatório →</div>
+      <div class="card-arrow">Acessar análise →</div>
     </a>
 
     <a class="card solicitacoes" href="https://fsmalta87.github.io/relatorio/solicitacoes.html">
@@ -105,6 +109,15 @@
       <div>
         <div class="card-title">Solicitações de clientes</div>
         <div class="card-desc">Variações nas médias de contato por cidade e motivo</div>
+      </div>
+      <div class="card-arrow">Acessar análise →</div>
+    </a>
+
+    <a class="card servicos" href="#">
+      <div class="card-icon">🔧</div>
+      <div>
+        <div class="card-title">Análise de serviços</div>
+        <div class="card-desc">Serviços fora do prazo por cidade, tipo e responsável</div>
       </div>
       <div class="card-arrow">Acessar análise →</div>
     </a>
