@@ -120,25 +120,40 @@ function parseVariação(txt) {
       continue;
     }
 
-    const cols = l.split('\t');
-    if (cols.length < 9) continue;
-
-    // Detecta se primeira coluna está vazia (coluna extra no início)
-    const offset = cols[0].trim() === '' ? 1 : 0;
-
-    const cidade  = (cols[0 + offset] || '').trim();
-    const motivo  = (cols[1 + offset] || '').trim();
+    // Tentar parse como JSON primeiro, depois como TSV
+    let cidade, motivo, jan, fev, mar, abr, atual, hist, delta, statusCol;
+    const lt2 = l.trim();
+    if (lt2.startsWith('{')) {
+      try {
+        const obj = JSON.parse(lt2.replace(/,$/, ''));
+        cidade = (obj['CIDADE'] || obj['Cidade'] || '').trim();
+        motivo = (obj['motivos de contato (grupos)'] || obj['Motivo'] || '').trim();
+        jan    = parseNum(obj['jan26'] || obj['Jan'] || obj['Jan/26'] || '0');
+        fev    = parseNum(obj['fev26'] || obj['Fev'] || obj['Fev/26'] || '0');
+        mar    = parseNum(obj['mar26'] || obj['Mar'] || obj['Mar/26'] || '0');
+        abr    = parseNum(obj['abr26'] || obj['Abr'] || obj['Abr/26'] || '0');
+        atual  = parseNum(obj['Mês Atual'] || obj['MesAtual'] || obj['Atual'] || '0');
+        hist   = parseNum(obj['Média'] || obj['Media'] || obj['Média Hist_x002e_Variação %Status'] || '0');
+        delta  = parseFloat(obj['Variacao'] || obj['Variação %'] || '0') || 0;
+        statusCol = (obj['Status'] || '').trim();
+      } catch(e) { continue; }
+    } else {
+      const cols = l.split('\t');
+      if (cols.length < 9) continue;
+      const offset = cols[0].trim() === '' ? 1 : 0;
+      cidade    = (cols[0 + offset] || '').trim();
+      motivo    = (cols[1 + offset] || '').trim();
+      jan       = parseNum(cols[2 + offset]);
+      fev       = parseNum(cols[3 + offset]);
+      mar       = parseNum(cols[4 + offset]);
+      abr       = parseNum(cols[5 + offset]);
+      atual     = parseNum(cols[6 + offset]);
+      hist      = parseNum(cols[7 + offset]);
+      const varStr = (cols[8 + offset] || '').trim().replace('%','').replace('+','');
+      delta     = parseFloat(varStr) || 0;
+      statusCol = (cols[9 + offset] || cols[10 + offset] || '').trim();
+    }
     if (!cidade || cidade === 'CIDADE' || cidade === 'Unidade' || cidade === 'RS') continue;
-
-    const jan    = parseNum(cols[2 + offset]);
-    const fev    = parseNum(cols[3 + offset]);
-    const mar    = parseNum(cols[4 + offset]);
-    const abr    = parseNum(cols[5 + offset]);
-    const atual  = parseNum(cols[6 + offset]);
-    const hist   = parseNum(cols[7 + offset]);
-    const varStr = (cols[8 + offset] || '').trim().replace('%','').replace('+','');
-    const delta  = parseFloat(varStr) || 0;
-    const statusCol = (cols[9 + offset] || cols[10 + offset] || '').trim();
 
     const isAlta  = statusCol.includes('ALTA')  || statusCol.includes('🔴');
     const isQueda = statusCol.includes('QUEDA') || statusCol.includes('🟢');
@@ -304,7 +319,7 @@ function render(data) {
       </div>
 
       <div class="card card-full">
-        <div class="card-title">Evolução mensal — top variaçãos com contexto de cidade</div>
+        <div class="card-title">Evolução mensal — top variação com contexto de cidade</div>
         <div id="spark-list"></div>
         <div class="legend">
           <span class="legend-item"><span class="legend-sq" style="background:#378ADD"></span>Jan</span>
@@ -330,7 +345,7 @@ function render(data) {
 
     <div class="footer">
       <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Abr. Calculado no Excel.</span>
-      <span class="footer-badge">Corsan - Experiência do Cliente</span>
+      <span class="footer-badge">Corsan · Experiência do Cliente</span>
     </div>`;
 
   renderAnom();
