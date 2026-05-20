@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Operacional — Corsan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0f1e;--surface:#111827;--surface2:#1a2235;
+    --border:rgba(99,179,237,0.12);--accent:#38bdf8;
+    --text:#e2e8f0;--muted:#64748b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+  }
+  .grid-bg{
+    position:fixed;inset:0;z-index:0;
+    background-image:
+      linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);
+    background-size:40px 40px;pointer-events:none;
+  }
+  .wrap{
+    position:relative;z-index:1;
+    display:flex;flex-direction:column;align-items:center;
+    gap:48px;padding:40px 24px;max-width:640px;width:100%;
+  }
+  .logo-area{display:flex;flex-direction:column;align-items:center;gap:16px}
+  .logo-area img{height:80px;filter:brightness(0) invert(1);display:block}
+  .subtitle{
+    font-size:13px;color:var(--muted);letter-spacing:.08em;
+    text-transform:uppercase;font-weight:500;
+  }
+  .divider{
+    width:1px;height:32px;background:linear-gradient(to bottom,transparent,var(--border),transparent);
+  }
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%}
+  @media(max-width:480px){.cards{grid-template-columns:1fr}}
+  .card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:16px;padding:28px 24px;
+    display:flex;flex-direction:column;align-items:flex-start;gap:12px;
+    text-decoration:none;color:inherit;
+    transition:border-color .2s, transform .15s, background .2s;
+    position:relative;overflow:hidden;cursor:pointer;
+  }
+  .card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    transition:opacity .2s;opacity:0;
+  }
+  .card.agua::before{background:linear-gradient(90deg,#38bdf8,#818cf8)}
+  .card.solicitacoes::before{background:linear-gradient(90deg,#f87171,#fbbf24)}
+  .card:hover{transform:translateY(-2px);background:var(--surface2)}
+  .card:hover::before{opacity:1}
+  .card:hover.agua{border-color:rgba(56,189,248,.3)}
+  .card:hover.solicitacoes{border-color:rgba(248,113,113,.3)}
+  .card-icon{
+    width:44px;height:44px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;flex-shrink:0;
+  }
+  .card.agua .card-icon{background:rgba(56,189,248,.1)}
+  .card.solicitacoes .card-icon{background:rgba(248,113,113,.1)}
+  .card-title{font-size:15px;font-weight:500;color:#f1f5f9;line-height:1.3}
+  .card-desc{font-size:12px;color:var(--muted);line-height:1.6}
+  .card-arrow{
+    margin-top:auto;font-size:12px;display:flex;align-items:center;gap:4px;
+    transition:gap .2s;
+  }
+  .card.agua .card-arrow{color:#38bdf8}
+  .card.solicitacoes .card-arrow{color:#f87171}
+  .card:hover .card-arrow{gap:8px}
+  .footer{
+    font-size:11px;color:var(--muted);text-align:center;
+    font-family:'DM Mono',monospace;
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="wrap">
+
+  <div class="logo-area">
+    <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
+    <span class="subtitle">Painel operacional</span>
+  </div>
+
+  <div class="cards">
+
+    <a class="card agua" href="https://fsmalta87.github.io/relatorio/">
+      <div class="card-icon">💧</div>
+      <div>
+        <div class="card-title">Falta de água</div>
+        <div class="card-desc">Eventos operacionais, alertas críticos e recomendações por diretoria</div>
+      </div>
+      <div class="card-arrow">Acessar relatório →</div>
+    </a>
+
+    <a class="card solicitacoes" href="https://fsmalta87.github.io/relatorio/solicitacoes.html">
+      <div class="card-icon">📊</div>
+      <div>
+        <div class="card-title">Solicitações de clientes</div>
+        <div class="card-desc">Variações nas médias de contato por cidade e motivo</div>
+      </div>
+      <div class="card-arrow">Acessar análise →</div>
+    </a>
+
+  </div>
+
+  <div class="footer">Atualizado diariamente via Power Automate · AI Builder</div>
+
+</div>
+</body>
+</html>
