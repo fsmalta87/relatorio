@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anomalias — Contatos por Cidade</title>
+<title>Variação — Contatos por Cidade</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -96,11 +96,11 @@ function fmt(n) {
   return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function parseAnomalia(txt) {
+function parseVariação(txt) {
   const data = {
     gerado: new Date().toLocaleString('pt-BR'),
     totalAltas: 0, totalQuedas: 0, maiorDesvio: '',
-    narracao: '', anomalias: []
+    narracao: '', variaçãos: []
   };
   const linhas = txt.split('\n');
   let section = 'dados';
@@ -111,7 +111,7 @@ function parseAnomalia(txt) {
     const lt = l.trim();
     if (!lt) continue;
 
-    if (lt.includes('ANOMALIAS DETECTADAS')) { section='dados'; continue; }
+    if (lt.includes('VARIAÇÕES DETECTADAS')) { section='dados'; continue; }
     if (lt.includes('NARRAÇÃO') || lt.includes('NARRACAO')) { section='narracao'; continue; }
     if (lt.startsWith('---')) { if(section==='narracao') section='dados'; continue; }
 
@@ -157,7 +157,7 @@ function parseAnomalia(txt) {
     const avgVals = [jan,fev,mar,abr].filter(v=>v>0);
     const avg = avgVals.length ? avgVals.reduce((a,b)=>a+b,0)/avgVals.length : hist;
 
-    data.anomalias.push({
+    data.variaçãos.push({
       cidade, motivo,
       vals: [jan, fev, mar, abr, atual],
       hist: hist || avg,
@@ -167,7 +167,7 @@ function parseAnomalia(txt) {
   return data;
 }
 
-let anomalias_global = [];
+let variaçãos_global = [];
 let filtros = { high: true, low: true };
 let cidadeFiltro = 'todas';
 
@@ -199,16 +199,16 @@ function filtrarCidade(cidade) {
     b.classList.toggle('active', b.dataset.cidade === cidade);
   });
   renderAnom();
-  renderSparks(anomalias_global);
+  renderSparks(variaçãos_global);
 }
 
 function renderAnom() {
-  const visiveis = anomalias_global
+  const visiveis = variaçãos_global
     .filter(a => filtros[a.tipo] && (cidadeFiltro === 'todas' || a.cidade === cidadeFiltro))
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
 
   document.getElementById('anom-list').innerHTML = visiveis.length === 0
-    ? '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nenhuma anomalia no filtro selecionado.</p>'
+    ? '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nenhuma variação no filtro selecionado.</p>'
     : visiveis.map(a => {
         const sinal = a.delta > 0 ? '+' : '';
         return `<div class="anom-item ${a.tipo}">
@@ -226,8 +226,8 @@ function renderAnom() {
       }).join('');
 }
 
-function renderSparks(anomalias) {
-  const filtradas = cidadeFiltro === 'todas' ? anomalias : anomalias.filter(a => a.cidade === cidadeFiltro);
+function renderSparks(variaçãos) {
+  const filtradas = cidadeFiltro === 'todas' ? variaçãos : variaçãos.filter(a => a.cidade === cidadeFiltro);
   const top = [...filtradas].sort((a,b) => Math.abs(b.delta)-Math.abs(a.delta)).slice(0,8);
   document.getElementById('spark-list').innerHTML = top.map(a => {
     const maxV = Math.max(...a.vals, 0.1);
@@ -235,8 +235,8 @@ function renderSparks(anomalias) {
     const cls = a.delta > 0 ? 'badge-up' : 'badge-down';
     const bars = a.vals.map((v,i) => {
       const h = Math.max(3, Math.round(v/maxV*26));
-      const isAnomalia = i === 4 && Math.abs(a.delta) > 30;
-      const cor = isAnomalia ? (a.delta > 0 ? '#f87171' : '#34d399') : MCORES[i];
+      const isVariação = i === 4 && Math.abs(a.delta) > 30;
+      const cor = isVariação ? (a.delta > 0 ? '#f87171' : '#34d399') : MCORES[i];
       return `<div class="spark-b" style="height:${h}px;background:${cor}" title="${MESES[i]}: ${fmt(v)}"></div>`;
     }).join('');
     return `<div class="spark-row">
@@ -250,9 +250,9 @@ function renderSparks(anomalias) {
 }
 
 function render(data) {
-  anomalias_global = data.anomalias;
+  variaçãos_global = data.variaçãos;
 
-  const cidades = ['todas', ...new Set(data.anomalias.map(a => a.cidade))];
+  const cidades = ['todas', ...new Set(data.variaçãos.map(a => a.cidade))];
   const cidadeBtns = cidades.map(c =>
     `<button class="cfbtn${c==='todas'?' active':''}" data-cidade="${c}" onclick="filtrarCidade('${c}')">${c==='todas'?'Todas':c}</button>`
   ).join('');
@@ -261,12 +261,12 @@ function render(data) {
     <div class="header">
       <div class="header-left">
         <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
-        <h1>Análise de Anomalias — Média de Contatos por Cidade</h1>
+        <h1>Análise de Variaçãos — Média de Contatos por Cidade</h1>
         <div class="header-meta">Top 10 motivos por cidade · Gerado em ${data.gerado}</div>
       </div>
       <div class="header-stat">
         <div class="header-stat-val" style="color:var(--danger)">${data.totalAltas + data.totalQuedas}</div>
-        <div class="header-stat-label">anomalias detectadas</div>
+        <div class="header-stat-label">variações detectadas</div>
       </div>
     </div>
 
@@ -281,7 +281,7 @@ function render(data) {
       </div>
       <div class="metric">
         <div class="metric-val">30%</div>
-        <div class="metric-label">limiar de anomalia</div>
+        <div class="metric-label">limiar de variação</div>
       </div>
       <div class="metric">
         <div class="metric-val" style="color:var(--warning)">${data.maiorDesvio || '—'}</div>
@@ -307,7 +307,7 @@ function render(data) {
       </div>
 
       <div class="card card-full">
-        <div class="card-title">Anomalias detectadas — cidade + motivo</div>
+        <div class="card-title">Variações detectadas — cidade + motivo</div>
         <div class="filter-row">
           <button class="fbtn on-all" data-tipo="all" onclick="filtrarAll()">Todos</button>
           <button class="fbtn on-high" data-tipo="high" onclick="filtrar('high')">Altas</button>
@@ -318,7 +318,7 @@ function render(data) {
       </div>
 
       <div class="card card-full">
-        <div class="card-title">Evolução mensal — top anomalias com contexto de cidade</div>
+        <div class="card-title">Evolução mensal — top variaçãos com contexto de cidade</div>
         <div id="spark-list"></div>
         <div class="legend">
           <span class="legend-item"><span class="legend-sq" style="background:#378ADD"></span>Jan</span>
@@ -337,15 +337,15 @@ function render(data) {
     </div>`;
 
   renderAnom();
-  renderSparks(data.anomalias);
+  renderSparks(data.variaçãos);
 }
 
 fetch(JSON_URL + '?t=' + Date.now())
   .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
   .then(txt => {
     if (!txt || !txt.trim()) throw new Error('Arquivo vazio');
-    const data = parseAnomalia(txt);
-    if (!data.anomalias.length) throw new Error('Nenhuma anomalia encontrada — verifique o arquivo anomalias.json');
+    const data = parseVariação(txt);
+    if (!data.variaçãos.length) throw new Error('Nenhuma variação encontrada — verifique o arquivo variaçãos.json');
     render(data);
   })
   .catch(err => {
