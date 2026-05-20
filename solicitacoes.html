@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Variação — Contatos por Cidade</title>
+<title>Variaçãos — Contatos por Cidade</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -305,8 +305,9 @@ function render(data) {
   variaçãos_global = data.variaçãos;
 
   const cidades = [...new Set(data.anomalias.map(a => a.cidade))].sort();
-  const cidadeOpts = ['<div class="city-opt selected" data-cidade="todas" onclick="selecionarCidade('todas', this)"><span>Todas as cidades</span></div>',
-    ...cidades.map(c => `<div class="city-opt" data-cidade="${c}" onclick="selecionarCidade('${c}', this)">${c}</div>`)
+  const cidadeOpts = [
+    '<div class="city-opt selected" data-cidade="todas" onclick="selecionarCidade(\'todas\', this)"><span>Todas as cidades</span></div>',
+    ...cidades.map(c => '<div class="city-opt" data-cidade="' + c + '" onclick="selecionarCidade(\'' + c + '\', this)">' + c + '</div>')
   ].join('');
 
   document.getElementById('app').innerHTML = `
@@ -393,7 +394,7 @@ function render(data) {
 
     <div class="footer">
       <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Abr. Calculado no Excel.</span>
-      <span class="footer-badge">AI Builder · Power Automate</span>
+      <span class="footer-badge">Corsan · Experiência do Cliente</span>
     </div>`;
 
   renderAnom();
