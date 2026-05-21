@@ -391,6 +391,8 @@ function selecionarPrazo(p, btn) {
   renderOS();
 }
 
+function handleCidade(el) { selecionarByEl('cidade', el); }
+function handleGrupo(el) { selecionarByEl('grupo', el); }
 function selecionarByEl(tipo, el) {
   const val = el.dataset[tipo];
   if (tipo === 'grupo') { filtGrupo = val; atualizarTag('grupoTag', val, 'todos', 'limparGrupo'); }
@@ -448,20 +450,15 @@ function render(data) {
   const grupos = [...new Set(data.os.map(o=>o.grupo).filter(Boolean))].sort();
   const cidades = [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
 
-  const cidadeOpts = cidades.length > 0 ? [
-    '<div class="dd-opt sel" data-cidade="todas" onclick="selecionarByEl('cidade',this)">Todas as cidades</div>',
-    ...cidades.map(c=>'<div class="dd-opt" data-cidade="' + c + '" onclick="selecionarByEl('cidade',this)">' + c + '</div>')
-  ].join('') : '';
+  const cidadeOpts = cidades.length > 0 ? (
+    ['<div class="dd-opt sel" data-cidade="todas" onclick="handleCidade(this)">Todas as cidades</div>'].concat(
+      cidades.map(function(c){ return '<div class="dd-opt" data-cidade="' + c + '" onclick="handleCidade(this)">' + c + '</div>'; })
+    ).join('')
+  ) : '';
 
-  const grupoOpts = [
-    '<div class="dd-opt sel" data-grupo="todos" onclick="selecionarByEl(\'grupo\',this)">Todos os grupos</div>',
-    ...grupos.map(g=>'<div class="dd-opt" data-grupo="'+g+'" onclick="selecionarByEl(\'grupo\',this)">'+g+'</div>')
-  ].join('');
-
-  const cidadeOpts = [
-    '<div class="dd-opt sel" data-cidade="todas" onclick="selecionarByEl(\'cidade\',this)">Todas as cidades</div>',
-    ...cidades.map(c=>'<div class="dd-opt" data-cidade="'+c+'" onclick="selecionarByEl(\'cidade\',this)">'+c+'</div>')
-  ].join('');
+  const grupoOpts = ['<div class="dd-opt sel" data-grupo="todos" onclick="handleGrupo(this)">Todos os grupos</div>'].concat(
+    grupos.map(function(g){ return '<div class="dd-opt" data-grupo="' + g + '" onclick="handleGrupo(this)">' + g + '</div>'; })
+  ).join('');
 
   document.getElementById('app').innerHTML = `
     <div class="header">
