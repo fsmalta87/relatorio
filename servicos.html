@@ -186,20 +186,27 @@ function parseServicos(txt) {
     }
 
     // Tentar JSON
-    if (lt.startsWith('{')) {
+    if (lt.startsWith('{') || lt.startsWith('[')) {
       try {
-        const obj = JSON.parse(lt.replace(/,$/, ''));
-        const prazoRaw = (obj['Prazo OS backlog'] || obj['Prazo'] || '').trim();
-        const { cod, desc } = parseCodDesc(obj['Código/Descrição'] || obj['Codigo'] || '');
-        const qtd = parseInt(obj['QTD'] || obj['Qtd'] || obj['qtd'] || '1') || 1;
-        data.os.push({
-          diretoria: (obj['Regional'] || obj['Diretoria'] || '').trim(),
-          cidade: (obj['Cidade'] || '').trim(),
-          grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
-          cod, desc, qtd,
-          prazoRaw,
-          prazoKey: getPrazoKey(prazoRaw),
-        });
+        // Pode ser objeto único ou array inteiro
+        let objetos = [];
+        try {
+          const parsed = JSON.parse(lt.replace(/,$/, ''));
+          objetos = Array.isArray(parsed) ? parsed : [parsed];
+        } catch(e) { continue; }
+        for (const obj of objetos) {
+          const prazoRaw = (obj['Prazo OS backlog'] || obj['Prazo'] || '').trim();
+          const { cod, desc } = parseCodDesc(obj['Código/Descrição'] || obj['Codigo'] || '');
+          const qtd = parseInt(obj['QTD'] || obj['Qtd'] || obj['qtd'] || '1') || 1;
+          data.os.push({
+            diretoria: (obj['Regional'] || obj['Diretoria'] || '').trim(),
+            cidade: (obj['Cidade'] || '').trim(),
+            grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
+            cod, desc, qtd,
+            prazoRaw,
+            prazoKey: getPrazoKey(prazoRaw),
+          });
+        }
       } catch(e) { continue; }
     } else {
       // TSV
