@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Resumo Executivo — Corsan</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#060a14;--surface:#0d1525;--surface2:#131f35;--surface3:#1a2840;
@@ -27,14 +27,14 @@ body::before{content:'';position:fixed;inset:0;z-index:0;
 
 /* Header */
 .header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-.header img{height:52px;filter:brightness(0) invert(1)}
+.header img{display:block}
 .header-right{text-align:right}
-.header-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#f1f5f9;letter-spacing:-.02em}
+.header-title{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:#f1f5f9;letter-spacing:-.02em}
 .header-sub{font-size:11px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace}
 
 /* Section */
 .section{margin-bottom:28px}
-.section-label{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* Table card */
@@ -64,7 +64,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;
 .metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
 @media(max-width:600px){.metrics-row{grid-template-columns:repeat(2,1fr)}}
 .metric-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
-.metric-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
+.metric-val{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700}
 .metric-label{font-size:11px;color:var(--muted);margin-top:3px}
 
 /* Notes */
@@ -268,7 +268,7 @@ function render(data) {
 
   document.getElementById('app').innerHTML = `
     <div class="header">
-      <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
+      <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan" style="height:144px;margin-bottom:4px;margin-top:-8px;display:block;filter:brightness(0) invert(1)">
       <div class="header-right">
         <div class="header-title">Resumo Executivo</div>
         <div class="header-sub">${new Date().toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}</div>
