@@ -245,6 +245,8 @@ function parseServicos(txt) {
   return data;
 }
 
+function sumQtd(arr) { return arr.reduce(function(s,o){ return s + (o.qtd||1); }, 0); }
+
 function calcMetrics(os) {
   const total = sumQtd(os);
   const criticas = sumQtd(os.filter(o => ['c)','d)','e)','f)','g)','h)'].includes(o.prazoKey)));
