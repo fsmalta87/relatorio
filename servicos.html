@@ -166,70 +166,84 @@ function parseCodDesc(txt) {
 function parseServicos(txt) {
   const data = {
     gerado: new Date().toLocaleString('pt-BR'),
-    narracao: '', os: []
+    narracao: '', os: [], resumo: []
   };
   const linhas = txt.split('\n');
   let section = 'dados';
+  let arrayCount = 0; // conta quantos arrays JSON já encontramos
 
   for (let i = 0; i < linhas.length; i++) {
     const l = linhas[i];
     const lt = l.trim();
     if (!lt) continue;
+
     if (lt.includes('NARRAÇÃO') || lt.includes('NARRACAO')) { section='narracao'; continue; }
-    if (lt.includes('DADOS') || lt.startsWith('---')) {
-      if (section === 'narracao') section = 'dados';
-      continue;
-    }
+    if (lt.includes('DADOS')) { section='dados'; continue; }
+    if (lt.startsWith('---')) { if(section==='narracao') section='dados'; continue; }
+
     if (section === 'narracao') {
       data.narracao += (data.narracao ? '\n' : '') + lt;
       continue;
     }
 
-    // Tentar JSON
-    if (lt.startsWith('{') || lt.startsWith('[')) {
+    // Arrays JSON — primeiro é o resumo (com QTD), segundo é o detalhe (com Cidade)
+    if (lt.startsWith('[') || lt.startsWith('{')) {
+      let objetos = [];
       try {
-        // Pode ser objeto único ou array inteiro
-        let objetos = [];
-        try {
-          const parsed = JSON.parse(lt.replace(/,$/, ''));
-          objetos = Array.isArray(parsed) ? parsed : [parsed];
-        } catch(e) { continue; }
-        for (const obj of objetos) {
-          const prazoRaw = (obj['Prazo OS backlog'] || obj['Prazo'] || '').trim();
-          const { cod, desc } = parseCodDesc(obj['Código/Descrição'] || obj['Codigo'] || '');
+        const parsed = JSON.parse(lt.replace(/,$/, ''));
+        objetos = Array.isArray(parsed) ? parsed : [parsed];
+      } catch(e) { continue; }
+
+      for (const obj of objetos) {
+        const prazoRaw = (obj['Prazo OS backlog'] || obj['Prazo'] || '').trim();
+        const prazoKey = getPrazoKey(prazoRaw);
+
+        // Resumo: tem QTD mas não tem Cidade nem Código/Descrição
+        if (obj['QTD'] || obj['Qtd'] || obj['qtd']) {
           const qtd = parseInt(obj['QTD'] || obj['Qtd'] || obj['qtd'] || '1') || 1;
-          data.os.push({
+          data.resumo.push({
             diretoria: (obj['Regional'] || obj['Diretoria'] || '').trim(),
+            grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
+            qtd, prazoRaw, prazoKey
+          });
+        } else {
+          // Detalhe: tem Cidade e Código/Descrição
+          const { cod, desc } = parseCodDesc(obj['Código/Descrição'] || obj['Codigo'] || '');
+          data.os.push({
+            diretoria: (obj['Diretoria'] || obj['Regional'] || '').trim(),
             cidade: (obj['Cidade'] || '').trim(),
             grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
-            cod, desc, qtd,
-            prazoRaw,
-            prazoKey: getPrazoKey(prazoRaw),
+            cod, desc, qtd: 1,
+            prazoRaw, prazoKey
           });
         }
-      } catch(e) { continue; }
-    } else {
-      // TSV
-      const cols = l.split('\t');
-      if (cols.length < 5) continue;
-      const diretoria = cols[0].trim();
-      if (!diretoria || diretoria === 'Diretoria' || diretoria === 'Regional') continue;
-      const prazoRaw = cols[4].trim();
-      const { cod, desc } = parseCodDesc(cols[3].trim());
-      data.os.push({
-        diretoria,
-        cidade: cols[1].trim(),
-        grupo: cols[2].trim(),
-        cod, desc, qtd: 1,
-        prazoRaw,
-        prazoKey: getPrazoKey(prazoRaw),
-      });
+      }
+      continue;
     }
+
+    // TSV legado
+    const cols = l.split('\t');
+    if (cols.length < 5) continue;
+    const diretoria = cols[0].trim();
+    if (!diretoria || diretoria === 'Diretoria' || diretoria === 'Regional') continue;
+    const prazoRaw = cols[4].trim();
+    const { cod, desc } = parseCodDesc(cols[3].trim());
+    data.os.push({
+      diretoria, cidade: cols[1].trim(), grupo: cols[2].trim(),
+      cod, desc, qtd: 1, prazoRaw, prazoKey: getPrazoKey(prazoRaw)
+    });
   }
+
+  // Se só veio resumo (sem detalhe), usa o resumo expandido na lista
+  if (data.os.length === 0 && data.resumo.length > 0) {
+    data.os = data.resumo.map(r => ({
+      diretoria: r.diretoria, cidade: '', grupo: r.grupo,
+      cod: '', desc: '', qtd: r.qtd, prazoRaw: r.prazoRaw, prazoKey: r.prazoKey
+    }));
+  }
+
   return data;
 }
-
-function sumQtd(arr) { return arr.reduce((s, o) => s + (o.qtd||1), 0); }
 
 function calcMetrics(os) {
   const total = sumQtd(os);
@@ -252,10 +266,10 @@ function calcDir(os, dir) {
 function renderNarracao(txt) {
   if (!txt || !txt.trim()) return '';
   const blocos = [
-    { key:['SITUAÇÃO CRÍTICA','CRITICA','CRÍTICA'], cls:'critico' },
-    { key:['ATENÇÃO','ATENCAO','AMANHÃ'], cls:'atencao' },
-    { key:['DESTAQUE','POSITIVO'], cls:'positivo' },
-    { key:['LEITURA EXECUTIVA','EXECUTIVA'], cls:'exec' },
+    { key:['🔴','SITUAÇÃO CRÍTICA'], cls:'critico' },
+    { key:['⚠️','ATENÇÃO AMANHÃ','ATENCAO AMANHA'], cls:'atencao' },
+    { key:['✅','DESTAQUES POSITIVOS','DESTAQUE POSITIVO'], cls:'positivo' },
+    { key:['📋','LEITURA EXECUTIVA'], cls:'exec' },
   ];
   const linhas = txt.split('\n');
   let atual = null; let atualBloco = null;
@@ -264,9 +278,10 @@ function renderNarracao(txt) {
     const lt = l.trim(); if (!lt) continue;
     let matched = false;
     for (const b of blocos) {
-      if (b.key.some(k => lt.toUpperCase().includes(k))) {
+      // Só é título se a linha COMEÇA com um dos marcadores
+      if (b.key.some(k => lt.startsWith(k) || lt.toUpperCase().startsWith(k.toUpperCase()))) {
         atual = b.cls; atualBloco = b;
-        if (!enc[atual]) enc[atual] = { label: lt, texto: [] };
+        if (!enc[atual]) enc[atual] = { label: lt, texto: [], bloco: b };
         matched = true; break;
       }
     }
@@ -291,8 +306,9 @@ const POR_PAG = 30;
 function filtrarOS() {
   return os_global.filter(o =>
     (filtDiretoria === 'todas' || o.diretoria === filtDiretoria) &&
-    (filtCidade === 'todas' || o.cidade === filtCidade) &&
+
     (filtGrupo === 'todos' || o.grupo === filtGrupo) &&
+    (filtCidade === 'todas' || !o.cidade || o.cidade === filtCidade) &&
     (filtPrazo === 'todas' || (filtPrazo === 'urgente' ? ['b)','c)'].includes(o.prazoKey) : o.prazoKey === filtPrazo))
   ).sort((a,b) => {
     const op = (PRAZO_CFG[b.prazoKey]?.ordem||0) - (PRAZO_CFG[a.prazoKey]?.ordem||0);
@@ -426,10 +442,16 @@ document.addEventListener('click', e => {
 
 function render(data) {
   os_global = data.os;
-  const m = calcMetrics(data.os);
-  const dirs = [...new Set(data.os.map(o=>o.diretoria).filter(Boolean))].sort();
+  const fonte = data.resumo && data.resumo.length > 0 ? data.resumo : data.os;
+  const m = calcMetrics(fonte);
+  const dirs = [...new Set(fonte.map(o=>o.diretoria).filter(Boolean))].sort();
   const grupos = [...new Set(data.os.map(o=>o.grupo).filter(Boolean))].sort();
   const cidades = [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
+
+  const cidadeOpts = cidades.length > 0 ? [
+    '<div class="dd-opt sel" data-cidade="todas" onclick="selecionarByEl('cidade',this)">Todas as cidades</div>',
+    ...cidades.map(c=>'<div class="dd-opt" data-cidade="' + c + '" onclick="selecionarByEl('cidade',this)">' + c + '</div>')
+  ].join('') : '';
 
   const grupoOpts = [
     '<div class="dd-opt sel" data-grupo="todos" onclick="selecionarByEl(\'grupo\',this)">Todos os grupos</div>',
@@ -496,16 +518,18 @@ function render(data) {
           </div>
           <div class="tag-row" id="grupoTag"></div>
         </div>
-        <div class="filter-row">
-          <span class="filter-label">Cidade</span>
-          <div class="dd-wrap">
-            <input class="dd-input" id="cidadeInput" placeholder="Buscar cidade..." autocomplete="off"
-              onclick="toggleDD('cidadeDDx')" oninput="filterDD('cidadeDDx',this.value)">
-            <div class="dd-list" id="cidadeDDx">${cidadeOpts}</div>
-          </div>
-          <div class="tag-row" id="cidadeTag"></div>
-        </div>
+
       </div>
+      ${cidades.length > 0 ? `
+      <div class="filter-row">
+        <span class="filter-label">Cidade</span>
+        <div class="dd-wrap">
+          <input class="dd-input" id="cidadeInput" placeholder="Buscar cidade..." autocomplete="off"
+            onclick="toggleDD('cidadeDDx')" oninput="filterDD('cidadeDDx',this.value)">
+          <div class="dd-list" id="cidadeDDx">${cidadeOpts}</div>
+        </div>
+        <div class="tag-row" id="cidadeTag"></div>
+      </div>` : ''}
 
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <span class="block-title" style="margin:0" id="os-count"></span>
@@ -530,7 +554,7 @@ function render(data) {
       <span class="footer-badge">AI Builder · Power Automate</span>
     </div>`;
 
-  renderDirCards(data.os, dirs);
+  renderDirCards(fonte, dirs);
   renderOS();
 }
 
