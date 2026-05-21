@@ -37,6 +37,13 @@
   .ia-subcard.top-alta{border-color:rgba(251,191,36,.2)}
   .ia-subcard.top-queda{border-color:rgba(129,140,248,.2)}
   .ia-subcard.exec{grid-column:1/-1;border-color:rgba(56,189,248,.2)}
+  .ia-subcard.diretoria{grid-column:1/-1;border-color:rgba(251,191,36,.2)}
+  .ia-subcard.diretoria .ia-subcard-label{color:#fbbf24}
+  .dir-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+  @media(max-width:700px){.dir-grid{grid-template-columns:repeat(2,1fr)}}
+  .dir-card{background:rgba(255,255,255,.02);border:0.5px solid var(--border);border-radius:6px;padding:10px 12px}
+  .dir-card-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#fbbf24;margin-bottom:6px}
+  .dir-card-text{font-size:11px;color:var(--text);line-height:1.6}
   .ia-subcard-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
   .ia-subcard.alta .ia-subcard-label{color:#f87171}
   .ia-subcard.queda .ia-subcard-label{color:#34d399}
@@ -161,6 +168,7 @@ function renderNarracao(txt) {
     { key: ['MAIORES QUEDAS POR CIDADE','QUEDAS POR CIDADE'], cls: 'queda', formatNum: true, remCidade: false },
     { key: ['TOP 5 ASSUNTOS EM ALTA','ASSUNTOS EM ALTA'], cls: 'top-alta', formatNum: false, remCidade: true },
     { key: ['TOP 5 ASSUNTOS EM QUEDA','ASSUNTOS EM QUEDA'], cls: 'top-queda', formatNum: false, remCidade: true },
+    { key: ['RESUMO POR DIRETORIA','POR DIRETORIA'], cls: 'diretoria', formatNum: false, remCidade: false },
     { key: ['LEITURA EXECUTIVA','EXECUTIVA'], cls: 'exec', formatNum: false, remCidade: false },
   ];
   var linhas = txt.split('\n');
@@ -184,13 +192,34 @@ function renderNarracao(txt) {
       encontrados[atual].texto.push(lt);
     }
   }
-  var ordem = ['alta','queda','top-alta','top-queda','exec'];
+  var ordem = ['alta','queda','top-alta','top-queda','diretoria','exec'];
+  var DIRETORIAS = ['Leste','Norte','Centro','Sul','Oeste'];
+
   var html = ordem.map(function(cls) {
     var b = encontrados[cls];
     if (!b) return '';
     var textoFinal = b.texto.join('\n');
     if (b.bloco.formatNum) textoFinal = formatarNumeros(textoFinal);
     if (b.bloco.remCidade) textoFinal = removerCidades(textoFinal);
+
+    if (cls === 'diretoria') {
+      // Montar grid com um card por diretoria
+      var linhasDir = b.texto;
+      var dirMap = {};
+      linhasDir.forEach(function(l) {
+        DIRETORIAS.forEach(function(d) {
+          if (l.toUpperCase().startsWith(d.toUpperCase())) {
+            dirMap[d] = l.replace(new RegExp('^' + d + '\\s*:\\s*', 'i'), '');
+          }
+        });
+      });
+      var cardsDir = DIRETORIAS.map(function(d) {
+        var texto = dirMap[d] || '—';
+        return '<div class="dir-card"><div class="dir-card-name">' + d + '</div><div class="dir-card-text">' + texto + '</div></div>';
+      }).join('');
+      return '<div class="ia-subcard ' + cls + '"><div class="ia-subcard-label">' + b.label + '</div><div class="dir-grid">' + cardsDir + '</div></div>';
+    }
+
     return '<div class="ia-subcard ' + cls + '"><div class="ia-subcard-label">' + b.label + '</div><div class="ia-subcard-text">' + textoFinal + '</div></div>';
   }).join('');
   return '<div class="ia-label">Análise gerada por IA</div><div class="ia-grid">' + html + '</div>';
@@ -214,7 +243,7 @@ function parseAnomalia(txt) {
     if (lt.startsWith('---')) { if(section==='narracao') section='dados'; continue; }
     if (section === 'narracao') { data.narracao += (data.narracao ? '\n' : '') + lt; continue; }
 
-    let cidade, motivo, jan, fev, mar, abr, atual, hist, delta, statusCol;
+    let cidade, motivo, jan, fev, mar, abr, atual, hist, delta, statusCol, diretoria = '';
     const lt2 = lt;
     if (lt2.startsWith('{')) {
       try {
@@ -229,6 +258,7 @@ function parseAnomalia(txt) {
         hist   = parseNum(obj['Média'] || obj['Media'] || obj['Média Hist_x002e_Variação %Status'] || '0');
         delta  = parseFloat(obj['Variacao'] || obj['Variação %'] || '0') || 0;
         statusCol = (obj['Status'] || '').trim();
+        diretoria = (obj['Diretoria'] || obj['diretoria'] || '').trim();
       } catch(e) { continue; }
     } else {
       const cols = l.split('\t');
@@ -245,6 +275,7 @@ function parseAnomalia(txt) {
       const varStr = (cols[8 + offset] || '').trim().replace('%','').replace('+','');
       delta     = parseFloat(varStr) || 0;
       statusCol = (cols[9 + offset] || cols[10 + offset] || '').trim();
+      diretoria = (cols[11 + offset] || '').trim();
     }
     if (!cidade || cidade === 'CIDADE' || cidade === 'Unidade' || cidade === 'RS') continue;
     const isAlta  = statusCol.includes('ALTA')  || statusCol.includes('🔴');
@@ -260,7 +291,7 @@ function parseAnomalia(txt) {
     }
     const avgVals = [jan,fev,mar,abr].filter(v=>v>0);
     const avg = avgVals.length ? avgVals.reduce((a,b)=>a+b,0)/avgVals.length : hist;
-    data.anomalias.push({ cidade, motivo, vals:[jan,fev,mar,abr,atual], hist:hist||avg, delta, tipo });
+    data.anomalias.push({ cidade, motivo, diretoria: diretoria || '', vals:[jan,fev,mar,abr,atual], hist:hist||avg, delta, tipo });
   }
   return data;
 }
@@ -269,6 +300,7 @@ let anomalias_global = [];
 let filtros = { high: true, low: true };
 let cidadeFiltro = 'todas';
 let assuntoFiltro = 'todos';
+let diretoriaFiltro = 'todas';
 
 function filtrar(tipo) {
   filtros[tipo] = !filtros[tipo];
@@ -285,11 +317,19 @@ function filtrarAll() {
 }
 function atualizarBtnsFiltro() {
   const allOn = filtros.high && filtros.low;
-  document.querySelectorAll('.fbtn').forEach(b => {
+  document.querySelectorAll('.fbtn[data-tipo]').forEach(b => {
     const t = b.dataset.tipo;
     if (t === 'all') b.className = 'fbtn' + (allOn ? ' on-all' : '');
-    else b.className = 'fbtn' + (filtros[t] ? ` on-${t}` : '');
+    else b.className = 'fbtn' + (filtros[t] ? ' on-' + t : '');
   });
+}
+function filtrarDir(dir) {
+  diretoriaFiltro = dir;
+  document.querySelectorAll('.fbtn[data-dir]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.dir === dir ? ' on-all' : '');
+  });
+  renderAnom();
+  renderSparks(anomalias_global);
 }
 
 // Cidade
@@ -366,6 +406,7 @@ document.addEventListener('click', e => {
 function renderAnom() {
   const visiveis = anomalias_global
     .filter(a => filtros[a.tipo]
+      && (diretoriaFiltro === 'todas' || a.diretoria === diretoriaFiltro)
       && (cidadeFiltro === 'todas' || a.cidade === cidadeFiltro)
       && (assuntoFiltro === 'todos' || a.motivo === assuntoFiltro))
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
@@ -376,7 +417,7 @@ function renderAnom() {
         return `<div class="anom-item ${a.tipo}">
           <div class="anom-accent"></div>
           <div class="anom-body">
-            <span class="anom-city">${a.cidade}</span>
+            <span class="anom-city">${a.diretoria ? '<span style="font-size:10px;color:var(--muted);display:block;line-height:1.2">' + a.diretoria + '</span>' : ''}${a.cidade}</span>
             <span class="anom-motivo">${a.motivo}</span>
             <div class="anom-nums">
               <span class="anom-atual">${fmt(a.vals[4])}</span>
@@ -391,6 +432,7 @@ function renderAnom() {
 function renderSparks(anomalias) {
   const filtradas = anomalias
     .filter(a => filtros[a.tipo]
+      && (diretoriaFiltro==='todas'||a.diretoria===diretoriaFiltro)
       && (cidadeFiltro==='todas'||a.cidade===cidadeFiltro)
       && (assuntoFiltro==='todos'||a.motivo===assuntoFiltro));
   const top = [...filtradas].sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta)).slice(0,8);
@@ -405,7 +447,7 @@ function renderSparks(anomalias) {
       return `<div class="spark-b" style="height:${h}px;background:${cor}" title="${MESES[i]}: ${fmt(v)}"></div>`;
     }).join('');
     return `<div class="spark-row">
-      <span class="spark-city">${a.cidade}</span>
+      <span class="spark-city">${a.diretoria ? '<span style="font-size:9px;color:var(--muted);display:block;line-height:1">' + a.diretoria + '</span>' : ''}${a.cidade}</span>
       <span class="spark-motivo">${a.motivo}</span>
       <div class="spark">${bars}</div>
       <span class="spark-val">${fmt(a.vals[4])}</span>
@@ -417,6 +459,7 @@ function renderSparks(anomalias) {
 function render(data) {
   anomalias_global = data.anomalias;
   const cidades = [...new Set(data.anomalias.map(a=>a.cidade))].sort();
+  const diretorias = [...new Set(data.anomalias.map(a=>a.diretoria).filter(Boolean))].sort();
   const assuntos = [...new Set(data.anomalias.map(a=>a.motivo))].sort();
 
   const cidadeOpts = [
@@ -464,6 +507,17 @@ function render(data) {
             <button class="fbtn on-all" data-tipo="all" onclick="filtrarAll()">Todos</button>
             <button class="fbtn on-high" data-tipo="high" onclick="filtrar('high')">Altas</button>
             <button class="fbtn on-low" data-tipo="low" onclick="filtrar('low')">Quedas</button>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label">Diretoria</span>
+            <div style="display:flex;gap:6px;flex-wrap:wrap" id="dir-btns">
+              <button class="fbtn on-all" data-dir="todas" onclick="filtrarDir('todas')">Todas</button>
+              <button class="fbtn" data-dir="Leste" onclick="filtrarDir('Leste')">Leste</button>
+              <button class="fbtn" data-dir="Norte" onclick="filtrarDir('Norte')">Norte</button>
+              <button class="fbtn" data-dir="Centro" onclick="filtrarDir('Centro')">Centro</button>
+              <button class="fbtn" data-dir="Sul" onclick="filtrarDir('Sul')">Sul</button>
+              <button class="fbtn" data-dir="Oeste" onclick="filtrarDir('Oeste')">Oeste</button>
+            </div>
           </div>
           <div class="filter-row">
             <span class="filter-label">Cidade</span>
