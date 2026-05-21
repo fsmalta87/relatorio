@@ -242,7 +242,23 @@ function parseServicos(txt) {
     }));
   }
 
+  // Agrupar linhas iguais somando qtd
+  data.os = agruparOS(data.os);
+
   return data;
+}
+
+function agruparOS(lista) {
+  const mapa = {};
+  for (const o of lista) {
+    const key = [o.diretoria, o.cidade, o.grupo, o.cod, o.prazoKey].join('||');
+    if (mapa[key]) {
+      mapa[key].qtd += (o.qtd || 1);
+    } else {
+      mapa[key] = Object.assign({}, o, { qtd: o.qtd || 1 });
+    }
+  }
+  return Object.values(mapa);
 }
 
 function sumQtd(arr) { return arr.reduce(function(s,o){ return s + (o.qtd||1); }, 0); }
