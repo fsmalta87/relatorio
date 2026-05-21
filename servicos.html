@@ -242,6 +242,9 @@ function parseServicos(txt) {
     }));
   }
 
+  // Guardar cidades únicas antes do agrupamento
+  data.cidades = [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
+
   // Agrupar linhas iguais somando qtd
   data.os = agruparOS(data.os);
 
@@ -395,7 +398,24 @@ function selecionarDir(d) {
   filtDiretoria = d;
   pagina = 1;
   document.querySelectorAll('.dir-card').forEach(el => {
-    el.classList.toggle('active', el.getAttribute('onclick') === `selecionarDir('${d}')`);
+    el.classList.toggle('active', el.getAttribute('onclick') === "selecionarDir('" + d + "')");
+  });
+  document.querySelectorAll('.fbtn[data-reg]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.reg === d ? ' on' : '');
+  });
+  renderOS();
+}
+
+function filtrarReg(reg) {
+  filtDiretoria = reg;
+  pagina = 1;
+  document.querySelectorAll('.fbtn[data-reg]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.reg === reg ? ' on' : '');
+  });
+  // Atualizar cards de diretoria
+  document.querySelectorAll('.dir-card').forEach(el => {
+    const onclick = el.getAttribute('onclick') || '';
+    el.classList.toggle('active', onclick.includes("'" + reg + "'") || (reg === 'todas' && onclick.includes("'todas'")));
   });
   renderOS();
 }
@@ -466,7 +486,7 @@ function render(data) {
   const m = calcMetrics(fonte);
   const dirs = [...new Set(fonte.map(o=>o.diretoria).filter(Boolean))].sort();
   const grupos = [...new Set(data.os.map(o=>o.grupo).filter(Boolean))].sort();
-  const cidades = [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
+  const cidades = data.cidades || [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
 
   const cidadeOpts = cidades.length > 0 ? (
     ['<div class="dd-opt sel" data-cidade="todas" onclick="handleCidade(this)">Todas as cidades</div>'].concat(
@@ -523,6 +543,13 @@ function render(data) {
           <button class="fbtn" data-prazo="g)" onclick="selecionarPrazo('g)',this)">31–60 dias</button>
           <button class="fbtn" data-prazo="h)" onclick="selecionarPrazo('h)',this)">61–360 dias</button>
           <button class="fbtn" data-prazo="a)" onclick="selecionarPrazo('a)',this)">Dentro do prazo</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Regional</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap" id="reg-btns">
+            <button class="fbtn on" data-reg="todas" onclick="filtrarReg('todas')">Todas</button>
+            ${dirs.map(d => '<button class="fbtn" data-reg="' + d + '" onclick="filtrarReg(\'' + d + '\')">' + d + '</button>').join('')}
+          </div>
         </div>
         <div class="filter-row">
           <span class="filter-label">Grupo</span>
