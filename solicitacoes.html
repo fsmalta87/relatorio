@@ -143,9 +143,9 @@ function fmt(n) {
 
 // Parser da narração em subcards
 function formatarNumeros(txt) {
-  return txt.replace(/(-?\d+)\.(\d+)/g, function(match, inteiro, decimal) {
-    var num = parseFloat(inteiro + '.' + decimal);
-    return num.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  // Só troca ponto decimal por vírgula, sem alterar o valor
+  return txt.replace(/(-?\d+)\.(\d{1,4})/g, function(match, inteiro, decimal) {
+    return inteiro + ',' + decimal;
   });
 }
 
