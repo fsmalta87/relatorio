@@ -142,26 +142,40 @@ function fmt(n) {
 }
 
 // Parser da narração em subcards
+function formatarNumeros(txt) {
+  return txt.replace(/(-?\d+)\.(\d+)/g, function(match, inteiro, decimal) {
+    var num = parseFloat(inteiro + '.' + decimal);
+    return num.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  });
+}
+
+function removerCidades(txt) {
+  return txt.replace(/ — [A-ZÁÉÍÓÚÃÕÂÊÔÇÀ ]+$/gm, '');
+}
+
 function renderNarracao(txt) {
   if (!txt || !txt.trim()) return '';
-  const blocos = [
-    { key: ['MAIORES ALTAS POR CIDADE','ALTAS POR CIDADE'], cls: 'alta' },
-    { key: ['MAIORES QUEDAS POR CIDADE','QUEDAS POR CIDADE'], cls: 'queda' },
-    { key: ['TOP 5 ASSUNTOS EM ALTA','ASSUNTOS EM ALTA'], cls: 'top-alta' },
-    { key: ['TOP 5 ASSUNTOS EM QUEDA','ASSUNTOS EM QUEDA'], cls: 'top-queda' },
-    { key: ['LEITURA EXECUTIVA','EXECUTIVA'], cls: 'exec' },
+  var blocos = [
+    { key: ['MAIORES ALTAS POR CIDADE','ALTAS POR CIDADE'], cls: 'alta', formatNum: true, remCidade: false },
+    { key: ['MAIORES QUEDAS POR CIDADE','QUEDAS POR CIDADE'], cls: 'queda', formatNum: true, remCidade: false },
+    { key: ['TOP 5 ASSUNTOS EM ALTA','ASSUNTOS EM ALTA'], cls: 'top-alta', formatNum: false, remCidade: true },
+    { key: ['TOP 5 ASSUNTOS EM QUEDA','ASSUNTOS EM QUEDA'], cls: 'top-queda', formatNum: false, remCidade: true },
+    { key: ['LEITURA EXECUTIVA','EXECUTIVA'], cls: 'exec', formatNum: false, remCidade: false },
   ];
-  const linhas = txt.split('\n');
-  let atual = null;
-  const encontrados = {};
-  for (const l of linhas) {
-    const lt = l.trim();
+  var linhas = txt.split('\n');
+  var atual = null;
+  var atualBloco = null;
+  var encontrados = {};
+  for (var i = 0; i < linhas.length; i++) {
+    var l = linhas[i];
+    var lt = l.trim();
     if (!lt) continue;
-    let matched = false;
-    for (const b of blocos) {
-      if (b.key.some(k => lt.toUpperCase().includes(k))) {
-        atual = b.cls;
-        if (!encontrados[atual]) encontrados[atual] = { label: lt, texto: [] };
+    var matched = false;
+    for (var j = 0; j < blocos.length; j++) {
+      var b = blocos[j];
+      if (b.key.some(function(k){ return lt.toUpperCase().includes(k); })) {
+        atual = b.cls; atualBloco = b;
+        if (!encontrados[atual]) encontrados[atual] = { label: lt, texto: [], bloco: b };
         matched = true; break;
       }
     }
@@ -169,16 +183,16 @@ function renderNarracao(txt) {
       encontrados[atual].texto.push(lt);
     }
   }
-  const ordem = ['alta','queda','top-alta','top-queda','exec'];
-  const html = ordem.map(cls => {
-    const b = encontrados[cls];
+  var ordem = ['alta','queda','top-alta','top-queda','exec'];
+  var html = ordem.map(function(cls) {
+    var b = encontrados[cls];
     if (!b) return '';
-    return `<div class="ia-subcard ${cls}">
-      <div class="ia-subcard-label">${b.label}</div>
-      <div class="ia-subcard-text">${b.texto.join('\n')}</div>
-    </div>`;
+    var textoFinal = b.texto.join('\n');
+    if (b.bloco.formatNum) textoFinal = formatarNumeros(textoFinal);
+    if (b.bloco.remCidade) textoFinal = removerCidades(textoFinal);
+    return '<div class="ia-subcard ' + cls + '"><div class="ia-subcard-label">' + b.label + '</div><div class="ia-subcard-text">' + textoFinal + '</div></div>';
   }).join('');
-  return `<div class="ia-label">Análise gerada por IA</div><div class="ia-grid">${html}</div>`;
+  return '<div class="ia-label">Análise gerada por IA</div><div class="ia-grid">' + html + '</div>';
 }
 
 function parseAnomalia(txt) {
@@ -259,12 +273,14 @@ function filtrar(tipo) {
   filtros[tipo] = !filtros[tipo];
   atualizarBtnsFiltro();
   renderAnom();
+  renderSparks(anomalias_global);
 }
 function filtrarAll() {
   const novoEstado = !(filtros.high && filtros.low);
   filtros = { high: novoEstado, low: novoEstado };
   atualizarBtnsFiltro();
   renderAnom();
+  renderSparks(anomalias_global);
 }
 function atualizarBtnsFiltro() {
   const allOn = filtros.high && filtros.low;
@@ -365,7 +381,9 @@ function renderAnom() {
 
 function renderSparks(anomalias) {
   const filtradas = anomalias
-    .filter(a => (cidadeFiltro==='todas'||a.cidade===cidadeFiltro) && (assuntoFiltro==='todos'||a.motivo===assuntoFiltro));
+    .filter(a => filtros[a.tipo]
+      && (cidadeFiltro==='todas'||a.cidade===cidadeFiltro)
+      && (assuntoFiltro==='todos'||a.motivo===assuntoFiltro));
   const top = [...filtradas].sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta)).slice(0,8);
   document.getElementById('spark-list').innerHTML = top.map(a => {
     const maxV = Math.max(...a.vals, 0.1);
