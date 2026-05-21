@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resumo Executivo — Corsan</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#060a14;--surface:#0d1525;--surface2:#131f35;--surface3:#1a2840;
+  --border:rgba(148,163,184,0.1);--border2:rgba(148,163,184,0.06);
+  --accent:#38bdf8;--accent2:#818cf8;--gold:#f59e0b;
+  --up:#34d399;--down:#f87171;--neutral:#94a3b8;
+  --text:#e2e8f0;--muted:#64748b;--dim:#334155;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;min-height:100vh;padding:0}
+
+/* Grid background */
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background-image:radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56,189,248,0.06), transparent),
+  linear-gradient(rgba(56,189,248,0.02) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(56,189,248,0.02) 1px,transparent 1px);
+  background-size:100% 100%,48px 48px,48px 48px;pointer-events:none}
+
+.page{max-width:1100px;margin:0 auto;padding:32px 24px;position:relative;z-index:1}
+
+/* Header */
+.header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.header img{height:52px;filter:brightness(0) invert(1)}
+.header-right{text-align:right}
+.header-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#f1f5f9;letter-spacing:-.02em}
+.header-sub{font-size:11px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace}
+
+/* Section */
+.section{margin-bottom:28px}
+.section-label{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Table card */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.table-header{display:grid;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.table-header-text{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;text-align:right}
+.table-header-text:first-child{text-align:left}
+.table-row{display:grid;padding:10px 16px;border-bottom:1px solid var(--border2);transition:background .15s;align-items:center}
+.table-row:last-child{border-bottom:none}
+.table-row:hover{background:rgba(255,255,255,.02)}
+.table-row.total{background:rgba(56,189,248,.04);border-bottom:1px solid var(--border)}
+.row-name{font-size:12px;font-weight:500;color:#f1f5f9}
+.row-name.total{font-weight:600;color:var(--accent)}
+.row-val{font-family:'DM Mono',monospace;font-size:12px;text-align:right;color:var(--text)}
+.row-delta{font-family:'DM Mono',monospace;font-size:11px;text-align:right;font-weight:500}
+.row-delta.up{color:var(--up)}
+.row-delta.down{color:var(--down)}
+.row-delta.neutral{color:var(--neutral)}
+.gf-badge{display:inline-block;background:rgba(56,189,248,.15);color:var(--accent);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;font-family:'DM Mono',monospace}
+
+/* Two col layout */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media(max-width:700px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+/* Metrics bar */
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
+@media(max-width:600px){.metrics-row{grid-template-columns:repeat(2,1fr)}}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.metric-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:700}
+.metric-label{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* Notes */
+.notes-box{background:rgba(56,189,248,.04);border:1px solid rgba(56,189,248,.12);border-radius:8px;padding:12px 16px;margin-top:10px}
+.notes-label{font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.notes-text{font-size:12px;color:var(--neutral);line-height:1.7;white-space:pre-wrap}
+
+/* Atendimento bullets */
+.bullets-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px}
+.bullet-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border2);font-size:12px;line-height:1.6;color:var(--text)}
+.bullet-item:last-child{border-bottom:none}
+.bullet-arrow{color:var(--accent);flex-shrink:0;font-weight:600;margin-top:1px}
+
+/* Progress bar */
+.prog-wrap{display:flex;height:6px;border-radius:3px;overflow:hidden;margin-top:6px;gap:1px}
+.prog-dp{background:var(--down);border-radius:2px}
+.prog-fp{background:var(--up);border-radius:2px}
+
+/* Canais críticos */
+.canais-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.canais-grid{grid-template-columns:1fr}}
+.canais-table{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.canais-table th{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:8px 12px;background:var(--surface2);text-align:right}
+.canais-table th:first-child{text-align:left}
+.canais-table td{padding:7px 12px;font-size:11px;border-top:1px solid var(--border2);text-align:right;font-family:'DM Mono',monospace}
+.canais-table td:first-child{text-align:left;font-family:'DM Sans',sans-serif;font-weight:500;color:#f1f5f9}
+.canais-table tr.total-row td{font-weight:600;color:var(--accent);border-top:1px solid var(--border)}
+
+.footer{margin-top:32px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);flex-wrap:wrap;gap:8px}
+.footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600}
+
+.empty{text-align:center;padding:80px 20px;color:var(--muted)}
+.empty h2{font-size:18px;color:#f1f5f9;margin-bottom:8px}
+
+/* Animations */
+.section{animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.section:nth-child(2){animation-delay:.05s}
+.section:nth-child(3){animation-delay:.1s}
+.section:nth-child(4){animation-delay:.15s}
+.section:nth-child(5){animation-delay:.2s}
+.section:nth-child(6){animation-delay:.25s}
+.section:nth-child(7){animation-delay:.3s}
+</style>
+</head>
+<body>
+<div class="page">
+  <div id="app"><div class="empty"><h2>Carregando...</h2><p>Buscando dados do relatório</p></div></div>
+</div>
+
+<script>
+const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-executivo.json';
+
+function fmtMoeda(v) {
+  const n = parseFloat(v);
+  if (isNaN(n)) return '—';
+  if (Math.abs(n) >= 1e6) return (n/1e6).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) + 'M';
+  if (Math.abs(n) >= 1e3) return (n/1e3).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}) + 'k';
+  return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function fmtPct(v) {
+  const n = parseFloat(v);
+  if (isNaN(n)) return '—';
+  return (n*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}) + '%';
+}
+function fmtInt(v) {
+  const n = parseInt(v);
+  if (isNaN(n)) return '—';
+  return n.toLocaleString('pt-BR');
+}
+function deltaClass(v) {
+  const n = parseFloat(v);
+  if (isNaN(n) || n === 0) return 'neutral';
+  return n > 0 ? 'up' : 'down';
+}
+function deltaSign(v) {
+  const n = parseFloat(v);
+  if (isNaN(n)) return '';
+  return n > 0 ? '+' : '';
+}
+
+const REGIONAIS = ['CORSAN','LESTE','CENTRAL','NORTE','SUL','OESTE'];
+
+function parseRows(data, startIdx, count) {
+  return data.slice(startIdx, startIdx + count);
+}
+
+function findSection(data, label) {
+  return data.findIndex(r => (r.Coluna1||'').trim() === label);
+}
+
+function buildTable(rows, colsConfig) {
+  // rows: array de objetos, colsConfig: [{key,label,fmt,type}]
+  return rows.map(r => {
+    const name = (r.Coluna1||'').trim();
+    const isTotal = name === 'CORSAN';
+    return `<div class="table-row${isTotal?' total':''}" style="grid-template-columns:${colsConfig.map((_,i)=>i===0?'140px':'1fr').join(' ')}">
+      <span class="row-name${isTotal?' total':''}">${name}</span>
+      ${colsConfig.slice(1).map(c => {
+        const val = r[c.key] || '';
+        if (c.type === 'delta') {
+          const cls = deltaClass(val);
+          return `<span class="row-delta ${cls}">${deltaSign(val)}${c.fmt(val)}</span>`;
+        }
+        return `<span class="row-val">${c.fmt(val)}</span>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+}
+
+function tableHeader(cols, template) {
+  return `<div class="table-header" style="grid-template-columns:${template}">
+    ${cols.map(c=>`<span class="table-header-text">${c}</span>`).join('')}
+  </div>`;
+}
+
+function parseData(txt) {
+  // Remover prefixo ---\nDADOS\n se existir
+  const jsonStart = txt.indexOf('[');
+  if (jsonStart < 0) return null;
+  try {
+    return JSON.parse(txt.slice(jsonStart));
+  } catch(e) {
+    console.error(e);
+    return null;
+  }
+}
+
+function render(data) {
+  if (!data || !data.length) {
+    document.getElementById('app').innerHTML = '<div class="empty"><h2>Sem dados</h2></div>';
+    return;
+  }
+
+  // — Identificar seções por label
+  const idxFat   = findSection(data, 'Faturamento');
+  const idxArr   = findSection(data, 'Arrecadação');
+  const idxLeiF  = findSection(data, 'Leitura - Fechamento Operacional');
+  const idxLeiHC = findSection(data, 'Leitura - HC');
+  const idxLeiLNR= findSection(data, 'Leitura - LNR');
+  const idxServ  = findSection(data, 'Serviços (Afeta Cliente)');
+  const idxAten  = findSection(data, 'Atendimento');
+
+  // — Faturamento (4 linhas após header GF/colunas = idx+3, 6 regionais)
+  const fatRows = data.filter(r => REGIONAIS.includes((r.Coluna1||'').trim()) &&
+    data.indexOf(r) > idxFat && (idxArr < 0 || data.indexOf(r) < idxArr));
+  const fatGF = (data[idxFat+1]||{}).Coluna1 || '';
+  const fatGFNum = fatGF.trim();
+  const fatNotesRow = data.slice(idxFat, idxArr < 0 ? data.length : idxArr)
+    .find(r => (r.Coluna1||'').startsWith('Notas'));
+
+  // — Arrecadação
+  const arrRows = data.filter(r => REGIONAIS.includes((r.Coluna1||'').trim()) &&
+    data.indexOf(r) > idxArr && (idxLeiF < 0 || data.indexOf(r) < idxLeiF));
+  const arrData = data.slice(idxArr, idxLeiF < 0 ? data.length : idxLeiF);
+  const arrDataRow = arrData.find(r => /^\d{5}/.test((r.Coluna1||'').trim()));
+  const arrDate = arrDataRow ? (() => {
+    const serial = parseInt(arrDataRow.Coluna1);
+    if (!isNaN(serial) && serial > 40000) {
+      const d = new Date((serial - 25569) * 86400 * 1000);
+      return d.toLocaleDateString('pt-BR');
+    }
+    return arrDataRow.Coluna1;
+  })() : '';
+  const arrNotesRow = arrData.find(r => (r.Coluna1||'').startsWith('Notas'));
+
+  // — Leitura Fechamento
+  const leiFRows = data.filter(r => REGIONAIS.includes((r.Coluna1||'').trim()) &&
+    data.indexOf(r) > idxLeiF && (idxLeiHC < 0 || data.indexOf(r) < idxLeiHC));
+  const leiFGF = (() => {
+    const h = data.slice(idxLeiF, idxLeiF+5).find(r => /^\d+$/.test((r.Coluna1||'').trim()) && (r.Coluna1||'').trim() !== '');
+    return h ? h.Coluna1.trim() : '';
+  })();
+  const leiFNotesRow = data.slice(idxLeiF, idxLeiHC).find(r => (r.Coluna1||'').startsWith('Notas'));
+
+  // — Leitura HC
+  const leiHCRows = data.filter(r => REGIONAIS.includes((r.Coluna1||'').trim()) &&
+    data.indexOf(r) > idxLeiHC && (idxLeiLNR < 0 || data.indexOf(r) < idxLeiLNR));
+  const leiHCNotesRow = data.slice(idxLeiHC, idxLeiLNR).find(r => (r.Coluna1||'').startsWith('Notas'));
+
+  // — Leitura LNR
+  const leiLNRRows = data.filter(r => REGIONAIS.includes((r.Coluna1||'').trim()) &&
+    data.indexOf(r) > idxLeiLNR && (idxServ < 0 || data.indexOf(r) < idxServ));
+  const leiLNRGF = (() => {
+    const h = data.slice(idxLeiLNR, idxLeiLNR+5).find(r => /^\d+$/.test((r.Coluna1||'').trim()) && r.Coluna1.trim() !== '');
+    return h ? h.Coluna1.trim() : '';
+  })();
+  const leiLNRNotesRow = data.slice(idxLeiLNR, idxServ).find(r => (r.Coluna1||'').startsWith('Notas'));
+
+  // — Serviços
+  const servRows = data.filter(r => REGIONAIS.includes((r.Coluna1||'').trim()) &&
+    data.indexOf(r) > idxServ && (idxAten < 0 || data.indexOf(r) < idxAten));
+  const servMeta = data.slice(idxServ, idxAten).find(r => (r.Coluna1||'').includes('Meta'));
+
+  // — Atendimento
+  const atenRow = idxAten >= 0 ? data.slice(idxAten).find(r => (r.Coluna1||'').length > 200) : null;
+
+  const tmpl4 = '140px 1fr 1fr 1fr 1fr';
+  const tmpl6 = '140px 1fr 1fr 1fr 1fr 1fr 1fr';
+  const tmpl8 = '140px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr';
+
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
+      <div class="header-right">
+        <div class="header-title">Resumo Executivo</div>
+        <div class="header-sub">${new Date().toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}</div>
+      </div>
+    </div>
+
+    <!-- FATURAMENTO -->
+    <div class="section">
+      <div class="section-label">💰 Faturamento ${fatGFNum ? `<span class="gf-badge">GF ${fatGFNum}</span>` : ''}</div>
+      <div class="grid-2">
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Resultado GF</div>
+          <div class="table-card">
+            ${tableHeader(['','Orçado','Realizado','△ (R$M)','△ (%)'], tmpl4)}
+            ${fatRows.map(r => {
+              const isT = r.Coluna1.trim()==='CORSAN';
+              return `<div class="table-row${isT?' total':''}" style="grid-template-columns:${tmpl4}">
+                <span class="row-name${isT?' total':''}">${r.Coluna1.trim()}</span>
+                <span class="row-val">${fmtMoeda(r.Coluna3)}</span>
+                <span class="row-val">${fmtMoeda(r.Coluna4)}</span>
+                <span class="row-delta ${deltaClass(r.Coluna5)}">${deltaSign(r.Coluna5)}${fmtMoeda(r.Coluna5)}</span>
+                <span class="row-delta ${deltaClass(r.Coluna6)}">${deltaSign(r.Coluna6)}${fmtPct(r.Coluna6)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Acumulado Mês</div>
+          <div class="table-card">
+            ${tableHeader(['','Orçado','Realizado','△ (R$M)','△ (%)'], tmpl4)}
+            ${fatRows.map(r => {
+              const isT = r.Coluna1.trim()==='CORSAN';
+              return `<div class="table-row${isT?' total':''}" style="grid-template-columns:${tmpl4}">
+                <span class="row-name${isT?' total':''}">${r.Coluna1.trim()}</span>
+                <span class="row-val">${fmtMoeda(r.Coluna8)}</span>
+                <span class="row-val">${fmtMoeda(r.Coluna9)}</span>
+                <span class="row-delta ${deltaClass(r.Coluna10)}">${deltaSign(r.Coluna10)}${fmtMoeda(r.Coluna10)}</span>
+                <span class="row-delta ${deltaClass(r.Coluna11)}">${deltaSign(r.Coluna11)}${fmtPct(r.Coluna11)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+      ${fatNotesRow ? `<div class="notes-box"><div class="notes-label">Notas</div><div class="notes-text">${(fatNotesRow.Coluna1||'').replace('Notas\n','').replace('Notas\n→','→')}</div></div>` : ''}
+    </div>
+
+    <!-- ARRECADAÇÃO -->
+    <div class="section">
+      <div class="section-label">🏦 Arrecadação ${arrDate ? `<span style="font-size:11px;color:var(--accent);font-family:'DM Mono',monospace">${arrDate}</span>` : ''}</div>
+      <div class="grid-2">
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Resultado Diário</div>
+          <div class="table-card">
+            ${tableHeader(['','Orçado','Realizado','△ (R$M)','△ (%)'], tmpl4)}
+            ${arrRows.map(r => {
+              const isT = r.Coluna1.trim()==='CORSAN';
+              return `<div class="table-row${isT?' total':''}" style="grid-template-columns:${tmpl4}">
+                <span class="row-name${isT?' total':''}">${r.Coluna1.trim()}</span>
+                <span class="row-val">${fmtMoeda(r.Coluna3)}</span>
+                <span class="row-val">${fmtMoeda(r.Coluna4)}</span>
+                <span class="row-delta ${deltaClass(r.Coluna5)}">${deltaSign(r.Coluna5)}${fmtMoeda(r.Coluna5)}</span>
+                <span class="row-delta ${deltaClass(r.Coluna6)}">${deltaSign(r.Coluna6)}${fmtPct(r.Coluna6)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Acumulado Mês</div>
+          <div class="table-card">
+            ${tableHeader(['','Orçado','Realizado','△ (R$M)','△ (%)'], tmpl4)}
+            ${arrRows.map(r => {
+              const isT = r.Coluna1.trim()==='CORSAN';
+              return `<div class="table-row${isT?' total':''}" style="grid-template-columns:${tmpl4}">
+                <span class="row-name${isT?' total':''}">${r.Coluna1.trim()}</span>
+                <span class="row-val">${fmtMoeda(r.Coluna8)}</span>
+                <span class="row-val">${fmtMoeda(r.Coluna9)}</span>
+                <span class="row-delta ${deltaClass(r.Coluna10)}">${deltaSign(r.Coluna10)}${fmtMoeda(r.Coluna10)}</span>
+                <span class="row-delta ${deltaClass(r.Coluna11)}">${deltaSign(r.Coluna11)}${fmtPct(r.Coluna11)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+      ${arrNotesRow ? `<div class="notes-box"><div class="notes-label">Notas</div><div class="notes-text">${(arrNotesRow.Coluna1||'').replace('Notas\n','').replace('Notas\n→','→')}</div></div>` : ''}
+    </div>
+
+    <!-- LEITURA FECHAMENTO -->
+    <div class="section">
+      <div class="section-label">📋 Leitura — Fechamento Operacional ${leiFGF ? `<span class="gf-badge">GF ${leiFGF}</span>` : ''}</div>
+      <div class="grid-2">
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">GF Atual</div>
+          <div class="table-card">
+            ${tableHeader(['','Total abertas','Pendentes','% Pend.'], '140px 1fr 1fr 1fr')}
+            ${leiFRows.map(r => {
+              const isT = r.Coluna1.trim()==='CORSAN';
+              const pct = parseFloat(r.Coluna5)||0;
+              const cls = pct > 0.25 ? 'down' : pct > 0.15 ? 'neutral' : 'up';
+              return `<div class="table-row${isT?' total':''}" style="grid-template-columns:140px 1fr 1fr 1fr">
+                <span class="row-name${isT?' total':''}">${r.Coluna1.trim()}</span>
+                <span class="row-val">${fmtInt(r.Coluna3)}</span>
+                <span class="row-val">${fmtInt(r.Coluna4)}</span>
+                <span class="row-delta ${cls}">${fmtPct(r.Coluna5)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Acumulado</div>
+          <div class="table-card">
+            ${tableHeader(['','Total','Pendentes','% Pend.'], '140px 1fr 1fr 1fr')}
+            ${leiFRows.map(r => {
+              const isT = r.Coluna1.trim()==='CORSAN';
+              const pct = parseFloat(r.Coluna10)||0;
+              const cls = pct > 0.03 ? 'down' : pct > 0.015 ? 'neutral' : 'up';
+              return `<div class="table-row${isT?' total':''}" style="grid-template-columns:140px 1fr 1fr 1fr">
+                <span class="row-name${isT?' total':''}">${r.Coluna1.trim()}</span>
+                <span class="row-val">${fmtInt(r.Coluna8)}</span>
+                <span class="row-val">${fmtInt(r.Coluna9)}</span>
+                <span class="row-delta ${cls}">${fmtPct(r.Coluna10)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+      ${leiFNotesRow ? `<div class="notes-box"><div class="notes-label">Notas</div><div class="notes-text">${(leiFNotesRow.Coluna1||'').replace('Notas\n','').replace('Notas\n→','→')}</div></div>` : ''}
+    </div>
+
+    <!-- LEITURA HC + LNR -->
+    <div class="section">
+      <div class="grid-2">
+        <div>
+          <div class="section-label">🔧 Leitura — HC</div>
+          <div class="table-card">
+            ${tableHeader(['','Qtd. Ideal','Como está','% Gap','Em aberto'], tmpl4)}
+            ${leiHCRows.map(r => {
+              const isT = r.Coluna1.trim()==='CORSAN';
+              const pct = parseFloat(r.Coluna5)||0;
+              const cls = pct > 0.1 ? 'down' : pct > 0.05 ? 'neutral' : 'up';
+              return `<div class="table-row${isT?' total':''}" style="grid-template-columns:${tmpl4}">
+                <span class="row-name${isT?' total':''}">${r.Coluna1.trim()}</span>
+                <span class="row-val">${fmtInt(r.Coluna3)}</span>
+                <span class="row-val">${fmtInt(r.Coluna4)}</span>
+                <span class="row-delta ${cls}">${fmtPct(r.Coluna5)}</span>
+                <span class="row-delta ${parseInt(r.Coluna6)>0?'down':'neutral'}">${r.Coluna6||'0'}</span>
+              </div>`;
+            }).join('')}
+          </div>
+          ${leiHCNotesRow ? `<div class="notes-box" style="margin-top:8px"><div class="notes-label">Notas</div><div class="notes-text">${(leiHCNotesRow.Coluna1||'').replace('Notas\n','')}</div></div>` : ''}
+        </div>
+        <div>
+          <div class="section-label">📊 Leitura — LNR ${leiLNRGF ? `<span class="gf-badge">GF ${leiLNRGF}</span>` : ''}</div>
+          <div class="table-card">
+            ${tableHeader(['','Total','LNR','% LNR','Acum. Total','Acum. LNR','% LNR'], '140px 1fr 1fr 1fr 1fr 1fr 1fr')}
+            ${leiLNRRows.map(r => {
+              const isT = r.Coluna1.trim()==='CORSAN';
+              return `<div class="table-row${isT?' total':''}" style="grid-template-columns:140px 1fr 1fr 1fr 1fr 1fr 1fr">
+                <span class="row-name${isT?' total':''}">${r.Coluna1.trim()}</span>
+                <span class="row-val">${fmtInt(r.Coluna3)}</span>
+                <span class="row-val">${fmtInt(r.Coluna4)}</span>
+                <span class="row-delta neutral">${fmtPct(r.Coluna5)}</span>
+                <span class="row-val">${fmtInt(r.Coluna8)||'—'}</span>
+                <span class="row-val">${fmtInt(r.Coluna9)}</span>
+                <span class="row-delta neutral">${fmtPct(r.Coluna10)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+          ${leiLNRNotesRow ? `<div class="notes-box" style="margin-top:8px"><div class="notes-label">Notas</div><div class="notes-text">${(leiLNRNotesRow.Coluna1||'').replace('Notas\n','')}</div></div>` : ''}
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVIÇOS -->
+    <div class="section">
+      <div class="section-label">⚙️ Serviços (Afeta Cliente) — Backlog ${servMeta ? `<span style="font-size:11px;color:var(--up)">${servMeta.Coluna1.replace('Meta atendimento DP','Meta DP').replace('\n',' ')}</span>` : ''}</div>
+      <div class="table-card">
+        ${tableHeader(['','DP (%)','FP (%)','Qtd. OSs','Principais ofensores'], '140px 80px 80px 100px 1fr')}
+        ${servRows.map(r => {
+          const isT = r.Coluna1.trim()==='CORSAN';
+          const dp = parseFloat(r.Coluna3)||0;
+          const fp = parseFloat(r.Coluna4)||0;
+          const clsDp = dp < 0.95 ? 'down' : 'up';
+          return `<div class="table-row${isT?' total':''}" style="grid-template-columns:140px 80px 80px 100px 1fr">
+            <span class="row-name${isT?' total':''}">${r.Coluna1.trim()}</span>
+            <div>
+              <span class="row-delta ${clsDp}">${(dp*100).toFixed(1)}%</span>
+              <div class="prog-wrap"><div class="prog-dp" style="width:${dp*100}%"></div><div class="prog-fp" style="width:${fp*100}%"></div></div>
+            </div>
+            <span class="row-delta ${fp>0.5?'up':'neutral'}">${(fp*100).toFixed(1)}%</span>
+            <span class="row-val">${fmtInt(r.Coluna5)}</span>
+            <span style="font-size:11px;color:var(--neutral);line-height:1.4">${r.Coluna6||''}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- ATENDIMENTO -->
+    ${atenRow ? `
+    <div class="section">
+      <div class="section-label">📞 Atendimento — Canais Críticos</div>
+      <div class="bullets-box">
+        ${(atenRow.Coluna1||'').split('\n→').filter(Boolean).map((b,i) => `
+          <div class="bullet-item">
+            <span class="bullet-arrow">→</span>
+            <span>${i===0 ? b.replace('→','').trim() : b.trim()}</span>
+          </div>`).join('')}
+      </div>
+    </div>` : ''}
+
+    <div class="footer">
+      <span>Gerado em ${new Date().toLocaleString('pt-BR')} · Corsan / Aegea</span>
+      <span class="footer-badge">Power Automate · AI Builder</span>
+    </div>
+  `;
+}
+
+fetch(JSON_URL + '?t=' + Date.now())
+  .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+  .then(txt => {
+    const data = parseData(txt);
+    if (!data) throw new Error('JSON inválido');
+    render(data);
+  })
+  .catch(err => {
+    document.getElementById('app').innerHTML =
+      `<div class="empty"><h2>Erro ao carregar</h2><p>${err.message}</p><p style="font-size:11px;margin-top:8px;color:var(--muted)">URL: ${JSON_URL}</p></div>`;
+  });
+</script>
+</body>
+</html>
