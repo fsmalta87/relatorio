@@ -191,11 +191,12 @@ function parseServicos(txt) {
         const obj = JSON.parse(lt.replace(/,$/, ''));
         const prazoRaw = (obj['Prazo OS backlog'] || obj['Prazo'] || '').trim();
         const { cod, desc } = parseCodDesc(obj['Código/Descrição'] || obj['Codigo'] || '');
+        const qtd = parseInt(obj['QTD'] || obj['Qtd'] || obj['qtd'] || '1') || 1;
         data.os.push({
-          diretoria: (obj['Diretoria'] || '').trim(),
+          diretoria: (obj['Regional'] || obj['Diretoria'] || '').trim(),
           cidade: (obj['Cidade'] || '').trim(),
           grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
-          cod, desc,
+          cod, desc, qtd,
           prazoRaw,
           prazoKey: getPrazoKey(prazoRaw),
         });
@@ -205,14 +206,14 @@ function parseServicos(txt) {
       const cols = l.split('\t');
       if (cols.length < 5) continue;
       const diretoria = cols[0].trim();
-      if (!diretoria || diretoria === 'Diretoria') continue;
+      if (!diretoria || diretoria === 'Diretoria' || diretoria === 'Regional') continue;
       const prazoRaw = cols[4].trim();
       const { cod, desc } = parseCodDesc(cols[3].trim());
       data.os.push({
         diretoria,
         cidade: cols[1].trim(),
         grupo: cols[2].trim(),
-        cod, desc,
+        cod, desc, qtd: 1,
         prazoRaw,
         prazoKey: getPrazoKey(prazoRaw),
       });
@@ -221,21 +222,23 @@ function parseServicos(txt) {
   return data;
 }
 
+function sumQtd(arr) { return arr.reduce((s, o) => s + (o.qtd||1), 0); }
+
 function calcMetrics(os) {
-  const total = os.length;
-  const criticas = os.filter(o => ['c)','d)','e)','f)','g)','h)'].includes(o.prazoKey)).length;
-  const amanha = os.filter(o => o.prazoKey === 'b)').length;
-  const prazo = os.filter(o => o.prazoKey === 'a)').length;
-  const venceHoje = os.filter(o => o.prazoKey === 'c)').length;
+  const total = sumQtd(os);
+  const criticas = sumQtd(os.filter(o => ['c)','d)','e)','f)','g)','h)'].includes(o.prazoKey)));
+  const amanha = sumQtd(os.filter(o => o.prazoKey === 'b)'));
+  const prazo = sumQtd(os.filter(o => o.prazoKey === 'a)'));
+  const venceHoje = sumQtd(os.filter(o => o.prazoKey === 'c)'));
   return { total, criticas, amanha, prazo, venceHoje };
 }
 
 function calcDir(os, dir) {
   const sub = dir === 'todas' ? os : os.filter(o => o.diretoria === dir);
-  const total = sub.length;
-  const criticas = sub.filter(o => ['c)','d)','e)','f)','g)','h)'].includes(o.prazoKey)).length;
-  const amanha = sub.filter(o => o.prazoKey === 'b)').length;
-  const prazo = sub.filter(o => o.prazoKey === 'a)').length;
+  const total = sumQtd(sub);
+  const criticas = sumQtd(sub.filter(o => ['c)','d)','e)','f)','g)','h)'].includes(o.prazoKey)));
+  const amanha = sumQtd(sub.filter(o => o.prazoKey === 'b)'));
+  const prazo = sumQtd(sub.filter(o => o.prazoKey === 'a)'));
   return { total, criticas, amanha, prazo };
 }
 
@@ -284,7 +287,10 @@ function filtrarOS() {
     (filtCidade === 'todas' || o.cidade === filtCidade) &&
     (filtGrupo === 'todos' || o.grupo === filtGrupo) &&
     (filtPrazo === 'todas' || (filtPrazo === 'urgente' ? ['b)','c)'].includes(o.prazoKey) : o.prazoKey === filtPrazo))
-  ).sort((a,b) => (PRAZO_CFG[b.prazoKey]?.ordem||0) - (PRAZO_CFG[a.prazoKey]?.ordem||0));
+  ).sort((a,b) => {
+    const op = (PRAZO_CFG[b.prazoKey]?.ordem||0) - (PRAZO_CFG[a.prazoKey]?.ordem||0);
+    return op !== 0 ? op : (b.qtd||1) - (a.qtd||1);
+  });
 }
 
 function renderOS() {
@@ -299,6 +305,7 @@ function renderOS() {
     ? '<p style="font-size:13px;color:var(--muted);padding:12px 0">Nenhuma OS no filtro selecionado.</p>'
     : pag.map(o => {
         const cfg = PRAZO_CFG[o.prazoKey] || PRAZO_CFG['a)'];
+        const qtdBadge = o.qtd > 1 ? `<span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);margin-right:4px">${o.qtd} OS</span>` : '';
         return `<div class="os-item">
           <div class="os-acc" style="background:${cfg.cor}"></div>
           <div class="os-body">
@@ -308,7 +315,7 @@ function renderOS() {
             </div>
             <div class="os-right">
               <span class="os-dir-cidade">${o.diretoria}${o.cidade ? ' / ' + o.cidade : ''}</span>
-              <span class="prazo-badge ${cfg.cls}">${cfg.label}</span>
+              <span style="display:flex;align-items:center;gap:4px">${qtdBadge}<span class="prazo-badge ${cfg.cls}">${cfg.label}</span></span>
             </div>
           </div>
         </div>`;
@@ -537,4 +544,3 @@ fetch(JSON_URL + '?t=' + Date.now())
 </script>
 </body>
 </html>
-
