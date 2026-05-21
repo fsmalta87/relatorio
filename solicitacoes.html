@@ -143,9 +143,10 @@ function fmt(n) {
 
 // Parser da narração em subcards
 function formatarNumeros(txt) {
-  // Só troca ponto decimal por vírgula, sem alterar o valor
-  return txt.replace(/(-?\d+)\.(\d{1,4})/g, function(match, inteiro, decimal) {
-    return inteiro + ',' + decimal;
+  // Multiplica por 100 e formata como percentual com vírgula decimal
+  return txt.replace(/(-?\d+\.\d+)/g, function(match) {
+    var num = parseFloat(match) * 100;
+    return num.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%';
   });
 }
 
@@ -302,6 +303,10 @@ function selecionarCidade(cidade, el) {
   atualizarTagCidade();
   renderAnom(); renderSparks(anomalias_global);
 }
+function selecionarCidadeByEl(el) {
+  const cidade = el.dataset.cidade;
+  selecionarCidade(cidade, el);
+}
 function toggleDropdown(id) { const dd=document.getElementById(id); if(dd) dd.classList.toggle('open'); }
 function fecharDropdown(id) { const dd=document.getElementById(id); if(dd) dd.classList.remove('open'); }
 function filterCidade(val) {
@@ -331,6 +336,10 @@ function selecionarAssunto(assunto, el) {
   fecharDropdown('assuntoDropdown');
   atualizarTagAssunto();
   renderAnom(); renderSparks(anomalias_global);
+}
+function selecionarAssuntoByEl(el) {
+  const assunto = el.dataset.assunto;
+  selecionarAssunto(assunto, el);
 }
 function filterAssunto(val) {
   document.getElementById('assuntoDropdown')?.classList.add('open');
@@ -411,13 +420,13 @@ function render(data) {
   const assuntos = [...new Set(data.anomalias.map(a=>a.motivo))].sort();
 
   const cidadeOpts = [
-    '<div class="city-opt selected" data-cidade="todas" onclick="selecionarCidade(\'todas\', this)"><span>Todas as cidades</span></div>',
-    ...cidades.map(c=>'<div class="city-opt" data-cidade="'+c+'" onclick="selecionarCidade(\''+c+'\', this)">'+c+'</div>')
+    '<div class="city-opt selected" data-cidade="todas" onclick="selecionarCidadeByEl(this)"><span>Todas as cidades</span></div>',
+    ...cidades.map(c=>'<div class="city-opt" data-cidade="' + c + '" onclick="selecionarCidadeByEl(this)">' + c + '</div>')
   ].join('');
 
   const assuntoOpts = [
-    '<div class="assunto-opt selected" data-assunto="todos" onclick="selecionarAssunto(\'todos\', this)"><span>Todos os assuntos</span></div>',
-    ...assuntos.map(a=>'<div class="assunto-opt" data-assunto="'+a+'" onclick="selecionarAssunto(\''+a+'\', this)">'+a+'</div>')
+    '<div class="assunto-opt selected" data-assunto="todos" onclick="selecionarAssuntoByEl(this)"><span>Todos os assuntos</span></div>',
+    ...assuntos.map(a=>'<div class="assunto-opt" data-assunto="' + a + '" onclick="selecionarAssuntoByEl(this)">' + a + '</div>')
   ].join('');
 
   document.getElementById('app').innerHTML = `
