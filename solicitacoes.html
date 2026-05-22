@@ -121,6 +121,11 @@
   .legend{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
   .legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
   .legend-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+  .pager{display:flex;align-items:center;justify-content:space-between;margin-top:12px;font-size:12px;color:var(--muted)}
+  .pager-btns{display:flex;gap:6px}
+  .pbtn{padding:4px 10px;border:0.5px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;font-size:11px}
+  .pbtn:disabled{opacity:.35;cursor:not-allowed}
+  .pbtn:not(:disabled):hover{border-color:var(--accent);color:var(--accent)}
   .footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);flex-wrap:wrap;gap:8px}
   .footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600}
   .empty{text-align:center;padding:48px 20px;color:var(--muted)}
@@ -193,7 +198,7 @@ function renderNarracao(txt) {
     }
   }
   var ordem = ['alta','queda','top-alta','top-queda','diretoria','exec'];
-  var DIRETORIAS = ['LESTE','NORTE','CENTRO','SUL','OESTE'];
+  var DIRETORIAS = ['Leste','Norte','Centro','Sul','Oeste'];
 
   var html = ordem.map(function(cls) {
     var b = encontrados[cls];
@@ -301,6 +306,8 @@ let filtros = { high: true, low: true };
 let cidadeFiltro = 'todas';
 let assuntoFiltro = 'todos';
 let diretoriaFiltro = 'todas';
+let paginaAnom = 1;
+const ANOM_POR_PAG = 30;
 
 function filtrar(tipo) {
   filtros[tipo] = !filtros[tipo];
@@ -341,7 +348,7 @@ function selecionarCidade(cidade, el) {
   if (s) s.value = cidade === 'todas' ? '' : cidade;
   fecharDropdown('cityDropdown');
   atualizarTagCidade();
-  renderAnom(); renderSparks(anomalias_global);
+  paginaAnom = 1; renderAnom(); renderSparks(anomalias_global);
 }
 function selecionarCidadeByEl(el) {
   const cidade = el.dataset.cidade;
@@ -375,7 +382,7 @@ function selecionarAssunto(assunto, el) {
   if (s) s.value = assunto === 'todos' ? '' : assunto;
   fecharDropdown('assuntoDropdown');
   atualizarTagAssunto();
-  renderAnom(); renderSparks(anomalias_global);
+  paginaAnom = 1; renderAnom(); renderSparks(anomalias_global);
 }
 function selecionarAssuntoByEl(el) {
   const assunto = el.dataset.assunto;
@@ -410,9 +417,15 @@ function renderAnom() {
       && (cidadeFiltro === 'todas' || a.cidade === cidadeFiltro)
       && (assuntoFiltro === 'todos' || a.motivo === assuntoFiltro))
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
-  document.getElementById('anom-list').innerHTML = visiveis.length === 0
+
+  const total = visiveis.length;
+  const inicio = (paginaAnom - 1) * ANOM_POR_PAG;
+  const pag = visiveis.slice(inicio, inicio + ANOM_POR_PAG);
+  const totalPags = Math.ceil(total / ANOM_POR_PAG) || 1;
+
+  document.getElementById('anom-list').innerHTML = pag.length === 0
     ? '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nenhuma variação no filtro selecionado.</p>'
-    : visiveis.map(a => {
+    : pag.map(a => {
         const sinal = a.delta > 0 ? '+' : '';
         return `<div class="anom-item ${a.tipo}">
           <div class="anom-accent"></div>
@@ -427,150 +440,13 @@ function renderAnom() {
           </div>
         </div>`;
       }).join('');
-}
 
-function renderSparks(anomalias) {
-  const filtradas = anomalias
-    .filter(a => filtros[a.tipo]
-      && (diretoriaFiltro==='todas'||a.diretoria===diretoriaFiltro)
-      && (cidadeFiltro==='todas'||a.cidade===cidadeFiltro)
-      && (assuntoFiltro==='todos'||a.motivo===assuntoFiltro));
-  const top = [...filtradas].sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta)).slice(0,8);
-  document.getElementById('spark-list').innerHTML = top.map(a => {
-    const maxV = Math.max(...a.vals, 0.1);
-    const sinal = a.delta>0?'+':'';
-    const cls = a.delta>0?'badge-up':'badge-down';
-    const bars = a.vals.map((v,i)=>{
-      const h=Math.max(3,Math.round(v/maxV*26));
-      const isAnom=i===4&&Math.abs(a.delta)>30;
-      const cor=isAnom?(a.delta>0?'#f87171':'#34d399'):MCORES[i];
-      return `<div class="spark-b" style="height:${h}px;background:${cor}" title="${MESES[i]}: ${fmt(v)}"></div>`;
-    }).join('');
-    return `<div class="spark-row">
-      <span class="spark-city">${a.diretoria ? '<span style="font-size:9px;color:var(--muted);display:block;line-height:1">' + a.diretoria + '</span>' : ''}${a.cidade}</span>
-      <span class="spark-motivo">${a.motivo}</span>
-      <div class="spark">${bars}</div>
-      <span class="spark-val">${fmt(a.vals[4])}</span>
-      <span class="spark-badge ${cls}">${sinal}${Math.round(a.delta*100)}%</span>
-    </div>`;
-  }).join('');
-}
-
-function render(data) {
-  anomalias_global = data.anomalias;
-  const cidades = [...new Set(data.anomalias.map(a=>a.cidade))].sort();
-  const diretorias = [...new Set(data.anomalias.map(a=>a.diretoria).filter(Boolean))].sort();
-  const assuntos = [...new Set(data.anomalias.map(a=>a.motivo))].sort();
-
-  const cidadeOpts = [
-    '<div class="city-opt selected" data-cidade="todas" onclick="selecionarCidadeByEl(this)"><span>Todas as cidades</span></div>',
-    ...cidades.map(c=>'<div class="city-opt" data-cidade="' + c + '" onclick="selecionarCidadeByEl(this)">' + c + '</div>')
-  ].join('');
-
-  const assuntoOpts = [
-    '<div class="assunto-opt selected" data-assunto="todos" onclick="selecionarAssuntoByEl(this)"><span>Todos os assuntos</span></div>',
-    ...assuntos.map(a=>'<div class="assunto-opt" data-assunto="' + a + '" onclick="selecionarAssuntoByEl(this)">' + a + '</div>')
-  ].join('');
-
-  document.getElementById('app').innerHTML = `
-    <div class="header">
-      <div class="header-left">
-        <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
-        <h1>Análise de Variações — Média de Contatos por Cidade</h1>
-        <div class="header-meta">Top 10 motivos por cidade · Gerado em ${data.gerado}</div>
-      </div>
-      <div class="header-stat">
-        <div class="header-stat-val" style="color:var(--danger)">${data.totalAltas + data.totalQuedas}</div>
-        <div class="header-stat-label">variações detectadas</div>
-      </div>
-    </div>
-
-    <div class="metrics">
-      <div class="metric"><div class="metric-val" style="color:var(--danger)">${data.totalAltas}</div><div class="metric-label">altas atípicas</div></div>
-      <div class="metric"><div class="metric-val" style="color:var(--success)">${data.totalQuedas}</div><div class="metric-label">quedas atípicas</div></div>
-      <div class="metric"><div class="metric-val">30%</div><div class="metric-label">limiar de variação</div></div>
-      <div class="metric"><div class="metric-val" style="color:var(--warning)">${data.maiorDesvio||'—'}</div><div class="metric-label">maior desvio</div></div>
-    </div>
-
-    ${data.narracao ? `
-    <div class="two" style="margin-bottom:14px">
-      <div class="card card-full">${renderNarracao(data.narracao)}</div>
-    </div>` : ''}
-
-    <div class="two">
-
-      <div class="card card-full">
-        <div class="card-title">Filtros</div>
-        <div class="filter-section">
-          <div class="filter-row">
-            <span class="filter-label">Status</span>
-            <button class="fbtn on-all" data-tipo="all" onclick="filtrarAll()">Todos</button>
-            <button class="fbtn on-high" data-tipo="high" onclick="filtrar('high')">Altas</button>
-            <button class="fbtn on-low" data-tipo="low" onclick="filtrar('low')">Quedas</button>
-          </div>
-          <div class="filter-row">
-            <span class="filter-label">Diretoria</span>
-            <div style="display:flex;gap:6px;flex-wrap:wrap" id="dir-btns">
-              <button class="fbtn on-all" data-dir="todas" onclick="filtrarDir('todas')">Todas</button>
-              <button class="fbtn" data-dir="LESTE" onclick="filtrarDir('LESTE')">LESTE</button>
-              <button class="fbtn" data-dir="NORTE" onclick="filtrarDir('NORTE')">NORTE</button>
-              <button class="fbtn" data-dir="CENTRO" onclick="filtrarDir('CENTRO')">CENTRO</button>
-              <button class="fbtn" data-dir="SUL" onclick="filtrarDir('SUL')">SUL</button>
-              <button class="fbtn" data-dir="OESTE" onclick="filtrarDir('OESTE')">OESTE</button>
-            </div>
-          </div>
-          <div class="filter-row">
-            <span class="filter-label">Cidade</span>
-            <div class="city-filter" style="flex:1">
-              <div class="city-select-wrap">
-                <input type="text" class="city-search" id="citySearch" placeholder="Buscar cidade..." autocomplete="off"
-                  onclick="toggleDropdown('cityDropdown')" oninput="filterCidade(this.value)">
-                <button class="city-clear" onclick="limparCidade()">Limpar</button>
-                <div class="city-dropdown" id="cityDropdown">${cidadeOpts}</div>
-              </div>
-              <div class="tags-row" id="cityTags"></div>
-            </div>
-          </div>
-          <div class="filter-row">
-            <span class="filter-label">Assunto</span>
-            <div class="assunto-filter" style="flex:1">
-              <input type="text" class="assunto-search" id="assuntoSearch" placeholder="Buscar assunto..." autocomplete="off"
-                onclick="toggleDropdown('assuntoDropdown')" oninput="filterAssunto(this.value)">
-              <div class="assunto-dropdown" id="assuntoDropdown">${assuntoOpts}</div>
-              <div class="tags-row" id="assuntoTags"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card card-full">
-        <div class="card-title">Evolução mensal — top variações com contexto de cidade</div>
-        <div id="spark-list"></div>
-        <div class="legend">
-          <span class="legend-item"><span class="legend-sq" style="background:#378ADD"></span>Jan</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#BA7517"></span>Fev</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#1D9E75"></span>Mar</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#534AB7"></span>Abr</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#f87171"></span>Atual (alta)</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#34d399"></span>Atual (queda)</span>
-        </div>
-      </div>
-
-      <div class="card card-full">
-        <div class="card-title">Variações detectadas — cidade + motivo</div>
-        <div id="anom-list"></div>
-        <p style="font-size:11px;color:var(--muted);margin-top:8px">Mês atual vs. média histórica Jan–Abr. Limiar: desvio acima de 30%.</p>
-      </div>
-
-    </div>
-
-    <div class="footer">
-      <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Abr. Calculado no Excel.</span>
-      <span class="footer-badge">AI Builder · Power Automate</span>
-    </div>`;
-
-  renderAnom();
-  renderSparks(data.anomalias);
+  const pi = document.getElementById('anom-pager-info');
+  const pp = document.getElementById('anom-btn-prev');
+  const pn = document.getElementById('anom-btn-next');
+  if (pi) pi.textContent = 'Página ' + paginaAnom + ' de ' + totalPags + ' · ' + total + ' registros';
+  if (pp) pp.disabled = paginaAnom <= 1;
+  if (pn) pn.disabled = paginaAnom >= totalPags;
 }
 
 fetch(JSON_URL + '?t=' + Date.now())
