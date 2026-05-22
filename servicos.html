@@ -385,7 +385,7 @@ function renderDirCards(os, dirs) {
     '</div>';
   }
 
-  el.innerHTML = ['todas', ...dirs].map(d => {
+  el.innerHTML = dirs.map(d => {
     const s = calcDir(os, d);
     const nome = d === 'todas' ? 'Todas' : d;
     const corHoje = s.hoje > 0 ? '#f87171' : '#34d399';
