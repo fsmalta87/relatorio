@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -278,10 +278,12 @@ function calcMetrics(os) {
 function calcDir(os, dir) {
   const sub = dir === 'todas' ? os : os.filter(o => o.diretoria === dir);
   const total = sumQtd(sub);
-  const criticas = sumQtd(sub.filter(o => ['c)','d)','e)','f)','g)','h)'].includes(o.prazoKey)));
+  const hoje   = sumQtd(sub.filter(o => o.prazoKey === 'c)'));
   const amanha = sumQtd(sub.filter(o => o.prazoKey === 'b)'));
-  const prazo = sumQtd(sub.filter(o => o.prazoKey === 'a)'));
-  return { total, criticas, amanha, prazo };
+  const backlog= sumQtd(sub.filter(o => ['d)','e)','f)','g)','h)'].includes(o.prazoKey)));
+  const prazo  = sumQtd(sub.filter(o => o.prazoKey === 'a)'));
+  const criticas = hoje + backlog;
+  return { total, hoje, amanha, backlog, prazo, criticas };
 }
 
 function renderNarracao(txt) {
@@ -373,24 +375,34 @@ function renderOS() {
 function renderDirCards(os, dirs) {
   const el = document.getElementById('dir-cards');
   if (!el) return;
-  const todos = { d: calcDir(os, 'todas'), nome: 'Todas' };
-  const criMax = Math.max(...dirs.map(d => calcDir(os,d).criticas), 1);
 
   el.innerHTML = ['todas', ...dirs].map(d => {
-    const stats = calcDir(os, d);
+    const s = calcDir(os, d);
     const nome = d === 'todas' ? 'Todas' : d;
-    const pct = (v) => stats.total ? Math.round(v/stats.total*100) : 0;
-    const corCri = stats.criticas === 0 ? '#34d399' : stats.criticas > criMax*0.5 ? '#f87171' : '#fbbf24';
-    return `<div class="dir-card${filtDiretoria===d?' active':''}" onclick="selecionarDir('${d}')">
-      <div class="dir-name">${nome}</div>
-      <div class="dir-criticas" style="color:${corCri}">${stats.criticas}</div>
-      <div class="dir-sub">${stats.total} OS · ${pct(stats.criticas)}% críticas</div>
-      <div class="dir-bar">
-        <div class="dir-bar-seg" style="width:${pct(stats.prazo)}%;background:#34d399"></div>
-        <div class="dir-bar-seg" style="width:${pct(stats.amanha)}%;background:#fbbf24"></div>
-        <div class="dir-bar-seg" style="width:${pct(stats.criticas)}%;background:#f87171"></div>
-      </div>
-    </div>`;
+    const corHoje = s.hoje > 0 ? '#f87171' : '#34d399';
+    return '<div class="dir-card' + (filtDiretoria===d?' active':'') + '" onclick="selecionarDir(\'' + d + '\')">' +
+      '<div class="dir-name">' + nome + '</div>' +
+      '<div class="dir-criticas" style="color:' + corHoje + '">' + s.hoje.toLocaleString("pt-BR") + '</div>' +
+      '<div class="dir-sub">' + s.total.toLocaleString("pt-BR") + ' OS total</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px">' +
+        '<div style="background:rgba(248,113,113,.08);border:0.5px solid rgba(248,113,113,.2);border-radius:5px;padding:5px 7px">' +
+          '<div style="font-size:9px;color:#f87171;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Vence hoje</div>' +
+          '<div style="font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9">' + s.hoje.toLocaleString("pt-BR") + '</div>' +
+        '</div>' +
+        '<div style="background:rgba(251,191,36,.08);border:0.5px solid rgba(251,191,36,.2);border-radius:5px;padding:5px 7px">' +
+          '<div style="font-size:9px;color:#fbbf24;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Vence amanhã</div>' +
+          '<div style="font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9">' + s.amanha.toLocaleString("pt-BR") + '</div>' +
+        '</div>' +
+        '<div style="background:rgba(167,139,250,.08);border:0.5px solid rgba(167,139,250,.2);border-radius:5px;padding:5px 7px">' +
+          '<div style="font-size:9px;color:#a78bfa;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Backlog</div>' +
+          '<div style="font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9">' + s.backlog.toLocaleString("pt-BR") + '</div>' +
+        '</div>' +
+        '<div style="background:rgba(52,211,153,.08);border:0.5px solid rgba(52,211,153,.2);border-radius:5px;padding:5px 7px">' +
+          '<div style="font-size:9px;color:#34d399;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">No prazo</div>' +
+          '<div style="font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9">' + s.prazo.toLocaleString("pt-BR") + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
   }).join('');
 }
 
