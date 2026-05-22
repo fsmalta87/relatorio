@@ -112,6 +112,21 @@
   .pbtn:disabled{opacity:.35;cursor:not-allowed}
   .pbtn:not(:disabled):hover{border-color:var(--accent);color:var(--accent)}
 
+  /* Cards regionais */
+  .reg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+  @media(max-width:700px){.reg-grid{grid-template-columns:repeat(2,1fr)}}
+  .reg-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+  .reg-card:hover{border-color:rgba(56,189,248,.3);background:rgba(56,189,248,.04)}
+  .reg-card.active{border-color:rgba(56,189,248,.5);background:rgba(56,189,248,.08)}
+  .reg-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+  .reg-card.active .reg-name{color:var(--accent)}
+  .reg-eventos{font-size:20px;font-weight:600;font-family:'DM Mono',monospace;color:#f1f5f9}
+  .reg-sub{font-size:10px;color:var(--muted);margin-top:2px;margin-bottom:8px}
+  .reg-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px}
+  .reg-mini{border-radius:5px;padding:5px 7px}
+  .reg-mini-label{font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+  .reg-mini-val{font-size:12px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9}
+
   .footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);flex-wrap:wrap;gap:8px}
   .footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600}
   .empty{text-align:center;padding:48px 20px;color:var(--muted)}
@@ -124,6 +139,14 @@
   <div id="app"><div class="empty"><h2>Carregando dados...</h2><p style="font-size:13px;margin-top:6px">Buscando eventos de falta de água...</p></div></div>
 </div>
 <script>
+const DEPARA_REGIONAL = {"AGUDO": "CENTRO", "CAÇAPAVA DO SUL": "CENTRO", "CACHOEIRA DO SUL": "CENTRO", "CANDELÁRIA": "CENTRO", "DONA FRANCISCA": "CENTRO", "ENCRUZILHADA DO SUL": "CENTRO", "FAXINAL DO SOTURNO": "CENTRO", "FORMIGUEIRO": "CENTRO", "LAVRAS DO SUL": "CENTRO", "NOVA PALMA": "CENTRO", "RESTINGA SÊCA": "CENTRO", "SANTA MARGARIDA DO SUL": "CENTRO", "SANTANA DA BOA VISTA": "CENTRO", "SÃO SEPÉ": "CENTRO", "VILA NOVA DO SUL": "CENTRO", "ARROIO DO MEIO": "CENTRO", "BOM RETIRO DO SUL": "CENTRO", "CRUZEIRO DO SUL": "CENTRO", "ENCANTADO": "CENTRO", "ESTRELA": "CENTRO", "LAJEADO": "CENTRO", "MARQUES DE SOUZA": "CENTRO", "NOVA BRÉSCIA": "CENTRO", "PAVERAMA": "CENTRO", "ROCA SALES": "CENTRO", "TAQUARI": "CENTRO", "PANTANO GRANDE": "CENTRO", "RIO PARDO": "CENTRO", "SANTA CRUZ DO SUL": "CENTRO", "VENÂNCIO AIRES": "CENTRO", "DILERMANDO DE AGUIAR": "CENTRO", "ITAARA": "CENTRO", "IVORÁ": "CENTRO", "MATA": "CENTRO", "SANTA MARIA": "CENTRO", "SÃO PEDRO DO SUL": "CENTRO", "SILVEIRA MARTINS": "CENTRO", "CARAZINHO": "CENTRO", "CHAPADA": "CENTRO", "COLORADO": "CENTRO", "ESPUMOSO": "CENTRO", "NÃO-ME-TOQUE": "CENTRO", "PALMEIRA DAS MISSÕES": "CENTRO", "TAPERA": "CENTRO", "VICTOR GRAEFF": "CENTRO", "ALTO ALEGRE": "CENTRO", "CAMPOS BORGES": "CENTRO", "CRUZ ALTA": "CENTRO", "FORTALEZA DOS VALOS": "CENTRO", "IBIRUBÁ": "CENTRO", "JÚLIO DE CASTILHOS": "CENTRO", "SALTO DO JACUÍ": "CENTRO", "SELBACH": "CENTRO", "TUPANCIRETÃ": "CENTRO", "AJURICABA": "CENTRO", "CATUÍPE": "CENTRO", "CONDOR": "CENTRO", "IJUÍ": "CENTRO", "PANAMBI": "CENTRO", "PEJUÇARA": "CENTRO", "SANTA BÁRBARA DO SUL": "CENTRO", "ARROIO DO TIGRE": "CENTRO", "ARVOREZINHA": "CENTRO", "BARROS CASSAL": "CENTRO", "BOQUEIRÃO DO LEÃO": "CENTRO", "FONTOURA XAVIER": "CENTRO", "ILÓPOLIS": "CENTRO", "ITAPUCA": "CENTRO", "LAGOA BONITA DO SUL": "CENTRO", "LAGOÃO": "CENTRO", "PASSA SETE": "CENTRO", "PUTINGA": "CENTRO", "SÃO JOSÉ DO HERVAL": "CENTRO", "SOBRADINHO": "CENTRO", "SOLEDADE": "CENTRO", "CAPÃO DA CANOA": "LESTE", "XANGRI-LÁ": "LESTE", "BALNEÁRIO PINHAL": "LESTE", "CIDREIRA": "LESTE", "OSÓRIO": "LESTE", "CAPIVARI DO SUL": "LESTE", "GLORINHA": "LESTE", "MOSTARDAS": "LESTE", "PALMARES DO SUL": "LESTE", "SANTO ANTÔNIO DA PATRULHA": "LESTE", "TAVARES": "LESTE", "IMBÉ": "LESTE", "TRAMANDAÍ": "LESTE", "ARROIO DO SAL": "LESTE", "TERRA DE AREIA": "LESTE", "TORRES": "LESTE", "TRÊS CACHOEIRAS": "LESTE", "ALVORADA": "LESTE", "VIAMÃO": "LESTE", "CANOAS": "LESTE", "CACHOEIRINHA": "LESTE", "GRAVATAÍ": "LESTE", "ELDORADO DO SUL": "LESTE", "GUAÍBA": "LESTE", "ESTEIO": "LESTE", "SAPUCAIA DO SUL": "LESTE", "ARATIBA": "NORTE", "ÁUREA": "NORTE", "EREBANGO": "NORTE", "ERECHIM": "NORTE", "ESTAÇÃO": "NORTE", "GAURAMA": "NORTE", "GETÚLIO VARGAS": "NORTE", "MARCELINO RAMOS": "NORTE", "MARIANO MORO": "NORTE", "SERTÃO": "NORTE", "SEVERIANO DE ALMEIDA": "NORTE", "VIADUTOS": "NORTE", "ALPESTRE": "NORTE", "AMETISTA DO SUL": "NORTE", "CAIÇARA": "NORTE", "ERVAL SECO": "NORTE", "FREDERICO WESTPHALEN": "NORTE", "IRAÍ": "NORTE", "JABOTICABA": "NORTE", "PALMITINHO": "NORTE", "PINHEIRINHO DO VALE": "NORTE", "PLANALTO": "NORTE", "RODEIO BONITO": "NORTE", "SEBERI": "NORTE", "TAQUARUÇU DO SUL": "NORTE", "VICENTE DUTRA": "NORTE", "VISTA ALEGRE": "NORTE", "BARÃO DE COTEGIPE": "NORTE", "CAMPINAS DO SUL": "NORTE", "CONSTANTINA": "NORTE", "ENTRE RIOS DO SUL": "NORTE", "ERVAL GRANDE": "NORTE", "FAXINALZINHO": "NORTE", "ITATIBA DO SUL": "NORTE", "JACUTINGA": "NORTE", "LIBERATO SALZANO": "NORTE", "NONOAI": "NORTE", "RIO DOS ÍNDIOS": "NORTE", "RONDA ALTA": "NORTE", "RONDINHA": "NORTE", "SÃO VALENTIM": "NORTE", "SARANDI": "NORTE", "TRINDADE DO SUL": "NORTE", "MARAU": "NORTE", "PASSO FUNDO": "NORTE", "BARÃO": "NORTE", "CARLOS BARBOSA": "NORTE", "FARROUPILHA": "NORTE", "GARIBALDI": "NORTE", "SALVADOR DO SUL": "NORTE", "SÃO PEDRO DA SERRA": "NORTE", "BOM JESUS": "NORTE", "CAMBARÁ DO SUL": "NORTE", "CANELA": "NORTE", "GRAMADO": "NORTE", "JAQUIRANA": "NORTE", "NOVA PETRÓPOLIS": "NORTE", "SÃO FRANCISCO DE PAULA": "NORTE", "SÃO JOSÉ DOS AUSENTES": "NORTE", "ÁGUA SANTA": "NORTE", "BARRACÃO": "NORTE", "CACIQUE DOBLE": "NORTE", "ESMERALDA": "NORTE", "IBIAÇÁ": "NORTE", "LAGOA VERMELHA": "NORTE", "MACHADINHO": "NORTE", "MAXIMILIANO DE ALMEIDA": "NORTE", "MUITOS CAPÕES": "NORTE", "PAIM FILHO": "NORTE", "SANANDUVA": "NORTE", "SANTO EXPEDITO DO SUL": "NORTE", "SÃO JOÃO DA URTIGA": "NORTE", "SÃO JOSÉ DO OURO": "NORTE", "TAPEJARA": "NORTE", "VACARIA": "NORTE", "BENTO GONÇALVES": "NORTE", "PINTO BANDEIRA": "NORTE", "ANTÔNIO PRADO": "NORTE", "CAMPESTRE DA SERRA": "NORTE", "FLORES DA CUNHA": "NORTE", "IPÊ": "NORTE", "NOVA ROMA DO SUL": "NORTE", "SÃO MARCOS": "NORTE", "CASCA": "NORTE", "CASEIROS": "NORTE", "CIRÍACO": "NORTE", "COTIPORÃ": "NORTE", "DAVID CANABARRO": "NORTE", "FAGUNDES VARELA": "NORTE", "GUAPORÉ": "NORTE", "IBIRAIARAS": "NORTE", "NOVA ARAÇÁ": "NORTE", "NOVA BASSANO": "NORTE", "NOVA PRATA": "NORTE", "PARAÍ": "NORTE", "SÃO JORGE": "NORTE", "SERAFINA CORRÊA": "NORTE", "VERANÓPOLIS": "NORTE", "VILA FLORES": "NORTE", "ALEGRETE": "OESTE", "MANOEL VIANA": "OESTE", "QUARAÍ": "OESTE", "CACEQUI": "OESTE", "DOM PEDRITO": "OESTE", "ROSÁRIO DO SUL": "OESTE", "SÃO VICENTE DO SUL": "OESTE", "BARRA DO QUARAÍ": "OESTE", "ITAQUI": "OESTE", "MAÇAMBARÁ": "OESTE", "SÃO BORJA": "OESTE", "BOSSOROCA": "OESTE", "JAGUARI": "OESTE", "NOVA ESPERANÇA DO SUL": "OESTE", "SANTIAGO": "OESTE", "SÃO FRANCISCO DE ASSIS": "OESTE", "UNISTALDA": "OESTE", "CAIBATÉ": "OESTE", "CAMPINA DAS MISSÕES": "OESTE", "CÂNDIDO GODÓI": "OESTE", "CERRO LARGO": "OESTE", "ENTRE-IJUÍS": "OESTE", "GUARANI DAS MISSÕES": "OESTE", "PORTO LUCENA": "OESTE", "PORTO XAVIER": "OESTE", "SANTO ÂNGELO": "OESTE", "SANTO ANTÔNIO DAS MISSÕES": "OESTE", "SÃO LUIZ GONZAGA": "OESTE", "SÃO MIGUEL DAS MISSÕES": "OESTE", "SÃO NICOLAU": "OESTE", "ALECRIM": "OESTE", "DOUTOR MAURÍCIO CARDOSO": "OESTE", "GIRUÁ": "OESTE", "HORIZONTINA": "OESTE", "SANTA ROSA": "OESTE", "SANTO CRISTO": "OESTE", "TUCUNDUVA": "OESTE", "TUPARENDI": "OESTE", "BARRA DO GUARITA": "OESTE", "BRAGA": "OESTE", "CAMPO NOVO": "OESTE", "CHIAPETTA": "OESTE", "CORONEL BICACO": "OESTE", "DERRUBADAS": "OESTE", "INHACORÁ": "OESTE", "MIRAGUAÍ": "OESTE", "REDENTORA": "OESTE", "SANTO AUGUSTO": "OESTE", "TENENTE PORTELA": "OESTE", "VISTA GAÚCHA": "OESTE", "BOA VISTA DO BURICÁ": "OESTE", "BOM PROGRESSO": "OESTE", "CRISSIUMAL": "OESTE", "HUMAITÁ": "OESTE", "INDEPENDÊNCIA": "OESTE", "SÃO JOSÉ DO INHACORÁ": "OESTE", "SÃO MARTINHO": "OESTE", "SEDE NOVA": "OESTE", "TIRADENTES DO SUL": "OESTE", "TRÊS DE MAIO": "OESTE", "TRÊS PASSOS": "OESTE", "ARROIO DOS RATOS": "SUL", "BARÃO DO TRIUNFO": "SUL", "BUTIÁ": "SUL", "MINAS DO LEÃO": "SUL", "CAMPO BOM": "SUL", "ESTÂNCIA VELHA": "SUL", "PORTÃO": "SUL", "SAPIRANGA": "SUL", "CHARQUEADAS": "SUL", "GENERAL CÂMARA": "SUL", "SÃO JERÔNIMO": "SUL", "DOIS IRMÃOS": "SUL", "MORRO REUTER": "SUL", "SANTA MARIA DO HERVAL": "SUL", "CAPELA DE SANTANA": "SUL", "FELIZ": "SUL", "MONTENEGRO": "SUL", "SÃO SEBASTIÃO DO CAÍ": "SUL", "NOVA SANTA RITA": "SUL", "TRIUNFO": "SUL", "RIOZINHO": "SUL", "ROLANTE": "SUL", "TAQUARA": "SUL", "IGREJINHA": "SUL", "NOVA HARTZ": "SUL", "PAROBÉ": "SUL", "TRÊS COROAS": "SUL", "AMARAL FERRADOR": "SUL", "ARAMBARÉ": "SUL", "CAMAQUÃ": "SUL", "CHUVISCA": "SUL", "CRISTAL": "SUL", "DOM FELICIANO": "SUL", "SÃO LOURENÇO DO SUL": "SUL", "CANGUÇU": "SUL", "CAPÃO DO LEÃO": "SUL", "MORRO REDONDO": "SUL", "ARROIO GRANDE": "SUL", "HERVAL": "SUL", "JAGUARÃO": "SUL", "ACEGUÁ": "SUL", "CERRITO": "SUL", "PEDRAS ALTAS": "SUL", "PEDRO OSÓRIO": "SUL", "PINHEIRO MACHADO": "SUL", "PIRATINI": "SUL", "RIO GRANDE": "SUL", "SÃO JOSÉ DO NORTE": "SUL", "CHUÍ": "SUL", "SANTA VITÓRIA DO PALMAR": "SUL", "BARRA DO RIBEIRO": "SUL", "CERRO GRANDE DO SUL": "SUL", "MARIANA PIMENTEL": "SUL", "SENTINELA DO SUL": "SUL", "SERTÃO SANTANA": "SUL", "TAPES": "SUL"};
+
+function getRegional(municipio) {
+  if (!municipio) return '';
+  const upper = municipio.toUpperCase().trim();
+  return DEPARA_REGIONAL[upper] || '';
+}
+
 const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-relatorio.json';
 const POR_PAG = 20;
 
@@ -172,6 +195,7 @@ function parseData(txt) {
             dt_inicio_rec: obj.dt_inicio_rec || obj.DT_INICIO_REC_GRAD || '',
             dt_fim_rec:  obj.dt_fim_rec || obj.DT_FIM_REC_GRAD || '',
             ligacoes:    parseInt(obj.ligacoes || obj.LIGACOES || 0) || 0,
+            regional:    getRegional(obj.municipio || obj.MUNICIPIOS || ''),
           });
         }
       } catch(e) { continue; }
@@ -214,12 +238,14 @@ function renderNarracao(txt) {
 let eventos_global = [];
 let filtStatus = 'todos';
 let filtMunicipio = 'todos';
+let filtRegional = 'todas';
 let pagina = 1;
 
 function filtrarEventos() {
   return eventos_global
     .filter(e =>
       (filtStatus === 'todos' || e.status === filtStatus) &&
+      (filtRegional === 'todas' || e.regional === filtRegional) &&
       (filtMunicipio === 'todos' || e.municipio === filtMunicipio)
     )
     .sort((a, b) => {
@@ -229,6 +255,45 @@ function filtrarEventos() {
       if (oa !== ob) return oa - ob;
       return (b.ligacoes || 0) - (a.ligacoes || 0);
     });
+}
+
+function calcRegional(eventos, reg) {
+  const sub = reg === 'todas' ? eventos : eventos.filter(e => e.regional === reg);
+  const ativos = sub.filter(e => ['Em Andamento','Em Recuperacao'].includes(e.status));
+  return {
+    total: sub.length,
+    ativos: ativos.length,
+    programados: sub.filter(e => e.status === 'Programado').length,
+    concluidos: sub.filter(e => e.status === 'Concluido').length,
+    ligacoes: ativos.reduce((s, e) => s + (e.ligacoes || 0), 0),
+  };
+}
+
+function renderRegCards(eventos) {
+  const el = document.getElementById('reg-cards');
+  if (!el) return;
+  const regs = ['CENTRO','LESTE','NORTE','OESTE','SUL'];
+  el.innerHTML = regs.map(reg => {
+    const s = calcRegional(eventos, reg);
+    const corAtivos = s.ativos > 0 ? '#f87171' : '#34d399';
+    const mono = 'DM Mono,monospace';
+    function mini(bg, border, cor, titulo, valor) {
+      return '<div class="reg-mini" style="background:' + bg + ';border:0.5px solid ' + border + '">' +
+        '<div class="reg-mini-label" style="color:' + cor + '">' + titulo + '</div>' +
+        '<div class="reg-mini-val">' + valor + '</div></div>';
+    }
+    return '<div class="reg-card' + (filtRegional===reg?' active':'') + '" onclick="filtrarRegional(\'' + reg + '\')">' +
+      '<div class="reg-name">' + reg + '</div>' +
+      '<div class="reg-eventos" style="color:' + corAtivos + '">' + s.ativos + '</div>' +
+      '<div class="reg-sub">' + s.total + ' eventos · ' + s.ligacoes.toLocaleString("pt-BR") + ' lig.</div>' +
+      '<div class="reg-mini-grid">' +
+        mini('rgba(248,113,113,.08)','rgba(248,113,113,.2)','#f87171','Ativos', s.ativos) +
+        mini('rgba(251,191,36,.08)','rgba(251,191,36,.2)','#fbbf24','Program.', s.programados) +
+        mini('rgba(52,211,153,.08)','rgba(52,211,153,.2)','#34d399','Concluídos', s.concluidos) +
+        mini('rgba(56,189,248,.08)','rgba(56,189,248,.2)','#38bdf8','Ligações', s.ligacoes.toLocaleString("pt-BR")) +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
 
 function renderEventos() {
@@ -247,7 +312,10 @@ function renderEventos() {
           <div class="ev-acc"></div>
           <div class="ev-body">
             <div class="ev-info">
-              <div class="ev-municipio">${e.municipio || '—'}</div>
+              <div class="ev-municipio">
+                ${e.regional ? '<span style="font-size:9px;color:var(--muted);display:block;line-height:1.2;text-transform:uppercase;letter-spacing:.06em">' + e.regional + '</span>' : ''}
+                ${e.municipio || '—'}
+              </div>
               <div class="ev-categoria">${e.categoria}</div>
               <div class="ev-datas">
                 Início: ${e.dt_inicio || '—'}
@@ -265,6 +333,19 @@ function renderEventos() {
   document.getElementById('pager-info').textContent = `Página ${pagina} de ${totalPags} · ${total} registros`;
   document.getElementById('btn-prev').disabled = pagina <= 1;
   document.getElementById('btn-next').disabled = pagina >= totalPags;
+}
+
+function filtrarRegional(reg) {
+  filtRegional = reg;
+  pagina = 1;
+  document.querySelectorAll('.fbtn[data-reg]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.reg === reg ? ' on' : '');
+  });
+  document.querySelectorAll('.reg-card').forEach(el => {
+    const onclick = el.getAttribute('onclick') || '';
+    el.classList.toggle('active', onclick.includes("'" + reg + "'"));
+  });
+  renderEventos();
 }
 
 function selecionarStatus(s) {
@@ -352,6 +433,11 @@ function render(data) {
       <div class="metric"><div class="metric-val" style="color:#34d399">${concluido}</div><div class="metric-label">Concluídos</div></div>
     </div>
 
+    <div class="block">
+      <div class="block-title">Visão por regional — clique para filtrar</div>
+      <div class="reg-grid" id="reg-cards"></div>
+    </div>
+
     ${data.narracao ? `
     <div class="block">
       <div class="block-title">Análise gerada por IA</div>
@@ -368,6 +454,15 @@ function render(data) {
           <button class="fbtn" data-status="Em Recuperacao" onclick="selecionarStatus('Em Recuperacao')">Em recuperação</button>
           <button class="fbtn" data-status="Programado" onclick="selecionarStatus('Programado')">Programado</button>
           <button class="fbtn" data-status="Concluido" onclick="selecionarStatus('Concluido')">Concluído</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Regional</span>
+          <button class="fbtn on" data-reg="todas" onclick="filtrarRegional('todas')">Todas</button>
+          <button class="fbtn" data-reg="CENTRO" onclick="filtrarRegional('CENTRO')">Centro</button>
+          <button class="fbtn" data-reg="LESTE" onclick="filtrarRegional('LESTE')">Leste</button>
+          <button class="fbtn" data-reg="NORTE" onclick="filtrarRegional('NORTE')">Norte</button>
+          <button class="fbtn" data-reg="OESTE" onclick="filtrarRegional('OESTE')">Oeste</button>
+          <button class="fbtn" data-reg="SUL" onclick="filtrarRegional('SUL')">Sul</button>
         </div>
         <div class="filter-row">
           <span class="filter-label">Município</span>
@@ -399,6 +494,7 @@ function render(data) {
       <span class="footer-badge">Power Automate · AI Builder</span>
     </div>`;
 
+  renderRegCards(data.eventos);
   renderEventos();
 }
 
