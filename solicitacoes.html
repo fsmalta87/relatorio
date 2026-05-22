@@ -449,6 +449,39 @@ function renderAnom() {
   if (pn) pn.disabled = paginaAnom >= totalPags;
 }
 
+const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#f87171'];
+const MESES  = ['Jan','Fev','Mar','Abr','Atual'];
+
+function renderSparks(anomalias) {
+  const filtradas = anomalias
+    .filter(a => filtros[a.tipo]
+      && (diretoriaFiltro==='todas'||a.diretoria===diretoriaFiltro)
+      && (cidadeFiltro==='todas'||a.cidade===cidadeFiltro)
+      && (assuntoFiltro==='todos'||a.motivo===assuntoFiltro));
+  const top = [...filtradas].sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta)).slice(0,8);
+  const el = document.getElementById('spark-list');
+  if (!el) return;
+  el.innerHTML = top.map(a => {
+    const maxV = Math.max(...a.vals, 0.1);
+    const sinal = a.delta>0?'+':'';
+    const cls = a.delta>0?'badge-up':'badge-down';
+    const bars = a.vals.map((v,i)=>{
+      const h=Math.max(3,Math.round(v/maxV*26));
+      const isAnom=i===4&&Math.abs(a.delta)>30;
+      const cor=isAnom?(a.delta>0?'#f87171':'#34d399'):MCORES[i];
+      return '<div class="spark-b" style="height:'+h+'px;background:'+cor+'" title="'+MESES[i]+': '+fmt(v)+'"></div>';
+    }).join('');
+    return '<div class="spark-row">'
+      +'<span class="spark-city">'+(a.diretoria?'<span style="font-size:9px;color:var(--muted);display:block;line-height:1">'+a.diretoria+'</span>':'')+a.cidade+'</span>'
+      +'<span class="spark-motivo">'+a.motivo+'</span>'
+      +'<div class="spark">'+bars+'</div>'
+      +'<span class="spark-val">'+fmt(a.vals[4])+'</span>'
+      +'<span class="spark-badge '+cls+'">'+sinal+Math.round(a.delta*100)+'%</span>'
+      +'</div>';
+  }).join('');
+}
+
+
 function render(data) {
   anomalias_global = data.anomalias;
   const fonte = data.resumo && data.resumo.length > 0 ? data.resumo : data.anomalias;
