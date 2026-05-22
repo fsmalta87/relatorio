@@ -449,6 +449,129 @@ function renderAnom() {
   if (pn) pn.disabled = paginaAnom >= totalPags;
 }
 
+function render(data) {
+  anomalias_global = data.anomalias;
+  const fonte = data.resumo && data.resumo.length > 0 ? data.resumo : data.anomalias;
+  const cidades = data.cidades || [...new Set(data.anomalias.map(a=>a.cidade))].sort();
+  const assuntos = [...new Set(data.anomalias.map(a=>a.motivo))].sort();
+  const diretorias = [...new Set(data.anomalias.map(a=>a.diretoria).filter(Boolean))].sort();
+
+  const cidadeOpts = [
+    '<div class="city-opt selected" data-cidade="todas" onclick="selecionarCidadeByEl(this)"><span>Todas as cidades</span></div>',
+    ...cidades.map(c=>'<div class="city-opt" data-cidade="' + c + '" onclick="selecionarCidadeByEl(this)">' + c + '</div>')
+  ].join('');
+
+  const assuntoOpts = (
+    ['<div class="assunto-opt selected" data-assunto="todos" onclick="selecionarAssuntoByEl(this)"><span>Todos os assuntos</span></div>'].concat(
+      assuntos.map(a=>'<div class="assunto-opt" data-assunto="' + a + '" onclick="selecionarAssuntoByEl(this)">' + a + '</div>')
+    ).join('')
+  );
+
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <div class="header-left">
+        <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
+        <h1>Análise de Variações — Média de Contatos por Cidade</h1>
+        <div class="header-meta">Top 10 motivos por cidade · Gerado em ${data.gerado}</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-val" style="color:var(--danger)">${data.totalAltas + data.totalQuedas}</div>
+        <div class="header-stat-label">variações detectadas</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="metric-val" style="color:var(--danger)">${data.totalAltas}</div><div class="metric-label">altas atípicas</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--success)">${data.totalQuedas}</div><div class="metric-label">quedas atípicas</div></div>
+      <div class="metric"><div class="metric-val">30%</div><div class="metric-label">limiar de variação</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--warning)">${data.maiorDesvio||'—'}</div><div class="metric-label">maior desvio</div></div>
+    </div>
+
+    ${data.narracao ? `
+    <div class="two" style="margin-bottom:14px">
+      <div class="card card-full">${renderNarracao(data.narracao)}</div>
+    </div>` : ''}
+
+    <div class="two">
+
+      <div class="card card-full">
+        <div class="card-title">Filtros</div>
+        <div class="filter-section">
+          <div class="filter-row">
+            <span class="filter-label">Status</span>
+            <button class="fbtn on-all" data-tipo="all" onclick="filtrarAll()">Todos</button>
+            <button class="fbtn on-high" data-tipo="high" onclick="filtrar('high')">Altas</button>
+            <button class="fbtn on-low" data-tipo="low" onclick="filtrar('low')">Quedas</button>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label">Diretoria</span>
+            <div style="display:flex;gap:6px;flex-wrap:wrap" id="dir-btns">
+              <button class="fbtn on" data-dir="todas" onclick="filtrarDir('todas')">Todas</button>
+              ${diretorias.map(d => '<button class="fbtn" data-dir="' + d + '" onclick="filtrarDir(\'' + d + '\')">' + d + '</button>').join('')}
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label">Cidade</span>
+            <div class="city-filter" style="flex:1">
+              <div class="city-select-wrap">
+                <input type="text" class="city-search" id="citySearch" placeholder="Buscar cidade..." autocomplete="off"
+                  onclick="toggleDropdown('cityDropdown')" oninput="filterCidade(this.value)">
+                <button class="city-clear" onclick="limparCidade()">Limpar</button>
+                <div class="city-dropdown" id="cityDropdown">${cidadeOpts}</div>
+              </div>
+              <div class="tags-row" id="cityTags"></div>
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label">Assunto</span>
+            <div class="assunto-filter" style="flex:1">
+              <input type="text" class="assunto-search" id="assuntoSearch" placeholder="Buscar assunto..." autocomplete="off"
+                onclick="toggleDropdown('assuntoDropdown')" oninput="filterAssunto(this.value)">
+              <div class="assunto-dropdown" id="assuntoDropdown">${assuntoOpts}</div>
+              <div class="tags-row" id="assuntoTags"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-full">
+        <div class="card-title">Evolução mensal — top variações com contexto de cidade</div>
+        <div id="spark-list"></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-sq" style="background:#378ADD"></span>Jan</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#BA7517"></span>Fev</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#1D9E75"></span>Mar</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#534AB7"></span>Abr</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#f87171"></span>Atual (alta)</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#34d399"></span>Atual (queda)</span>
+        </div>
+      </div>
+
+      <div class="card card-full">
+        <div class="card-title">Variações detectadas — cidade + motivo</div>
+        <div id="anom-list"></div>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px">Mês atual vs. média histórica Jan–Abr. Limiar: desvio acima de 30%.</p>
+        <div class="pager">
+          <span id="anom-pager-info"></span>
+          <div class="pager-btns">
+            <button class="pbtn" id="anom-btn-prev" onclick="paginaAnom--;renderAnom()">← Anterior</button>
+            <button class="pbtn" id="anom-btn-next" onclick="paginaAnom++;renderAnom()">Próxima →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Abr. Calculado no Excel.</span>
+      <span class="footer-badge">AI Builder · Power Automate</span>
+    </div>`;
+
+  renderAnom();
+  renderSparks(data.anomalias);
+}
+
+
 fetch(JSON_URL + '?t=' + Date.now())
   .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
   .then(txt => {
