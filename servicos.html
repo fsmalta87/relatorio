@@ -375,6 +375,15 @@ function renderOS() {
 function renderDirCards(os, dirs) {
   const el = document.getElementById('dir-cards');
   if (!el) return;
+  const mono = 'DM Mono,monospace';
+  const sans = 'DM Sans,sans-serif';
+
+  function miniCard(bg, border, cor, titulo, valor) {
+    return '<div style="background:' + bg + ';border:0.5px solid ' + border + ';border-radius:5px;padding:5px 7px">' +
+      '<div style="font-size:9px;color:' + cor + ';font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">' + titulo + '</div>' +
+      '<div style="font-size:13px;font-weight:500;font-family:' + mono + ';color:#f1f5f9">' + valor + '</div>' +
+    '</div>';
+  }
 
   el.innerHTML = ['todas', ...dirs].map(d => {
     const s = calcDir(os, d);
@@ -382,25 +391,13 @@ function renderDirCards(os, dirs) {
     const corHoje = s.hoje > 0 ? '#f87171' : '#34d399';
     return '<div class="dir-card' + (filtDiretoria===d?' active':'') + '" onclick="selecionarDir(\'' + d + '\')">' +
       '<div class="dir-name">' + nome + '</div>' +
-      '<div class="dir-criticas" style="color:' + corHoje + '">' + s.hoje.toLocaleString("pt-BR") + '</div>' +
-      '<div class="dir-sub">' + s.total.toLocaleString("pt-BR") + ' OS total</div>' +
+      '<div class="dir-criticas" style="color:' + corHoje + '">' + s.hoje.toLocaleString('pt-BR') + '</div>' +
+      '<div class="dir-sub">' + s.total.toLocaleString('pt-BR') + ' OS total</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px">' +
-        '<div style="background:rgba(248,113,113,.08);border:0.5px solid rgba(248,113,113,.2);border-radius:5px;padding:5px 7px">' +
-          '<div style="font-size:9px;color:#f87171;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Vence hoje</div>' +
-          '<div style="font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9">' + s.hoje.toLocaleString("pt-BR") + '</div>' +
-        '</div>' +
-        '<div style="background:rgba(251,191,36,.08);border:0.5px solid rgba(251,191,36,.2);border-radius:5px;padding:5px 7px">' +
-          '<div style="font-size:9px;color:#fbbf24;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Vence amanhã</div>' +
-          '<div style="font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9">' + s.amanha.toLocaleString("pt-BR") + '</div>' +
-        '</div>' +
-        '<div style="background:rgba(167,139,250,.08);border:0.5px solid rgba(167,139,250,.2);border-radius:5px;padding:5px 7px">' +
-          '<div style="font-size:9px;color:#a78bfa;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">Backlog</div>' +
-          '<div style="font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9">' + s.backlog.toLocaleString("pt-BR") + '</div>' +
-        '</div>' +
-        '<div style="background:rgba(52,211,153,.08);border:0.5px solid rgba(52,211,153,.2);border-radius:5px;padding:5px 7px">' +
-          '<div style="font-size:9px;color:#34d399;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">No prazo</div>' +
-          '<div style="font-size:13px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9">' + s.prazo.toLocaleString("pt-BR") + '</div>' +
-        '</div>' +
+        miniCard('rgba(248,113,113,.08)', 'rgba(248,113,113,.2)', '#f87171', 'Vence hoje',   s.hoje.toLocaleString('pt-BR')) +
+        miniCard('rgba(251,191,36,.08)',  'rgba(251,191,36,.2)',  '#fbbf24', 'Vence amanhã', s.amanha.toLocaleString('pt-BR')) +
+        miniCard('rgba(167,139,250,.08)', 'rgba(167,139,250,.2)', '#a78bfa', 'Backlog',      s.backlog.toLocaleString('pt-BR')) +
+        miniCard('rgba(52,211,153,.08)',  'rgba(52,211,153,.2)',  '#34d399', 'No prazo',     s.prazo.toLocaleString('pt-BR')) +
       '</div>' +
     '</div>';
   }).join('');
