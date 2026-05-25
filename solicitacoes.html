@@ -449,9 +449,6 @@ function renderAnom() {
   if (pn) pn.disabled = paginaAnom >= totalPags;
 }
 
-const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#f87171'];
-const MESES  = ['Jan','Fev','Mar','Abr','Atual'];
-
 function renderSparks(anomalias) {
   const filtradas = anomalias
     .filter(a => filtros[a.tipo]
