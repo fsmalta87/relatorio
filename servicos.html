@@ -3,24 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Falta de Água — Corsan</title>
+<title>Análise de Serviços — Corsan</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0a0f1e;--surface:#111827;--surface2:#1a2235;
-    --border:rgba(99,179,237,0.12);--border2:rgba(99,179,237,0.06);
-    --accent:#38bdf8;--text:#e2e8f0;--muted:#64748b;
-    --danger:#f87171;--warning:#fbbf24;--success:#34d399;--purple:#a78bfa;
+    --border:rgba(99,179,237,0.12);--accent:#38bdf8;
+    --text:#e2e8f0;--muted:#64748b;
+    --ca:#34d399;--cb:#fbbf24;--cc:#f87171;
+    --cd:#a78bfa;--ce:#f97316;--cf:#ec4899;
+    --cg:#6366f1;--ch:#94a3b8;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;padding:24px}
-  .grid-bg{position:fixed;inset:0;z-index:0;
-    background-image:linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);
-    background-size:40px 40px;pointer-events:none}
+  .grid-bg{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
   .container{max-width:960px;margin:0 auto;position:relative;z-index:1}
-
-  /* Header */
   .header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
   .header-left img{height:144px;margin-bottom:4px;margin-top:-8px;display:block;filter:brightness(0) invert(1)}
   h1{font-size:18px;font-weight:500;color:#f1f5f9}
@@ -28,29 +25,40 @@
   .header-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:right}
   .header-stat-val{font-size:22px;font-weight:600;font-family:'DM Mono',monospace}
   .header-stat-label{font-size:11px;color:var(--muted);margin-top:2px}
-
-  /* Metrics */
-  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px}
   .metric{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
   .metric-val{font-size:20px;font-weight:600;font-family:'DM Mono',monospace}
   .metric-label{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
-
-  /* IA subcards */
   .block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:14px}
   .block-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+
+  /* IA subcards */
   .ia-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   @media(max-width:600px){.ia-grid{grid-template-columns:1fr}}
   .ia-sub{border:0.5px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 14px;background:rgba(255,255,255,.02)}
   .ia-sub.critico{border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.04)}
-  .ia-sub.programado{border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.04)}
-  .ia-sub.concluido{border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.04)}
+  .ia-sub.atencao{border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.04)}
+  .ia-sub.positivo{border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.04)}
   .ia-sub.exec{grid-column:1/-1;border-color:rgba(56,189,248,.25);background:rgba(56,189,248,.04)}
-  .ia-sub-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .ia-sub-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px}
   .ia-sub.critico .ia-sub-label{color:#f87171}
-  .ia-sub.programado .ia-sub-label{color:#fbbf24}
-  .ia-sub.concluido .ia-sub-label{color:#34d399}
+  .ia-sub.atencao .ia-sub-label{color:#fbbf24}
+  .ia-sub.positivo .ia-sub-label{color:#34d399}
   .ia-sub.exec .ia-sub-label{color:var(--accent)}
   .ia-sub-text{font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap}
+
+  /* Cards diretoria */
+  .dir-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  @media(max-width:640px){.dir-grid{grid-template-columns:repeat(2,1fr)}}
+  .dir-card{border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+  .dir-card:hover{border-color:rgba(56,189,248,.3);background:rgba(56,189,248,.04)}
+  .dir-card.active{border-color:rgba(56,189,248,.5);background:rgba(56,189,248,.08)}
+  .dir-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+  .dir-card.active .dir-name{color:var(--accent)}
+  .dir-criticas{font-size:20px;font-weight:600;font-family:'DM Mono',monospace}
+  .dir-sub{font-size:10px;color:var(--muted);margin-top:1px;margin-bottom:8px}
+  .dir-bar{display:flex;height:4px;border-radius:2px;overflow:hidden;gap:1px;margin-top:6px}
+  .dir-bar-seg{height:100%;min-width:1px}
 
   /* Filtros */
   .filter-section{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
@@ -58,9 +66,9 @@
   .filter-label{font-size:11px;color:var(--muted);min-width:52px;flex-shrink:0}
   .fbtn{font-size:11px;padding:4px 10px;border:0.5px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
   .fbtn.on{background:rgba(56,189,248,.1);color:var(--accent);border-color:rgba(56,189,248,.3)}
-  .fbtn.on-danger{background:rgba(248,113,113,.1);color:#f87171;border-color:rgba(248,113,113,.3)}
-  .fbtn.on-warning{background:rgba(251,191,36,.1);color:#fbbf24;border-color:rgba(251,191,36,.3)}
-  .fbtn.on-success{background:rgba(52,211,153,.1);color:#34d399;border-color:rgba(52,211,153,.3)}
+  .fbtn.on-c{background:rgba(248,113,113,.1);color:#f87171;border-color:rgba(248,113,113,.3)}
+  .fbtn.on-b{background:rgba(251,191,36,.1);color:#fbbf24;border-color:rgba(251,191,36,.3)}
+  .fbtn.on-a{background:rgba(52,211,153,.1);color:#34d399;border-color:rgba(52,211,153,.3)}
 
   /* Dropdown */
   .dd-wrap{position:relative;flex:1;max-width:300px}
@@ -78,32 +86,22 @@
   .tag{display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 8px;background:rgba(56,189,248,.1);border:0.5px solid rgba(56,189,248,.25);border-radius:4px;color:var(--accent)}
   .tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:12px;padding:0;line-height:1}
 
-  /* Status badges */
-  .status-badge{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:500;white-space:nowrap}
-  .st-andamento{background:rgba(248,113,113,.12);color:#f87171}
-  .st-recuperacao{background:rgba(251,191,36,.12);color:#fbbf24}
-  .st-programado{background:rgba(56,189,248,.12);color:#38bdf8}
-  .st-concluido{background:rgba(52,211,153,.12);color:#34d399}
+  /* Lista OS */
+  .os-item{display:flex;align-items:stretch;margin-bottom:6px;border-radius:8px;overflow:hidden;border:0.5px solid rgba(255,255,255,.06)}
+  .os-acc{width:3px;flex-shrink:0}
+  .os-body{display:flex;align-items:center;gap:10px;padding:9px 12px;flex:1;min-width:0;background:rgba(255,255,255,.02)}
+  .os-info{flex:1;min-width:0}
+  .os-grupo{font-size:12px;font-weight:500;color:#f1f5f9}
+  .os-desc{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+  .os-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+  .os-dir-cidade{font-size:10px;color:var(--muted)}
+  .prazo-badge{font-size:10px;padding:2px 7px;border-radius:3px;font-weight:500;white-space:nowrap}
+  .note{font-size:11px;color:var(--muted);margin-top:8px}
 
-  /* Lista eventos */
-  .ev-item{display:flex;align-items:stretch;margin-bottom:6px;border-radius:8px;overflow:hidden;border:0.5px solid rgba(255,255,255,.06)}
-  .ev-item.andamento{border-color:rgba(248,113,113,.2)}
-  .ev-item.recuperacao{border-color:rgba(251,191,36,.2)}
-  .ev-item.programado{border-color:rgba(56,189,248,.15)}
-  .ev-item.concluido{border-color:rgba(52,211,153,.15)}
-  .ev-acc{width:3px;flex-shrink:0}
-  .ev-item.andamento .ev-acc{background:#f87171}
-  .ev-item.recuperacao .ev-acc{background:#fbbf24}
-  .ev-item.programado .ev-acc{background:#38bdf8}
-  .ev-item.concluido .ev-acc{background:#34d399}
-  .ev-body{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;flex:1;min-width:0;background:rgba(255,255,255,.02)}
-  .ev-info{flex:1;min-width:0}
-  .ev-municipio{font-size:12px;font-weight:500;color:#f1f5f9}
-  .ev-categoria{font-size:11px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .ev-datas{font-size:10px;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;line-height:1.6}
-  .ev-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
-  .ev-ligacoes{font-size:11px;font-family:'DM Mono',monospace;font-weight:500;color:#f1f5f9}
-  .ev-ligacoes-label{font-size:9px;color:var(--muted)}
+  /* Legenda prazos */
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .leg{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+  .leg-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
 
   /* Paginação */
   .pager{display:flex;align-items:center;justify-content:space-between;margin-top:12px;font-size:12px;color:var(--muted)}
@@ -111,21 +109,6 @@
   .pbtn{padding:4px 10px;border:0.5px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;font-size:11px}
   .pbtn:disabled{opacity:.35;cursor:not-allowed}
   .pbtn:not(:disabled):hover{border-color:var(--accent);color:var(--accent)}
-
-  /* Cards regionais */
-  .reg-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
-  @media(max-width:700px){.reg-grid{grid-template-columns:repeat(2,1fr)}}
-  .reg-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s}
-  .reg-card:hover{border-color:rgba(56,189,248,.3);background:rgba(56,189,248,.04)}
-  .reg-card.active{border-color:rgba(56,189,248,.5);background:rgba(56,189,248,.08)}
-  .reg-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
-  .reg-card.active .reg-name{color:var(--accent)}
-  .reg-eventos{font-size:20px;font-weight:600;font-family:'DM Mono',monospace;color:#f1f5f9}
-  .reg-sub{font-size:10px;color:var(--muted);margin-top:2px;margin-bottom:8px}
-  .reg-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px}
-  .reg-mini{border-radius:5px;padding:5px 7px}
-  .reg-mini-label{font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
-  .reg-mini-val{font-size:12px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9}
 
   .footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);flex-wrap:wrap;gap:8px}
   .footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600}
@@ -136,81 +119,180 @@
 <body>
 <div class="grid-bg"></div>
 <div class="container">
-  <div id="app"><div class="empty"><h2>Carregando dados...</h2><p style="font-size:13px;margin-top:6px">Buscando eventos de falta de água...</p></div></div>
+  <div id="app"><div class="empty"><h2>Carregando dados...</h2><p style="font-size:13px;margin-top:6px">Buscando análise mais recente...</p></div></div>
 </div>
 <script>
-const DEPARA_REGIONAL = {"AGUDO": "CENTRO", "CAÇAPAVA DO SUL": "CENTRO", "CACHOEIRA DO SUL": "CENTRO", "CANDELÁRIA": "CENTRO", "DONA FRANCISCA": "CENTRO", "ENCRUZILHADA DO SUL": "CENTRO", "FAXINAL DO SOTURNO": "CENTRO", "FORMIGUEIRO": "CENTRO", "LAVRAS DO SUL": "CENTRO", "NOVA PALMA": "CENTRO", "RESTINGA SÊCA": "CENTRO", "SANTA MARGARIDA DO SUL": "CENTRO", "SANTANA DA BOA VISTA": "CENTRO", "SÃO SEPÉ": "CENTRO", "VILA NOVA DO SUL": "CENTRO", "ARROIO DO MEIO": "CENTRO", "BOM RETIRO DO SUL": "CENTRO", "CRUZEIRO DO SUL": "CENTRO", "ENCANTADO": "CENTRO", "ESTRELA": "CENTRO", "LAJEADO": "CENTRO", "MARQUES DE SOUZA": "CENTRO", "NOVA BRÉSCIA": "CENTRO", "PAVERAMA": "CENTRO", "ROCA SALES": "CENTRO", "TAQUARI": "CENTRO", "PANTANO GRANDE": "CENTRO", "RIO PARDO": "CENTRO", "SANTA CRUZ DO SUL": "CENTRO", "VENÂNCIO AIRES": "CENTRO", "DILERMANDO DE AGUIAR": "CENTRO", "ITAARA": "CENTRO", "IVORÁ": "CENTRO", "MATA": "CENTRO", "SANTA MARIA": "CENTRO", "SÃO PEDRO DO SUL": "CENTRO", "SILVEIRA MARTINS": "CENTRO", "CARAZINHO": "CENTRO", "CHAPADA": "CENTRO", "COLORADO": "CENTRO", "ESPUMOSO": "CENTRO", "NÃO-ME-TOQUE": "CENTRO", "PALMEIRA DAS MISSÕES": "CENTRO", "TAPERA": "CENTRO", "VICTOR GRAEFF": "CENTRO", "ALTO ALEGRE": "CENTRO", "CAMPOS BORGES": "CENTRO", "CRUZ ALTA": "CENTRO", "FORTALEZA DOS VALOS": "CENTRO", "IBIRUBÁ": "CENTRO", "JÚLIO DE CASTILHOS": "CENTRO", "SALTO DO JACUÍ": "CENTRO", "SELBACH": "CENTRO", "TUPANCIRETÃ": "CENTRO", "AJURICABA": "CENTRO", "CATUÍPE": "CENTRO", "CONDOR": "CENTRO", "IJUÍ": "CENTRO", "PANAMBI": "CENTRO", "PEJUÇARA": "CENTRO", "SANTA BÁRBARA DO SUL": "CENTRO", "ARROIO DO TIGRE": "CENTRO", "ARVOREZINHA": "CENTRO", "BARROS CASSAL": "CENTRO", "BOQUEIRÃO DO LEÃO": "CENTRO", "FONTOURA XAVIER": "CENTRO", "ILÓPOLIS": "CENTRO", "ITAPUCA": "CENTRO", "LAGOA BONITA DO SUL": "CENTRO", "LAGOÃO": "CENTRO", "PASSA SETE": "CENTRO", "PUTINGA": "CENTRO", "SÃO JOSÉ DO HERVAL": "CENTRO", "SOBRADINHO": "CENTRO", "SOLEDADE": "CENTRO", "CAPÃO DA CANOA": "LESTE", "XANGRI-LÁ": "LESTE", "BALNEÁRIO PINHAL": "LESTE", "CIDREIRA": "LESTE", "OSÓRIO": "LESTE", "CAPIVARI DO SUL": "LESTE", "GLORINHA": "LESTE", "MOSTARDAS": "LESTE", "PALMARES DO SUL": "LESTE", "SANTO ANTÔNIO DA PATRULHA": "LESTE", "TAVARES": "LESTE", "IMBÉ": "LESTE", "TRAMANDAÍ": "LESTE", "ARROIO DO SAL": "LESTE", "TERRA DE AREIA": "LESTE", "TORRES": "LESTE", "TRÊS CACHOEIRAS": "LESTE", "ALVORADA": "LESTE", "VIAMÃO": "LESTE", "CANOAS": "LESTE", "CACHOEIRINHA": "LESTE", "GRAVATAÍ": "LESTE", "ELDORADO DO SUL": "LESTE", "GUAÍBA": "LESTE", "ESTEIO": "LESTE", "SAPUCAIA DO SUL": "LESTE", "ARATIBA": "NORTE", "ÁUREA": "NORTE", "EREBANGO": "NORTE", "ERECHIM": "NORTE", "ESTAÇÃO": "NORTE", "GAURAMA": "NORTE", "GETÚLIO VARGAS": "NORTE", "MARCELINO RAMOS": "NORTE", "MARIANO MORO": "NORTE", "SERTÃO": "NORTE", "SEVERIANO DE ALMEIDA": "NORTE", "VIADUTOS": "NORTE", "ALPESTRE": "NORTE", "AMETISTA DO SUL": "NORTE", "CAIÇARA": "NORTE", "ERVAL SECO": "NORTE", "FREDERICO WESTPHALEN": "NORTE", "IRAÍ": "NORTE", "JABOTICABA": "NORTE", "PALMITINHO": "NORTE", "PINHEIRINHO DO VALE": "NORTE", "PLANALTO": "NORTE", "RODEIO BONITO": "NORTE", "SEBERI": "NORTE", "TAQUARUÇU DO SUL": "NORTE", "VICENTE DUTRA": "NORTE", "VISTA ALEGRE": "NORTE", "BARÃO DE COTEGIPE": "NORTE", "CAMPINAS DO SUL": "NORTE", "CONSTANTINA": "NORTE", "ENTRE RIOS DO SUL": "NORTE", "ERVAL GRANDE": "NORTE", "FAXINALZINHO": "NORTE", "ITATIBA DO SUL": "NORTE", "JACUTINGA": "NORTE", "LIBERATO SALZANO": "NORTE", "NONOAI": "NORTE", "RIO DOS ÍNDIOS": "NORTE", "RONDA ALTA": "NORTE", "RONDINHA": "NORTE", "SÃO VALENTIM": "NORTE", "SARANDI": "NORTE", "TRINDADE DO SUL": "NORTE", "MARAU": "NORTE", "PASSO FUNDO": "NORTE", "BARÃO": "NORTE", "CARLOS BARBOSA": "NORTE", "FARROUPILHA": "NORTE", "GARIBALDI": "NORTE", "SALVADOR DO SUL": "NORTE", "SÃO PEDRO DA SERRA": "NORTE", "BOM JESUS": "NORTE", "CAMBARÁ DO SUL": "NORTE", "CANELA": "NORTE", "GRAMADO": "NORTE", "JAQUIRANA": "NORTE", "NOVA PETRÓPOLIS": "NORTE", "SÃO FRANCISCO DE PAULA": "NORTE", "SÃO JOSÉ DOS AUSENTES": "NORTE", "ÁGUA SANTA": "NORTE", "BARRACÃO": "NORTE", "CACIQUE DOBLE": "NORTE", "ESMERALDA": "NORTE", "IBIAÇÁ": "NORTE", "LAGOA VERMELHA": "NORTE", "MACHADINHO": "NORTE", "MAXIMILIANO DE ALMEIDA": "NORTE", "MUITOS CAPÕES": "NORTE", "PAIM FILHO": "NORTE", "SANANDUVA": "NORTE", "SANTO EXPEDITO DO SUL": "NORTE", "SÃO JOÃO DA URTIGA": "NORTE", "SÃO JOSÉ DO OURO": "NORTE", "TAPEJARA": "NORTE", "VACARIA": "NORTE", "BENTO GONÇALVES": "NORTE", "PINTO BANDEIRA": "NORTE", "ANTÔNIO PRADO": "NORTE", "CAMPESTRE DA SERRA": "NORTE", "FLORES DA CUNHA": "NORTE", "IPÊ": "NORTE", "NOVA ROMA DO SUL": "NORTE", "SÃO MARCOS": "NORTE", "CASCA": "NORTE", "CASEIROS": "NORTE", "CIRÍACO": "NORTE", "COTIPORÃ": "NORTE", "DAVID CANABARRO": "NORTE", "FAGUNDES VARELA": "NORTE", "GUAPORÉ": "NORTE", "IBIRAIARAS": "NORTE", "NOVA ARAÇÁ": "NORTE", "NOVA BASSANO": "NORTE", "NOVA PRATA": "NORTE", "PARAÍ": "NORTE", "SÃO JORGE": "NORTE", "SERAFINA CORRÊA": "NORTE", "VERANÓPOLIS": "NORTE", "VILA FLORES": "NORTE", "ALEGRETE": "OESTE", "MANOEL VIANA": "OESTE", "QUARAÍ": "OESTE", "CACEQUI": "OESTE", "DOM PEDRITO": "OESTE", "ROSÁRIO DO SUL": "OESTE", "SÃO VICENTE DO SUL": "OESTE", "BARRA DO QUARAÍ": "OESTE", "ITAQUI": "OESTE", "MAÇAMBARÁ": "OESTE", "SÃO BORJA": "OESTE", "BOSSOROCA": "OESTE", "JAGUARI": "OESTE", "NOVA ESPERANÇA DO SUL": "OESTE", "SANTIAGO": "OESTE", "SÃO FRANCISCO DE ASSIS": "OESTE", "UNISTALDA": "OESTE", "CAIBATÉ": "OESTE", "CAMPINA DAS MISSÕES": "OESTE", "CÂNDIDO GODÓI": "OESTE", "CERRO LARGO": "OESTE", "ENTRE-IJUÍS": "OESTE", "GUARANI DAS MISSÕES": "OESTE", "PORTO LUCENA": "OESTE", "PORTO XAVIER": "OESTE", "SANTO ÂNGELO": "OESTE", "SANTO ANTÔNIO DAS MISSÕES": "OESTE", "SÃO LUIZ GONZAGA": "OESTE", "SÃO MIGUEL DAS MISSÕES": "OESTE", "SÃO NICOLAU": "OESTE", "ALECRIM": "OESTE", "DOUTOR MAURÍCIO CARDOSO": "OESTE", "GIRUÁ": "OESTE", "HORIZONTINA": "OESTE", "SANTA ROSA": "OESTE", "SANTO CRISTO": "OESTE", "TUCUNDUVA": "OESTE", "TUPARENDI": "OESTE", "BARRA DO GUARITA": "OESTE", "BRAGA": "OESTE", "CAMPO NOVO": "OESTE", "CHIAPETTA": "OESTE", "CORONEL BICACO": "OESTE", "DERRUBADAS": "OESTE", "INHACORÁ": "OESTE", "MIRAGUAÍ": "OESTE", "REDENTORA": "OESTE", "SANTO AUGUSTO": "OESTE", "TENENTE PORTELA": "OESTE", "VISTA GAÚCHA": "OESTE", "BOA VISTA DO BURICÁ": "OESTE", "BOM PROGRESSO": "OESTE", "CRISSIUMAL": "OESTE", "HUMAITÁ": "OESTE", "INDEPENDÊNCIA": "OESTE", "SÃO JOSÉ DO INHACORÁ": "OESTE", "SÃO MARTINHO": "OESTE", "SEDE NOVA": "OESTE", "TIRADENTES DO SUL": "OESTE", "TRÊS DE MAIO": "OESTE", "TRÊS PASSOS": "OESTE", "ARROIO DOS RATOS": "SUL", "BARÃO DO TRIUNFO": "SUL", "BUTIÁ": "SUL", "MINAS DO LEÃO": "SUL", "CAMPO BOM": "SUL", "ESTÂNCIA VELHA": "SUL", "PORTÃO": "SUL", "SAPIRANGA": "SUL", "CHARQUEADAS": "SUL", "GENERAL CÂMARA": "SUL", "SÃO JERÔNIMO": "SUL", "DOIS IRMÃOS": "SUL", "MORRO REUTER": "SUL", "SANTA MARIA DO HERVAL": "SUL", "CAPELA DE SANTANA": "SUL", "FELIZ": "SUL", "MONTENEGRO": "SUL", "SÃO SEBASTIÃO DO CAÍ": "SUL", "NOVA SANTA RITA": "SUL", "TRIUNFO": "SUL", "RIOZINHO": "SUL", "ROLANTE": "SUL", "TAQUARA": "SUL", "IGREJINHA": "SUL", "NOVA HARTZ": "SUL", "PAROBÉ": "SUL", "TRÊS COROAS": "SUL", "AMARAL FERRADOR": "SUL", "ARAMBARÉ": "SUL", "CAMAQUÃ": "SUL", "CHUVISCA": "SUL", "CRISTAL": "SUL", "DOM FELICIANO": "SUL", "SÃO LOURENÇO DO SUL": "SUL", "CANGUÇU": "SUL", "CAPÃO DO LEÃO": "SUL", "MORRO REDONDO": "SUL", "ARROIO GRANDE": "SUL", "HERVAL": "SUL", "JAGUARÃO": "SUL", "ACEGUÁ": "SUL", "CERRITO": "SUL", "PEDRAS ALTAS": "SUL", "PEDRO OSÓRIO": "SUL", "PINHEIRO MACHADO": "SUL", "PIRATINI": "SUL", "RIO GRANDE": "SUL", "SÃO JOSÉ DO NORTE": "SUL", "CHUÍ": "SUL", "SANTA VITÓRIA DO PALMAR": "SUL", "BARRA DO RIBEIRO": "SUL", "CERRO GRANDE DO SUL": "SUL", "MARIANA PIMENTEL": "SUL", "SENTINELA DO SUL": "SUL", "SERTÃO SANTANA": "SUL", "TAPES": "SUL"};
+const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-servicos.json';
 
-function getRegional(municipio) {
-  if (!municipio) return '';
-  const upper = municipio.toUpperCase().trim();
-  return DEPARA_REGIONAL[upper] || '';
-}
-
-const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-relatorio.json';
-const POR_PAG = 20;
-
-const STATUS_CFG = {
-  'Em Andamento':   { cls: 'andamento',   badge: 'st-andamento',   label: 'Em Andamento' },
-  'Em Recuperacao': { cls: 'recuperacao', badge: 'st-recuperacao', label: 'Em Recuperação' },
-  'Programado':     { cls: 'programado',  badge: 'st-programado',  label: 'Programado' },
-  'Concluido':      { cls: 'concluido',   badge: 'st-concluido',   label: 'Concluído' },
+const PRAZO_CFG = {
+  'a)': { label:'Dentro do prazo', cor:'#34d399', cls:'pb-a', ordem:0 },
+  'b)': { label:'Vence amanhã',    cor:'#fbbf24', cls:'pb-b', ordem:1 },
+  'c)': { label:'Vence hoje',      cor:'#f87171', cls:'pb-c', ordem:2 },
+  'd)': { label:'1–10 dias',       cor:'#a78bfa', cls:'pb-d', ordem:3 },
+  'e)': { label:'11–20 dias',      cor:'#f97316', cls:'pb-e', ordem:4 },
+  'f)': { label:'21–30 dias',      cor:'#ec4899', cls:'pb-f', ordem:5 },
+  'g)': { label:'31–60 dias',      cor:'#6366f1', cls:'pb-g', ordem:6 },
+  'h)': { label:'61–360 dias',     cor:'#94a3b8', cls:'pb-h', ordem:7 },
 };
 
-function getStatusCfg(status) {
-  return STATUS_CFG[status] || { cls: 'programado', badge: 'st-programado', label: status };
+const PRAZO_CORES_CSS = `
+  .pb-a{background:rgba(52,211,153,.12);color:#34d399}
+  .pb-b{background:rgba(251,191,36,.12);color:#fbbf24}
+  .pb-c{background:rgba(248,113,113,.12);color:#f87171}
+  .pb-d{background:rgba(167,139,250,.12);color:#a78bfa}
+  .pb-e{background:rgba(249,115,22,.12);color:#f97316}
+  .pb-f{background:rgba(236,72,153,.12);color:#ec4899}
+  .pb-g{background:rgba(99,102,241,.12);color:#6366f1}
+  .pb-h{background:rgba(148,163,184,.12);color:#94a3b8}
+`;
+const styleEl = document.createElement('style');
+styleEl.textContent = PRAZO_CORES_CSS;
+document.head.appendChild(styleEl);
+
+function getPrazoKey(prazo) {
+  const p = (prazo || '').trim().toLowerCase();
+  for (const k of Object.keys(PRAZO_CFG)) {
+    if (p.startsWith(k)) return k;
+  }
+  return 'a)';
 }
 
-function parseData(txt) {
-  const data = { gerado: new Date().toLocaleString('pt-BR'), narracao: '', eventos: [] };
+function parseCodDesc(txt) {
+  const idx = (txt||'').indexOf('-');
+  if (idx < 0) return { cod: '', desc: txt };
+  return { cod: txt.slice(0, idx).trim(), desc: txt.slice(idx+1).trim() };
+}
+
+function parseServicos(txt) {
+  const data = {
+    gerado: new Date().toLocaleString('pt-BR'),
+    narracao: '', os: [], resumo: []
+  };
   const linhas = txt.split('\n');
   let section = 'dados';
+  let arrayCount = 0; // conta quantos arrays JSON já encontramos
 
-  for (const l of linhas) {
+  for (let i = 0; i < linhas.length; i++) {
+    const l = linhas[i];
     const lt = l.trim();
     if (!lt) continue;
-    if (lt.includes('NARRAÇÃO') || lt.includes('NARRACAO')) { section = 'narracao'; continue; }
-    if (lt.includes('DADOS')) { section = 'dados'; continue; }
-    if (lt.startsWith('---')) { if (section === 'narracao') section = 'dados'; continue; }
+
+    if (lt.includes('NARRAÇÃO') || lt.includes('NARRACAO')) { section='narracao'; continue; }
+    if (lt.includes('DADOS')) { section='dados'; continue; }
+    if (lt.startsWith('---')) { if(section==='narracao') section='dados'; continue; }
 
     if (section === 'narracao') {
       data.narracao += (data.narracao ? '\n' : '') + lt;
       continue;
     }
 
+    // Arrays JSON — primeiro é o resumo (com QTD), segundo é o detalhe (com Cidade)
     if (lt.startsWith('[') || lt.startsWith('{')) {
+      let objetos = [];
       try {
         const parsed = JSON.parse(lt.replace(/,$/, ''));
-        const arr = Array.isArray(parsed) ? parsed : [parsed];
-        for (const obj of arr) {
-          if (!obj.status && !obj.STATUS) continue;
-          data.eventos.push({
-            id:          obj.id || obj.ID_EVENTO || '',
-            categoria:   (obj.categoria || obj.CATEGORIA || '').trim(),
-            subcategoria:(obj.subcategoria || obj.SUBCATEGORIA || '').trim(),
-            status:      (obj.status || obj.STATUS || '').trim(),
-            municipio:   (obj.municipio || obj.MUNICIPIOS || '').trim(),
-            bairros:     (obj.bairros || obj.BAIRROS || '').trim(),
-            dt_inicio:   obj.dt_inicio || obj.DT_INICIO || '',
-            dt_inicio_rec: obj.dt_inicio_rec || obj.DT_INICIO_REC_GRAD || '',
-            dt_fim_rec:  obj.dt_fim_rec || obj.DT_FIM_REC_GRAD || '',
-            ligacoes:    parseInt(obj.ligacoes || obj.LIGACOES || 0) || 0,
-            regional:    getRegional(obj.municipio || obj.MUNICIPIOS || ''),
+        objetos = Array.isArray(parsed) ? parsed : [parsed];
+      } catch(e) { continue; }
+
+      for (const obj of objetos) {
+        const prazoRaw = (obj['Prazo OS backlog'] || obj['Prazo'] || '').trim();
+        const prazoKey = getPrazoKey(prazoRaw);
+
+        // Resumo: tem QTD mas não tem Cidade nem Código/Descrição
+        if (obj['QTD'] || obj['Qtd'] || obj['qtd']) {
+          const qtd = parseInt(obj['QTD'] || obj['Qtd'] || obj['qtd'] || '1') || 1;
+          data.resumo.push({
+            diretoria: (obj['Regional'] || obj['Diretoria'] || '').trim(),
+            grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
+            qtd, prazoRaw, prazoKey
+          });
+        } else {
+          // Detalhe: tem Cidade e Código/Descrição
+          const { cod, desc } = parseCodDesc(obj['Código/Descrição'] || obj['Codigo'] || '');
+          data.os.push({
+            diretoria: (obj['Diretoria'] || obj['Regional'] || '').trim(),
+            cidade: (obj['Cidade'] || '').trim(),
+            grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
+            cod, desc, qtd: 1,
+            prazoRaw, prazoKey
           });
         }
-      } catch(e) { continue; }
+      }
+      continue;
+    }
+
+    // TSV legado
+    const cols = l.split('\t');
+    if (cols.length < 5) continue;
+    const diretoria = cols[0].trim();
+    if (!diretoria || diretoria === 'Diretoria' || diretoria === 'Regional') continue;
+    const prazoRaw = cols[4].trim();
+    const { cod, desc } = parseCodDesc(cols[3].trim());
+    data.os.push({
+      diretoria, cidade: cols[1].trim(), grupo: cols[2].trim(),
+      cod, desc, qtd: 1, prazoRaw, prazoKey: getPrazoKey(prazoRaw)
+    });
+  }
+
+  // Se só veio resumo (sem detalhe), usa o resumo expandido na lista
+  if (data.os.length === 0 && data.resumo.length > 0) {
+    data.os = data.resumo.map(r => ({
+      diretoria: r.diretoria, cidade: '', grupo: r.grupo,
+      cod: '', desc: '', qtd: r.qtd, prazoRaw: r.prazoRaw, prazoKey: r.prazoKey
+    }));
+  }
+
+  // Guardar cidades únicas antes do agrupamento
+  data.cidades = [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
+
+  // Agrupar linhas iguais somando qtd
+  data.os = agruparOS(data.os);
+
+  return data;
+}
+
+function agruparOS(lista) {
+  const mapa = {};
+  for (const o of lista) {
+    const key = [o.diretoria, o.cidade, o.grupo, o.cod, o.prazoKey].join('||');
+    if (mapa[key]) {
+      mapa[key].qtd += (o.qtd || 1);
+    } else {
+      mapa[key] = Object.assign({}, o, { qtd: o.qtd || 1 });
     }
   }
-  return data;
+  return Object.values(mapa);
+}
+
+function sumQtd(arr) { return arr.reduce(function(s,o){ return s + (o.qtd||1); }, 0); }
+
+function calcMetrics(os) {
+  const total = sumQtd(os);
+  const criticas = sumQtd(os.filter(o => ['c)','d)','e)','f)','g)','h)'].includes(o.prazoKey)));
+  const amanha = sumQtd(os.filter(o => o.prazoKey === 'b)'));
+  const prazo = sumQtd(os.filter(o => o.prazoKey === 'a)'));
+  const venceHoje = sumQtd(os.filter(o => o.prazoKey === 'c)'));
+  return { total, criticas, amanha, prazo, venceHoje };
+}
+
+function calcDir(os, dir) {
+  const sub = dir === 'todas' ? os : os.filter(o => o.diretoria === dir);
+  const total = sumQtd(sub);
+  const hoje   = sumQtd(sub.filter(o => o.prazoKey === 'c)'));
+  const amanha = sumQtd(sub.filter(o => o.prazoKey === 'b)'));
+  const backlog= sumQtd(sub.filter(o => ['d)','e)','f)','g)','h)'].includes(o.prazoKey)));
+  const prazo  = sumQtd(sub.filter(o => o.prazoKey === 'a)'));
+  const criticas = hoje + backlog;
+  return { total, hoje, amanha, backlog, prazo, criticas };
 }
 
 function renderNarracao(txt) {
   if (!txt || !txt.trim()) return '';
   const blocos = [
-    { key: ['🔴', 'SITUAÇÃO CRÍTICA', 'CRITICA'], cls: 'critico' },
-    { key: ['📅', 'PROGRAMADOS', 'PROGRAMADO'], cls: 'programado' },
-    { key: ['✅', 'CONCLUÍDO', 'CONCLUIDOS'], cls: 'concluido' },
-    { key: ['📋', 'LEITURA EXECUTIVA'], cls: 'exec' },
+    { key:['🔴','SITUAÇÃO CRÍTICA'], cls:'critico' },
+    { key:['⚠️','ATENÇÃO AMANHÃ','ATENCAO AMANHA'], cls:'atencao' },
+    { key:['✅','DESTAQUES POSITIVOS','DESTAQUE POSITIVO'], cls:'positivo' },
+    { key:['📋','LEITURA EXECUTIVA'], cls:'exec' },
   ];
   const linhas = txt.split('\n');
   let atual = null; let atualBloco = null;
@@ -219,6 +301,7 @@ function renderNarracao(txt) {
     const lt = l.trim(); if (!lt) continue;
     let matched = false;
     for (const b of blocos) {
+      // Só é título se a linha COMEÇA com um dos marcadores
       if (b.key.some(k => lt.startsWith(k) || lt.toUpperCase().startsWith(k.toUpperCase()))) {
         atual = b.cls; atualBloco = b;
         if (!enc[atual]) enc[atual] = { label: lt, texto: [], bloco: b };
@@ -227,7 +310,7 @@ function renderNarracao(txt) {
     }
     if (!matched && atual && enc[atual]) enc[atual].texto.push(lt);
   }
-  const ordem = ['critico', 'programado', 'concluido', 'exec'];
+  const ordem = ['critico','atencao','positivo','exec'];
   const html = ordem.map(cls => {
     const b = enc[cls]; if (!b) return '';
     return `<div class="ia-sub ${cls}"><div class="ia-sub-label">${b.label}</div><div class="ia-sub-text">${b.texto.join('\n')}</div></div>`;
@@ -235,113 +318,159 @@ function renderNarracao(txt) {
   return html ? `<div class="ia-grid">${html}</div>` : `<div style="font-size:13px;color:var(--muted);white-space:pre-wrap;line-height:1.7">${txt}</div>`;
 }
 
-let eventos_global = [];
-let filtStatus = 'todos';
-let filtMunicipio = 'todos';
-let filtRegional = 'todas';
+let os_global = [];
+let filtDiretoria = 'todas';
+let filtPrazo = 'todas';
+let filtGrupo = 'todos';
+let filtCidade = 'todas';
 let pagina = 1;
+const POR_PAG = 30;
 
-function filtrarEventos() {
-  return eventos_global
-    .filter(e =>
-      (filtStatus === 'todos' || e.status === filtStatus) &&
-      (filtRegional === 'todas' || e.regional === filtRegional) &&
-      (filtMunicipio === 'todos' || e.municipio === filtMunicipio)
-    )
-    .sort((a, b) => {
-      const ordem = { 'Em Andamento': 0, 'Em Recuperacao': 1, 'Programado': 2, 'Concluido': 3 };
-      const oa = ordem[a.status] ?? 4;
-      const ob = ordem[b.status] ?? 4;
-      if (oa !== ob) return oa - ob;
-      return (b.ligacoes || 0) - (a.ligacoes || 0);
-    });
+function filtrarOS() {
+  return os_global.filter(o =>
+    (filtDiretoria === 'todas' || o.diretoria === filtDiretoria) &&
+
+    (filtGrupo === 'todos' || o.grupo === filtGrupo) &&
+    (filtCidade === 'todas' || !o.cidade || o.cidade === filtCidade) &&
+    (filtPrazo === 'todas' || (filtPrazo === 'urgente' ? ['b)','c)'].includes(o.prazoKey) : o.prazoKey === filtPrazo))
+  ).sort((a,b) => {
+    const op = (PRAZO_CFG[b.prazoKey]?.ordem||0) - (PRAZO_CFG[a.prazoKey]?.ordem||0);
+    return op !== 0 ? op : (b.qtd||1) - (a.qtd||1);
+  });
 }
 
-function calcRegional(eventos, reg) {
-  const sub = reg === 'todas' ? eventos : eventos.filter(e => e.regional === reg);
-  const ativos = sub.filter(e => ['Em Andamento','Em Recuperacao'].includes(e.status));
-  return {
-    total: sub.length,
-    ativos: ativos.length,
-    programados: sub.filter(e => e.status === 'Programado').length,
-    concluidos: sub.filter(e => e.status === 'Concluido').length,
-    ligacoes: ativos.reduce((s, e) => s + (e.ligacoes || 0), 0),
-  };
+function renderOS() {
+  const lista = filtrarOS();
+  const total = lista.length;
+  const inicio = (pagina-1)*POR_PAG;
+  const pag = lista.slice(inicio, inicio+POR_PAG);
+  const totalPags = Math.ceil(total/POR_PAG) || 1;
+
+  document.getElementById('os-count').textContent = `${total} OS`;
+  document.getElementById('os-list').innerHTML = pag.length === 0
+    ? '<p style="font-size:13px;color:var(--muted);padding:12px 0">Nenhuma OS no filtro selecionado.</p>'
+    : pag.map(o => {
+        const cfg = PRAZO_CFG[o.prazoKey] || PRAZO_CFG['a)'];
+        const qtdBadge = o.qtd > 1 ? `<span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);margin-right:4px">${o.qtd} OS</span>` : '';
+        return `<div class="os-item">
+          <div class="os-acc" style="background:${cfg.cor}"></div>
+          <div class="os-body">
+            <div class="os-info">
+              <div class="os-grupo">${o.grupo}</div>
+              <div class="os-desc">${o.cod ? o.cod + ' — ' : ''}${o.desc}</div>
+            </div>
+            <div class="os-right">
+              <span class="os-dir-cidade">${o.diretoria}${o.cidade ? ' / ' + o.cidade : ''}</span>
+              <span style="display:flex;align-items:center;gap:4px">${qtdBadge}<span class="prazo-badge ${cfg.cls}">${cfg.label}</span></span>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+  document.getElementById('pager-info').textContent = `Página ${pagina} de ${totalPags} · ${total} registros`;
+  document.getElementById('btn-prev').disabled = pagina <= 1;
+  document.getElementById('btn-next').disabled = pagina >= totalPags;
 }
 
-function renderRegCards(eventos) {
-  const el = document.getElementById('reg-cards');
+function renderDirCards(os, dirs) {
+  const el = document.getElementById('dir-cards');
   if (!el) return;
-  const regs = ['CENTRO','LESTE','NORTE','OESTE','SUL'];
-  el.innerHTML = regs.map(reg => {
-    const s = calcRegional(eventos, reg);
-    const nome = reg;
-    const mono = 'DM Mono,monospace';
-    function mini(bg, border, cor, titulo, valor) {
-      return '<div class="reg-mini" style="background:' + bg + ';border:0.5px solid ' + border + '">' +
-        '<div class="reg-mini-label" style="color:' + cor + '">' + titulo + '</div>' +
-        '<div class="reg-mini-val">' + valor + '</div></div>';
-    }
-    return '<div class="reg-card' + (filtRegional===reg?' active':'') + '" onclick="filtrarRegional(\'' + reg + '\')">' +
-      '<div class="reg-name">' + nome + '</div>' +
-      '<div class="reg-sub" style="margin-bottom:6px">' + s.total + ' eventos · ' + s.ligacoes.toLocaleString('pt-BR') + ' lig.</div>' +
-      '<div class="reg-mini-grid">' +
-        mini('rgba(248,113,113,.08)', 'rgba(248,113,113,.2)', '#f87171', 'Ativos',      s.ativos) +
-        mini('rgba(251,191,36,.08)',  'rgba(251,191,36,.2)',  '#fbbf24', 'Program.',    s.programados) +
-        mini('rgba(52,211,153,.08)',  'rgba(52,211,153,.2)',  '#34d399', 'Concluídos',  s.concluidos) +
-        mini('rgba(56,189,248,.08)',  'rgba(56,189,248,.2)',  '#38bdf8', 'Ligações',    s.ligacoes.toLocaleString('pt-BR')) +
+  const mono = 'DM Mono,monospace';
+  const sans = 'DM Sans,sans-serif';
+
+  function miniCard(bg, border, cor, titulo, valor) {
+    return '<div style="background:' + bg + ';border:0.5px solid ' + border + ';border-radius:5px;padding:5px 7px">' +
+      '<div style="font-size:9px;color:' + cor + ';font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">' + titulo + '</div>' +
+      '<div style="font-size:13px;font-weight:500;font-family:' + mono + ';color:#f1f5f9">' + valor + '</div>' +
+    '</div>';
+  }
+
+  el.innerHTML = dirs.map(d => {
+    const s = calcDir(os, d);
+    const nome = d === 'todas' ? 'Todas' : d;
+    const corHoje = s.hoje > 0 ? '#f87171' : '#34d399';
+    return '<div class="dir-card' + (filtDiretoria===d?' active':'') + '" onclick="selecionarDir(\'' + d + '\')">' +
+      '<div class="dir-name">' + nome + '</div>' +
+      '<div class="dir-criticas" style="color:' + corHoje + '">' + s.hoje.toLocaleString('pt-BR') + '</div>' +
+      '<div class="dir-sub">' + s.total.toLocaleString('pt-BR') + ' OS total</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px">' +
+        miniCard('rgba(248,113,113,.08)', 'rgba(248,113,113,.2)', '#f87171', 'Vence hoje',   s.hoje.toLocaleString('pt-BR')) +
+        miniCard('rgba(251,191,36,.08)',  'rgba(251,191,36,.2)',  '#fbbf24', 'Vence amanhã', s.amanha.toLocaleString('pt-BR')) +
+        miniCard('rgba(167,139,250,.08)', 'rgba(167,139,250,.2)', '#a78bfa', 'Atrasado',      s.backlog.toLocaleString('pt-BR')) +
+        miniCard('rgba(52,211,153,.08)',  'rgba(52,211,153,.2)',  '#34d399', 'No prazo',     s.prazo.toLocaleString('pt-BR')) +
       '</div>' +
     '</div>';
   }).join('');
 }
 
-function filtrarRegional(reg) {
-  filtRegional = reg;
+function selecionarDir(d) {
+  filtDiretoria = d;
+  pagina = 1;
+  document.querySelectorAll('.dir-card').forEach(el => {
+    el.classList.toggle('active', el.getAttribute('onclick') === "selecionarDir('" + d + "')");
+  });
+  document.querySelectorAll('.fbtn[data-reg]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.reg === d ? ' on' : '');
+  });
+  renderOS();
+}
+
+function filtrarReg(reg) {
+  filtDiretoria = reg;
   pagina = 1;
   document.querySelectorAll('.fbtn[data-reg]').forEach(b => {
     b.className = 'fbtn' + (b.dataset.reg === reg ? ' on' : '');
   });
-  document.querySelectorAll('.reg-card').forEach(el => {
+  // Atualizar cards de diretoria
+  document.querySelectorAll('.dir-card').forEach(el => {
     const onclick = el.getAttribute('onclick') || '';
-    el.classList.toggle('active', onclick.includes("'" + reg + "'"));
+    el.classList.toggle('active', onclick.includes("'" + reg + "'") || (reg === 'todas' && onclick.includes("'todas'")));
   });
-  renderEventos();
+  renderOS();
 }
 
-function selecionarStatus(s) {
-  filtStatus = s;
+function selecionarPrazo(p, btn) {
+  filtPrazo = p;
   pagina = 1;
-  document.querySelectorAll('.fbtn[data-status]').forEach(b => {
-    const cfg = getStatusCfg(b.dataset.status);
-    b.className = 'fbtn' + (b.dataset.status === s ? ' on' + (s === 'todos' ? '' : s === 'Em Andamento' ? '-danger' : s === 'Em Recuperacao' ? '-warning' : s === 'Programado' ? '' : '-success') : '');
-    if (b.dataset.status === s && s === 'todos') b.className = 'fbtn on';
+  document.querySelectorAll('.fbtn[data-prazo]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.prazo === p ? (p==='todas'?' on':p==='b)'?' on-b':' on-c') : '');
   });
-  renderEventos();
+  renderOS();
 }
 
-function handleMunicipio(el) {
-  filtMunicipio = el.dataset.municipio;
-  document.querySelectorAll('.dd-opt[data-municipio]').forEach(o => o.classList.toggle('sel', o.dataset.municipio === filtMunicipio));
-  const inp = document.getElementById('municipioInput');
-  if (inp) inp.value = filtMunicipio === 'todos' ? '' : filtMunicipio;
-  fecharDD('municipioDD');
-  atualizarTag();
+function handleCidade(el) { selecionarByEl('cidade', el); }
+function handleGrupo(el) { selecionarByEl('grupo', el); }
+function selecionarByEl(tipo, el) {
+  const val = el.dataset[tipo];
+  if (tipo === 'grupo') { filtGrupo = val; atualizarTag('grupoTag', val, 'todos', 'limparGrupo'); }
+  if (tipo === 'cidade') { filtCidade = val; atualizarTag('cidadeTag', val, 'todas', 'limparCidade'); }
+  document.querySelectorAll('.dd-opt[data-' + tipo + ']').forEach(o => o.classList.toggle('sel', o.dataset[tipo] === val));
+  const inp = document.getElementById(tipo + 'Input');
+  if (inp) inp.value = (val === 'todos' || val === 'todas') ? '' : val;
+  fecharDD(tipo + 'DD');
   pagina = 1;
-  renderEventos();
+  renderOS();
 }
 
-function limparMunicipio() {
-  filtMunicipio = 'todos';
-  const inp = document.getElementById('municipioInput'); if (inp) inp.value = '';
-  document.querySelectorAll('.dd-opt[data-municipio]').forEach(o => o.classList.toggle('sel', o.dataset.municipio === 'todos'));
-  atualizarTag();
-  pagina = 1; renderEventos();
+function atualizarTag(id, val, vazio, fnLimpar) {
+  const el = document.getElementById(id); if (!el) return;
+  el.innerHTML = (val === vazio || !val) ? '' :
+    `<span class="tag">${val}<button onclick="${fnLimpar}()">×</button></span>`;
 }
 
-function atualizarTag() {
-  const t = document.getElementById('municipioTag'); if (!t) return;
-  t.innerHTML = filtMunicipio === 'todos' ? '' :
-    `<span class="tag">${filtMunicipio}<button onclick="limparMunicipio()">×</button></span>`;
+function limparGrupo() {
+  filtGrupo = 'todos';
+  const inp = document.getElementById('grupoInput'); if (inp) inp.value = '';
+  document.querySelectorAll('.dd-opt[data-grupo]').forEach(o => o.classList.toggle('sel', o.dataset.grupo === 'todos'));
+  atualizarTag('grupoTag','todos','todos','limparGrupo');
+  pagina = 1; renderOS();
+}
+function limparCidade() {
+  filtCidade = 'todas';
+  const inp = document.getElementById('cidadeInput'); if (inp) inp.value = '';
+  document.querySelectorAll('.dd-opt[data-cidade]').forEach(o => o.classList.toggle('sel', o.dataset.cidade === 'todas'));
+  atualizarTag('cidadeTag','todas','todas','limparCidade');
+  pagina = 1; renderOS();
 }
 
 function toggleDD(id) { document.getElementById(id)?.classList.toggle('open'); }
@@ -349,53 +478,53 @@ function fecharDD(id) { document.getElementById(id)?.classList.remove('open'); }
 function filterDD(id, val) {
   document.getElementById(id)?.classList.add('open');
   document.querySelectorAll(`#${id} .dd-opt`).forEach(o => {
-    o.style.display = (o.dataset.municipio === 'todos' || (o.textContent || '').toLowerCase().includes(val.toLowerCase())) ? '' : 'none';
+    o.style.display = (o.dataset.grupo==='todos'||o.dataset.cidade==='todas'||
+      (o.textContent||'').toLowerCase().includes(val.toLowerCase())) ? '' : 'none';
   });
 }
 
 document.addEventListener('click', e => {
-  if (!e.target.closest('.dd-wrap')) document.querySelectorAll('.dd-list').forEach(d => d.classList.remove('open'));
+  if (!e.target.closest('.dd-wrap')) {
+    document.querySelectorAll('.dd-list').forEach(d => d.classList.remove('open'));
+  }
 });
 
 function render(data) {
-  eventos_global = data.eventos;
-  const municipios = [...new Set(data.eventos.map(e => e.municipio).filter(Boolean))].sort();
+  os_global = data.os;
+  const fonte = data.resumo && data.resumo.length > 0 ? data.resumo : data.os;
+  const m = calcMetrics(fonte);
+  const dirs = [...new Set(fonte.map(o=>o.diretoria).filter(Boolean))].sort();
+  const grupos = [...new Set(data.os.map(o=>o.grupo).filter(Boolean))].sort();
+  const cidades = data.cidades || [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
 
-  const total = data.eventos.length;
-  const andamento = data.eventos.filter(e => e.status === 'Em Andamento').length;
-  const recuperacao = data.eventos.filter(e => e.status === 'Em Recuperacao').length;
-  const programado = data.eventos.filter(e => e.status === 'Programado').length;
-  const concluido = data.eventos.filter(e => e.status === 'Concluido').length;
-  const totalLigacoes = data.eventos.filter(e => ['Em Andamento','Em Recuperacao'].includes(e.status))
-    .reduce((s, e) => s + (e.ligacoes || 0), 0);
+  const cidadeOpts = cidades.length > 0 ? (
+    ['<div class="dd-opt sel" data-cidade="todas" onclick="handleCidade(this)">Todas as cidades</div>'].concat(
+      cidades.map(function(c){ return '<div class="dd-opt" data-cidade="' + c + '" onclick="handleCidade(this)">' + c + '</div>'; })
+    ).join('')
+  ) : '';
 
-  const municipioOpts = ['<div class="dd-opt sel" data-municipio="todos" onclick="handleMunicipio(this)">Todos os municípios</div>'].concat(
-    municipios.map(m => '<div class="dd-opt" data-municipio="' + m + '" onclick="handleMunicipio(this)">' + m + '</div>')
+  const grupoOpts = ['<div class="dd-opt sel" data-grupo="todos" onclick="handleGrupo(this)">Todos os grupos</div>'].concat(
+    grupos.map(function(g){ return '<div class="dd-opt" data-grupo="' + g + '" onclick="handleGrupo(this)">' + g + '</div>'; })
   ).join('');
 
   document.getElementById('app').innerHTML = `
     <div class="header">
       <div class="header-left">
         <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
-        <h1>Eventos de Falta de Água</h1>
+        <h1>Análise de Serviços</h1>
         <div class="header-meta">Gerado em ${data.gerado}</div>
       </div>
       <div class="header-stat">
-        <div class="header-stat-val" style="color:var(--danger)">${totalLigacoes.toLocaleString('pt-BR')}</div>
-        <div class="header-stat-label">ligações afetadas (ativos)</div>
+        <div class="header-stat-val">${m.total.toLocaleString('pt-BR')}</div>
+        <div class="header-stat-label">OS em aberto</div>
       </div>
     </div>
 
     <div class="metrics">
-      <div class="metric"><div class="metric-val" style="color:#f87171">${andamento}</div><div class="metric-label">Em andamento</div></div>
-      <div class="metric"><div class="metric-val" style="color:#fbbf24">${recuperacao}</div><div class="metric-label">Em recuperação</div></div>
-      <div class="metric"><div class="metric-val" style="color:#38bdf8">${programado}</div><div class="metric-label">Programados</div></div>
-      <div class="metric"><div class="metric-val" style="color:#34d399">${concluido}</div><div class="metric-label">Concluídos</div></div>
-    </div>
-
-    <div class="block">
-      <div class="block-title">Visão por regional — clique para filtrar</div>
-      <div class="reg-grid" id="reg-cards"></div>
+      <div class="metric"><div class="metric-val" style="color:#f87171">${m.venceHoje.toLocaleString('pt-BR')}</div><div class="metric-label">Vence hoje</div></div>
+      <div class="metric"><div class="metric-val" style="color:#fbbf24">${m.amanha.toLocaleString('pt-BR')}</div><div class="metric-label">Vence amanhã</div></div>
+      <div class="metric"><div class="metric-val" style="color:#a78bfa">${(m.total-m.prazo-m.amanha-m.venceHoje).toLocaleString('pt-BR')}</div><div class="metric-label">Atrasado (>1 dia)</div></div>
+      <div class="metric"><div class="metric-val" style="color:#34d399">${m.prazo.toLocaleString('pt-BR')}</div><div class="metric-label">Dentro do prazo</div></div>
     </div>
 
     ${data.narracao ? `
@@ -405,65 +534,87 @@ function render(data) {
     </div>` : ''}
 
     <div class="block">
+      <div class="block-title">Visão por diretoria — clique para filtrar</div>
+      <div class="dir-grid" id="dir-cards"></div>
+    </div>
+
+    <div class="block">
       <div class="block-title">Filtros</div>
       <div class="filter-section">
         <div class="filter-row">
-          <span class="filter-label">Status</span>
-          <button class="fbtn on" data-status="todos" onclick="selecionarStatus('todos')">Todos</button>
-          <button class="fbtn" data-status="Em Andamento" onclick="selecionarStatus('Em Andamento')">Em andamento</button>
-          <button class="fbtn" data-status="Em Recuperacao" onclick="selecionarStatus('Em Recuperacao')">Em recuperação</button>
-          <button class="fbtn" data-status="Programado" onclick="selecionarStatus('Programado')">Programado</button>
-          <button class="fbtn" data-status="Concluido" onclick="selecionarStatus('Concluido')">Concluído</button>
+          <span class="filter-label">Prazo</span>
+          <button class="fbtn on" data-prazo="todas" onclick="selecionarPrazo('todas',this)">Todos</button>
+          <button class="fbtn" data-prazo="c)" onclick="selecionarPrazo('c)',this)">Vence hoje</button>
+          <button class="fbtn" data-prazo="b)" onclick="selecionarPrazo('b)',this)">Vence amanhã</button>
+          <button class="fbtn" data-prazo="d)" onclick="selecionarPrazo('d)',this)">1–10 dias</button>
+          <button class="fbtn" data-prazo="e)" onclick="selecionarPrazo('e)',this)">11–20 dias</button>
+          <button class="fbtn" data-prazo="f)" onclick="selecionarPrazo('f)',this)">21–30 dias</button>
+          <button class="fbtn" data-prazo="g)" onclick="selecionarPrazo('g)',this)">31–60 dias</button>
+          <button class="fbtn" data-prazo="h)" onclick="selecionarPrazo('h)',this)">61–360 dias</button>
+          <button class="fbtn" data-prazo="a)" onclick="selecionarPrazo('a)',this)">Dentro do prazo</button>
         </div>
         <div class="filter-row">
           <span class="filter-label">Regional</span>
-          <button class="fbtn on" data-reg="todas" onclick="filtrarRegional('todas')">Todas</button>
-          <button class="fbtn" data-reg="CENTRO" onclick="filtrarRegional('CENTRO')">Centro</button>
-          <button class="fbtn" data-reg="LESTE" onclick="filtrarRegional('LESTE')">Leste</button>
-          <button class="fbtn" data-reg="NORTE" onclick="filtrarRegional('NORTE')">Norte</button>
-          <button class="fbtn" data-reg="OESTE" onclick="filtrarRegional('OESTE')">Oeste</button>
-          <button class="fbtn" data-reg="SUL" onclick="filtrarRegional('SUL')">Sul</button>
+          <div style="display:flex;gap:6px;flex-wrap:wrap" id="reg-btns">
+            <button class="fbtn on" data-reg="todas" onclick="filtrarReg('todas')">Todas</button>
+            ${dirs.map(d => '<button class="fbtn" data-reg="' + d + '" onclick="filtrarReg(\'' + d + '\')">' + d + '</button>').join('')}
+          </div>
         </div>
         <div class="filter-row">
-          <span class="filter-label">Município</span>
+          <span class="filter-label">Grupo</span>
           <div class="dd-wrap">
-            <input class="dd-input" id="municipioInput" placeholder="Buscar município..." autocomplete="off"
-              onclick="toggleDD('municipioDD')" oninput="filterDD('municipioDD', this.value)">
-            <div class="dd-list" id="municipioDD">${municipioOpts}</div>
+            <input class="dd-input" id="grupoInput" placeholder="Buscar grupo..." autocomplete="off"
+              onclick="toggleDD('grupoDD')" oninput="filterDD('grupoDD',this.value)">
+            <div class="dd-list" id="grupoDD">${grupoOpts}</div>
           </div>
-          <div class="tag-row" id="municipioTag"></div>
+          <div class="tag-row" id="grupoTag"></div>
         </div>
+
       </div>
+      ${cidades.length > 0 ? `
+      <div class="filter-row">
+        <span class="filter-label">Cidade</span>
+        <div class="dd-wrap">
+          <input class="dd-input" id="cidadeInput" placeholder="Buscar cidade..." autocomplete="off"
+            onclick="toggleDD('cidadeDDx')" oninput="filterDD('cidadeDDx',this.value)">
+          <div class="dd-list" id="cidadeDDx">${cidadeOpts}</div>
+        </div>
+        <div class="tag-row" id="cidadeTag"></div>
+      </div>` : ''}
 
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <span class="block-title" style="margin:0" id="ev-count"></span>
+        <span class="block-title" style="margin:0" id="os-count"></span>
       </div>
-      <div id="ev-list"></div>
+      <div id="os-list"></div>
+
+      <div class="legend">
+        ${Object.entries(PRAZO_CFG).map(([k,v])=>`<span class="leg"><span class="leg-sq" style="background:${v.cor}"></span>${v.label}</span>`).join('')}
+      </div>
 
       <div class="pager">
         <span id="pager-info"></span>
         <div class="pager-btns">
-          <button class="pbtn" id="btn-prev" onclick="pagina--;renderEventos()">← Anterior</button>
-          <button class="pbtn" id="btn-next" onclick="pagina++;renderEventos()">Próxima →</button>
+          <button class="pbtn" id="btn-prev" onclick="pagina--;renderOS()">← Anterior</button>
+          <button class="pbtn" id="btn-next" onclick="pagina++;renderOS()">Próxima →</button>
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <span>Dados via ArcGIS · Corsan / Aegea</span>
-      <span class="footer-badge">Power Automate · AI Builder</span>
+      <span>Dados atualizados via Power Automate. Prazos conforme OS em aberto.</span>
+      <span class="footer-badge">AI Builder · Power Automate</span>
     </div>`;
 
-  renderRegCards(data.eventos);
-  renderEventos();
+  renderDirCards(fonte, dirs);
+  renderOS();
 }
 
 fetch(JSON_URL + '?t=' + Date.now())
   .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
   .then(txt => {
     if (!txt || !txt.trim()) throw new Error('Arquivo vazio');
-    const data = parseData(txt);
-    if (!data.eventos.length) throw new Error('Nenhum evento encontrado — verifique o arquivo JSON');
+    const data = parseServicos(txt);
+    if (!data.os.length) throw new Error('Nenhuma OS encontrada — verifique o arquivo servicos.json');
     render(data);
   })
   .catch(err => {
