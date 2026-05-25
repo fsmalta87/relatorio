@@ -40,6 +40,13 @@
   .ia-sub.atencao{border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.04)}
   .ia-sub.positivo{border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.04)}
   .ia-sub.exec{grid-column:1/-1;border-color:rgba(56,189,248,.25);background:rgba(56,189,248,.04)}
+  .ia-sub.diretoria{grid-column:1/-1;border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.04)}
+  .ia-sub.diretoria .ia-sub-label{color:#fbbf24}
+  .dir-resumo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+  @media(max-width:700px){.dir-resumo-grid{grid-template-columns:repeat(2,1fr)}}
+  .dir-resumo-card{background:rgba(255,255,255,.02);border:0.5px solid var(--border);border-radius:6px;padding:10px 12px}
+  .dir-resumo-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#fbbf24;margin-bottom:6px}
+  .dir-resumo-text{font-size:11px;color:var(--text);line-height:1.6}
   .ia-sub-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px}
   .ia-sub.critico .ia-sub-label{color:#f87171}
   .ia-sub.atencao .ia-sub-label{color:#fbbf24}
@@ -289,8 +296,7 @@ function calcDir(os, dir) {
 function renderNarracao(txt) {
   if (!txt || !txt.trim()) return '';
   const blocos = [
-    { key:['🔴','SITUAÇÃO CRÍTICA'], cls:'critico' },
-    { key:['⚠️','ATENÇÃO AMANHÃ','ATENCAO AMANHA'], cls:'atencao' },
+    { key:['🏢','RESUMO POR DIRETORIA','POR DIRETORIA'], cls:'diretoria' },
     { key:['✅','DESTAQUES POSITIVOS','DESTAQUE POSITIVO'], cls:'positivo' },
     { key:['📋','LEITURA EXECUTIVA'], cls:'exec' },
   ];
@@ -310,10 +316,28 @@ function renderNarracao(txt) {
     }
     if (!matched && atual && enc[atual]) enc[atual].texto.push(lt);
   }
-  const ordem = ['critico','atencao','positivo','exec'];
+  const ordem = ['diretoria','positivo','exec'];
+  const DIRS = ['CENTRAL','LESTE','NORTE','OESTE','SUL'];
+
   const html = ordem.map(cls => {
     const b = enc[cls]; if (!b) return '';
-    return `<div class="ia-sub ${cls}"><div class="ia-sub-label">${b.label}</div><div class="ia-sub-text">${b.texto.join('\n')}</div></div>`;
+
+    if (cls === 'diretoria') {
+      var dirMap = {};
+      b.texto.forEach(function(l) {
+        DIRS.forEach(function(d) {
+          if (l.toUpperCase().startsWith(d + ':') || l.toUpperCase().startsWith(d + ' ')) {
+            dirMap[d] = l.replace(new RegExp('^' + d + '\\s*:\\s*', 'i'), '');
+          }
+        });
+      });
+      var cardsDir = DIRS.map(function(d) {
+        return '<div class="dir-resumo-card"><div class="dir-resumo-name">' + d + '</div><div class="dir-resumo-text">' + (dirMap[d] || '—') + '</div></div>';
+      }).join('');
+      return '<div class="ia-sub ' + cls + '"><div class="ia-sub-label">' + b.label + '</div><div class="dir-resumo-grid">' + cardsDir + '</div></div>';
+    }
+
+    return '<div class="ia-sub ' + cls + '"><div class="ia-sub-label">' + b.label + '</div><div class="ia-sub-text">' + b.texto.join('\n') + '</div></div>';
   }).join('');
   return html ? `<div class="ia-grid">${html}</div>` : `<div style="font-size:13px;color:var(--muted);white-space:pre-wrap;line-height:1.7">${txt}</div>`;
 }
@@ -601,8 +625,7 @@ function render(data) {
     </div>
 
     <div class="footer">
-      <span>Dados atualizados via Power Automate. Prazos conforme OS em aberto.</span>
-      <span class="footer-badge">AI Builder · Power Automate</span>
+      <span class="footer-badge">Corsan · Experiência do Cliente</span>
     </div>`;
 
   renderDirCards(fonte, dirs);
