@@ -283,7 +283,7 @@ function calcDir(os, dir) {
   const backlog= sumQtd(sub.filter(o => ['d)','e)','f)','g)','h)'].includes(o.prazoKey)));
   const prazo  = sumQtd(sub.filter(o => o.prazoKey === 'a)'));
   const criticas = hoje + backlog;
-  return { total, hoje, amanha, backlog, prazo, criticas };
+  return { total, hoje, amanha, atrasado, prazo, criticas };
 }
 
 function renderNarracao(txt) {
@@ -396,7 +396,7 @@ function renderDirCards(os, dirs) {
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px">' +
         miniCard('rgba(248,113,113,.08)', 'rgba(248,113,113,.2)', '#f87171', 'Vence hoje',   s.hoje.toLocaleString('pt-BR')) +
         miniCard('rgba(251,191,36,.08)',  'rgba(251,191,36,.2)',  '#fbbf24', 'Vence amanhã', s.amanha.toLocaleString('pt-BR')) +
-        miniCard('rgba(167,139,250,.08)', 'rgba(167,139,250,.2)', '#a78bfa', 'Backlog',      s.backlog.toLocaleString('pt-BR')) +
+        miniCard('rgba(167,139,250,.08)', 'rgba(167,139,250,.2)', '#a78bfa', 'Atrasado',      s.backlog.toLocaleString('pt-BR')) +
         miniCard('rgba(52,211,153,.08)',  'rgba(52,211,153,.2)',  '#34d399', 'No prazo',     s.prazo.toLocaleString('pt-BR')) +
       '</div>' +
     '</div>';
@@ -511,7 +511,7 @@ function render(data) {
     <div class="header">
       <div class="header-left">
         <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
-        <h1>Análise de Serviços — Backlog e Prazos</h1>
+        <h1>Análise de Serviços</h1>
         <div class="header-meta">Gerado em ${data.gerado}</div>
       </div>
       <div class="header-stat">
@@ -523,7 +523,7 @@ function render(data) {
     <div class="metrics">
       <div class="metric"><div class="metric-val" style="color:#f87171">${m.venceHoje.toLocaleString('pt-BR')}</div><div class="metric-label">Vence hoje</div></div>
       <div class="metric"><div class="metric-val" style="color:#fbbf24">${m.amanha.toLocaleString('pt-BR')}</div><div class="metric-label">Vence amanhã</div></div>
-      <div class="metric"><div class="metric-val" style="color:#a78bfa">${(m.total-m.prazo-m.amanha-m.venceHoje).toLocaleString('pt-BR')}</div><div class="metric-label">Backlog (>1 dia)</div></div>
+      <div class="metric"><div class="metric-val" style="color:#a78bfa">${(m.total-m.prazo-m.amanha-m.venceHoje).toLocaleString('pt-BR')}</div><div class="metric-label">\Atrasado (>1 dia)</div></div>
       <div class="metric"><div class="metric-val" style="color:#34d399">${m.prazo.toLocaleString('pt-BR')}</div><div class="metric-label">Dentro do prazo</div></div>
     </div>
 
@@ -601,8 +601,7 @@ function render(data) {
     </div>
 
     <div class="footer">
-      <span>Dados atualizados via Power Automate. Prazos conforme backlog de OS.</span>
-      <span class="footer-badge">AI Builder · Power Automate</span>
+      <span class="footer-badge">Corsan - Experiência do Cliente</span>
     </div>`;
 
   renderDirCards(fonte, dirs);
