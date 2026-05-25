@@ -275,7 +275,7 @@ function renderRegCards(eventos) {
   const regs = ['CENTRO','LESTE','NORTE','OESTE','SUL'];
   el.innerHTML = regs.map(reg => {
     const s = calcRegional(eventos, reg);
-    const corAtivos = s.ativos > 0 ? '#f87171' : '#34d399';
+    const nome = reg;
     const mono = 'DM Mono,monospace';
     function mini(bg, border, cor, titulo, valor) {
       return '<div class="reg-mini" style="background:' + bg + ';border:0.5px solid ' + border + '">' +
@@ -283,56 +283,16 @@ function renderRegCards(eventos) {
         '<div class="reg-mini-val">' + valor + '</div></div>';
     }
     return '<div class="reg-card' + (filtRegional===reg?' active':'') + '" onclick="filtrarRegional(\'' + reg + '\')">' +
-      '<div class="reg-name">' + reg + '</div>' +
-      '<div class="reg-eventos" style="color:' + corAtivos + '">' + s.ativos + '</div>' +
-      '<div class="reg-sub">' + s.total + ' eventos · ' + s.ligacoes.toLocaleString("pt-BR") + ' lig.</div>' +
+      '<div class="reg-name">' + nome + '</div>' +
+      '<div class="reg-sub" style="margin-bottom:6px">' + s.total + ' eventos · ' + s.ligacoes.toLocaleString('pt-BR') + ' lig.</div>' +
       '<div class="reg-mini-grid">' +
-        mini('rgba(248,113,113,.08)','rgba(248,113,113,.2)','#f87171','Ativos', s.ativos) +
-        mini('rgba(251,191,36,.08)','rgba(251,191,36,.2)','#fbbf24','Program.', s.programados) +
-        mini('rgba(52,211,153,.08)','rgba(52,211,153,.2)','#34d399','Concluídos', s.concluidos) +
-        mini('rgba(56,189,248,.08)','rgba(56,189,248,.2)','#38bdf8','Ligações', s.ligacoes.toLocaleString("pt-BR")) +
+        mini('rgba(248,113,113,.08)', 'rgba(248,113,113,.2)', '#f87171', 'Ativos',      s.ativos) +
+        mini('rgba(251,191,36,.08)',  'rgba(251,191,36,.2)',  '#fbbf24', 'Program.',    s.programados) +
+        mini('rgba(52,211,153,.08)',  'rgba(52,211,153,.2)',  '#34d399', 'Concluídos',  s.concluidos) +
+        mini('rgba(56,189,248,.08)',  'rgba(56,189,248,.2)',  '#38bdf8', 'Ligações',    s.ligacoes.toLocaleString('pt-BR')) +
       '</div>' +
     '</div>';
   }).join('');
-}
-
-function renderEventos() {
-  const lista = filtrarEventos();
-  const total = lista.length;
-  const inicio = (pagina - 1) * POR_PAG;
-  const pag = lista.slice(inicio, inicio + POR_PAG);
-  const totalPags = Math.ceil(total / POR_PAG) || 1;
-
-  document.getElementById('ev-count').textContent = `${total} eventos`;
-  document.getElementById('ev-list').innerHTML = pag.length === 0
-    ? '<p style="font-size:13px;color:var(--muted);padding:12px 0">Nenhum evento no filtro selecionado.</p>'
-    : pag.map(e => {
-        const cfg = getStatusCfg(e.status);
-        return `<div class="ev-item ${cfg.cls}">
-          <div class="ev-acc"></div>
-          <div class="ev-body">
-            <div class="ev-info">
-              <div class="ev-municipio">
-                ${e.regional ? '<span style="font-size:9px;color:var(--muted);display:block;line-height:1.2;text-transform:uppercase;letter-spacing:.06em">' + e.regional + '</span>' : ''}
-                ${e.municipio || '—'}
-              </div>
-              <div class="ev-categoria">${e.categoria}</div>
-              <div class="ev-datas">
-                Início: ${e.dt_inicio || '—'}
-                ${e.dt_fim_rec ? ' · Normalização: ' + e.dt_fim_rec : ''}
-              </div>
-            </div>
-            <div class="ev-right">
-              <span class="status-badge ${cfg.badge}">${cfg.label}</span>
-              ${e.ligacoes > 0 ? `<span class="ev-ligacoes">${e.ligacoes.toLocaleString('pt-BR')}</span><span class="ev-ligacoes-label">ligações</span>` : ''}
-            </div>
-          </div>
-        </div>`;
-      }).join('');
-
-  document.getElementById('pager-info').textContent = `Página ${pagina} de ${totalPags} · ${total} registros`;
-  document.getElementById('btn-prev').disabled = pagina <= 1;
-  document.getElementById('btn-next').disabled = pagina >= totalPags;
 }
 
 function filtrarRegional(reg) {
