@@ -90,14 +90,14 @@
     font-family:'DM Mono',monospace;
   }
   .install-btn{
-    display:none;align-items:center;gap:8px;
+    display:flex;align-items:center;gap:8px;
     background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);
     color:var(--accent);font-family:'DM Sans',sans-serif;font-size:12px;
     padding:8px 16px;border-radius:8px;cursor:pointer;
     transition:background .15s;margin:0 auto;
   }
   .install-btn:hover{background:rgba(56,189,248,.15)}
-  .install-btn.visible{display:flex}
+  .install-btn.hidden{display:none}
 </style>
 </head>
 <body>
@@ -140,7 +140,7 @@
 
   </div>
 
-  <div class="footer" style="margin-top:16px">Atualizado diariamente via Power Automate · AI Builder</div>
+  <div class="footer" style="margin-top:16px">Corsan - Experiência do Cliente</div>
   <div style="text-align:center;margin-top:12px">
     <button class="install-btn" id="installBtn" onclick="instalarApp()">⬇ Adicionar à tela inicial</button>
   </div>
@@ -152,30 +152,38 @@
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
 
-  // Capturar evento de instalação
-  let deferredPrompt;
+  let deferredPrompt = null;
+
+  // Android/Chrome — captura prompt de instalação
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    document.getElementById('installBtn').classList.add('visible');
+    // botão já está visível por padrão
   });
 
-  // Esconder botão se já instalado
+  // Esconder se já instalado
   window.addEventListener('appinstalled', () => {
-    document.getElementById('installBtn').classList.remove('visible');
+    document.getElementById('installBtn').classList.add('hidden');
     deferredPrompt = null;
   });
 
+  // iOS — mostrar botão sempre que não estiver em modo standalone
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (isStandalone) {
+    document.getElementById('installBtn').classList.add('hidden');
+  }
+
   function instalarApp() {
     if (deferredPrompt) {
+      // Android
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(() => {
         deferredPrompt = null;
         document.getElementById('installBtn').classList.remove('visible');
       });
     } else {
-      // iOS não suporta beforeinstallprompt — mostrar instrução
-      alert('No iPhone/iPad:\n1. Toque no botão de compartilhar (□↑)\n2. Selecione "Adicionar à Tela de Início"');
+      // iOS — instrução manual
+      alert('Para adicionar à tela inicial:\n\niPhone/iPad:\n1. Toque em Compartilhar (ícone □↑ na barra inferior)\n2. Role e toque em "Adicionar à Tela de Início"\n3. Toque em "Adicionar"\n\nAndroid:\n1. Toque nos 3 pontos (⋮) no canto superior\n2. Toque em "Adicionar à tela inicial"');
     }
   }
 </script>
