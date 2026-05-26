@@ -37,6 +37,7 @@
   .ia-subcard.top-alta{border-color:rgba(251,191,36,.2)}
   .ia-subcard.top-queda{border-color:rgba(129,140,248,.2)}
   .ia-subcard.exec{grid-column:1/-1;border-color:rgba(56,189,248,.2)}
+  .ia-subcard.diretoria .ia-subcard-label{color:#fbbf24}
   .ia-subcard.diretoria{grid-column:1/-1;border-color:rgba(251,191,36,.2)}
   .ia-subcard.diretoria .ia-subcard-label{color:#fbbf24}
   .dir-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
@@ -169,12 +170,13 @@ function removerCidades(txt) {
 function renderNarracao(txt) {
   if (!txt || !txt.trim()) return '';
   var blocos = [
-    { key: ['MAIORES ALTAS POR CIDADE','ALTAS POR CIDADE'], cls: 'alta', formatNum: true, remCidade: false },
-    { key: ['MAIORES QUEDAS POR CIDADE','QUEDAS POR CIDADE'], cls: 'queda', formatNum: true, remCidade: false },
+    { key: ['🔴','MAIORES ALTAS','ALTAS POR CIDADE','VARIAÇÃO ALTA','VARIACÃO ALTA'], cls: 'alta', formatNum: true, remCidade: false },
+    { key: ['🟢','MAIORES QUEDAS','QUEDAS POR CIDADE','VARIAÇÃO BAIXA','VARIACÃO BAIXA','QUEDAS EXPRESSIVAS'], cls: 'queda', formatNum: true, remCidade: false },
+    { key: ['📊','ANÁLISE POR REGIONAL','ANALISE POR REGIONAL','POR REGIONAL'], cls: 'diretoria', formatNum: false, remCidade: false },
     { key: ['TOP 5 ASSUNTOS EM ALTA','ASSUNTOS EM ALTA'], cls: 'top-alta', formatNum: false, remCidade: true },
     { key: ['TOP 5 ASSUNTOS EM QUEDA','ASSUNTOS EM QUEDA'], cls: 'top-queda', formatNum: false, remCidade: true },
     { key: ['RESUMO POR DIRETORIA','POR DIRETORIA'], cls: 'diretoria', formatNum: false, remCidade: false },
-    { key: ['LEITURA EXECUTIVA','EXECUTIVA'], cls: 'exec', formatNum: false, remCidade: false },
+    { key: ['📋','LEITURA EXECUTIVA','EXECUTIVA'], cls: 'exec', formatNum: false, remCidade: false },
   ];
   var linhas = txt.split('\n');
   var atual = null;
@@ -197,7 +199,7 @@ function renderNarracao(txt) {
       encontrados[atual].texto.push(lt);
     }
   }
-  var ordem = ['alta','queda','top-alta','top-queda','diretoria','exec'];
+  var ordem = ['alta','queda','diretoria','top-alta','top-queda','exec'];
   var DIRETORIAS = ['Leste','Norte','Centro','Sul','Oeste'];
 
   var html = ordem.map(function(cls) {
