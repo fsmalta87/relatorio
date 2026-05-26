@@ -191,7 +191,22 @@ function renderNarracao(txt) {
       var b = blocos[j];
       if (b.key.some(function(k){ return lt.startsWith(k) || lt.toUpperCase().startsWith(k.toUpperCase()); })) {
         atual = b.cls; atualBloco = b;
-        if (!encontrados[atual]) encontrados[atual] = { label: lt, texto: [], bloco: b };
+        // Verificar se há texto colado após o título na mesma linha
+        var tituloUsado = b.key.find(function(k){ return lt.startsWith(k) || lt.toUpperCase().startsWith(k.toUpperCase()); });
+        var labelLinha = lt;
+        var restoLinha = '';
+        if (tituloUsado) {
+          // Separar título do conteúdo colado
+          var posResto = tituloUsado.length;
+          // Avança enquanto for letra maiúscula do título
+          while (posResto < lt.length && lt[posResto] !== ' ' && lt.charCodeAt(posResto) > 64 && lt.charCodeAt(posResto) < 91) posResto++;
+          if (posResto < lt.length && lt.slice(posResto).trim().length > 0) {
+            labelLinha = lt.slice(0, posResto).trim();
+            restoLinha = lt.slice(posResto).trim();
+          }
+        }
+        if (!encontrados[atual]) encontrados[atual] = { label: labelLinha, texto: [], bloco: b };
+        if (restoLinha) encontrados[atual].texto.push(restoLinha);
         matched = true; break;
       }
     }
@@ -210,17 +225,21 @@ function renderNarracao(txt) {
     if (b.bloco.remCidade) textoFinal = removerCidades(textoFinal);
 
     if (cls === 'diretoria') {
-      // Montar grid com um card por diretoria
-      var linhasDir = b.texto;
+      var DIRS = ['LESTE','CENTRO','NORTE','SUL','OESTE'];
       var dirMap = {};
-      linhasDir.forEach(function(l) {
-        DIRETORIAS.forEach(function(d) {
-          if (l.toUpperCase().startsWith(d.toUpperCase())) {
-            dirMap[d] = l.replace(new RegExp('^' + d + '\\s*:\\s*', 'i'), '');
+      b.texto.forEach(function(l) {
+        DIRS.forEach(function(d) {
+          if (l.toUpperCase().startsWith(d + ':') || l.toUpperCase().startsWith(d + ' ')) {
+            dirMap[d] = l.replace(new RegExp('^' + d + '\\s*:\\s*', 'i'), '').trim();
           }
         });
       });
-      var cardsDir = DIRETORIAS.map(function(d) {
+      // Se nenhuma regional foi mapeada, mostra texto narrativo
+      var temDirs = Object.keys(dirMap).length > 0;
+      if (!temDirs) {
+        return '<div class="ia-subcard ' + cls + '"><div class="ia-subcard-label">' + b.label + '</div><div class="ia-subcard-text">' + b.texto.join('\n') + '</div></div>';
+      }
+      var cardsDir = DIRS.map(function(d) {
         var texto = dirMap[d] || '—';
         return '<div class="dir-card"><div class="dir-card-name">' + d + '</div><div class="dir-card-text">' + texto + '</div></div>';
       }).join('');
@@ -310,10 +329,13 @@ let assuntoFiltro = 'todos';
 let diretoriaFiltro = 'todas';
 let paginaAnom = 1;
 const ANOM_POR_PAG = 30;
+let paginaSpark = 1;
+const SPARK_POR_PAG = 20;
 
 function filtrar(tipo) {
   filtros[tipo] = !filtros[tipo];
   atualizarBtnsFiltro();
+  paginaAnom = 1; paginaSpark = 1;
   renderAnom();
   renderSparks(anomalias_global);
 }
@@ -350,7 +372,7 @@ function selecionarCidade(cidade, el) {
   if (s) s.value = cidade === 'todas' ? '' : cidade;
   fecharDropdown('cityDropdown');
   atualizarTagCidade();
-  paginaAnom = 1; renderAnom(); renderSparks(anomalias_global);
+  paginaAnom = 1; paginaSpark = 1; renderAnom(); renderSparks(anomalias_global);
 }
 function selecionarCidadeByEl(el) {
   const cidade = el.dataset.cidade;
@@ -384,7 +406,7 @@ function selecionarAssunto(assunto, el) {
   if (s) s.value = assunto === 'todos' ? '' : assunto;
   fecharDropdown('assuntoDropdown');
   atualizarTagAssunto();
-  paginaAnom = 1; renderAnom(); renderSparks(anomalias_global);
+  paginaAnom = 1; paginaSpark = 1; renderAnom(); renderSparks(anomalias_global);
 }
 function selecionarAssuntoByEl(el) {
   const assunto = el.dataset.assunto;
@@ -457,7 +479,12 @@ function renderSparks(anomalias) {
       && (diretoriaFiltro==='todas'||a.diretoria===diretoriaFiltro)
       && (cidadeFiltro==='todas'||a.cidade===cidadeFiltro)
       && (assuntoFiltro==='todos'||a.motivo===assuntoFiltro));
-  const top = [...filtradas].sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta)).slice(0,8);
+  const sorted = [...filtradas].sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta));
+  const total = sorted.length;
+  const inicio = (paginaSpark - 1) * SPARK_POR_PAG;
+  const top = sorted.slice(inicio, inicio + SPARK_POR_PAG);
+  const totalPags = Math.ceil(total / SPARK_POR_PAG) || 1;
+
   const el = document.getElementById('spark-list');
   if (!el) return;
   el.innerHTML = top.map(a => {
@@ -478,7 +505,14 @@ function renderSparks(anomalias) {
       +'<span class="spark-badge '+cls+'">'+sinal+Math.round(a.delta*100)+'%</span>'
       +'</div>';
   }).join('');
-}
+
+
+  const pi = document.getElementById('spark-pager-info');
+  const pp = document.getElementById('spark-btn-prev');
+  const pn = document.getElementById('spark-btn-next');
+  if (pi) pi.textContent = 'Página ' + paginaSpark + ' de ' + totalPags + ' · ' + total + ' registros';
+  if (pp) pp.disabled = paginaSpark <= 1;
+  if (pn) pn.disabled = paginaSpark >= totalPags;}
 
 
 function render(data) {
@@ -577,20 +611,16 @@ function render(data) {
           <span class="legend-item"><span class="legend-sq" style="background:#f87171"></span>Atual (alta)</span>
           <span class="legend-item"><span class="legend-sq" style="background:#34d399"></span>Atual (queda)</span>
         </div>
-      </div>
-
-      <div class="card card-full">
-        <div class="card-title">Variações detectadas — cidade + motivo</div>
-        <div id="anom-list"></div>
-        <p style="font-size:11px;color:var(--muted);margin-top:8px">Mês atual vs. média histórica Jan–Abr. Limiar: desvio acima de 30%.</p>
         <div class="pager">
-          <span id="anom-pager-info"></span>
+          <span id="spark-pager-info"></span>
           <div class="pager-btns">
-            <button class="pbtn" id="anom-btn-prev" onclick="paginaAnom--;renderAnom()">← Anterior</button>
-            <button class="pbtn" id="anom-btn-next" onclick="paginaAnom++;renderAnom()">Próxima →</button>
+            <button class="pbtn" id="spark-btn-prev" onclick="paginaSpark--;renderSparks(anomalias_global)">← Anterior</button>
+            <button class="pbtn" id="spark-btn-next" onclick="paginaSpark++;renderSparks(anomalias_global)">Próxima →</button>
           </div>
         </div>
       </div>
+
+
 
     </div>
 
