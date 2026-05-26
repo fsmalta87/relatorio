@@ -189,7 +189,7 @@ function renderNarracao(txt) {
     var matched = false;
     for (var j = 0; j < blocos.length; j++) {
       var b = blocos[j];
-      if (b.key.some(function(k){ return lt.toUpperCase().includes(k); })) {
+      if (b.key.some(function(k){ return lt.startsWith(k) || lt.toUpperCase().startsWith(k.toUpperCase()); })) {
         atual = b.cls; atualBloco = b;
         if (!encontrados[atual]) encontrados[atual] = { label: lt, texto: [], bloco: b };
         matched = true; break;
