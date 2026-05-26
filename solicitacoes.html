@@ -447,7 +447,8 @@ function renderAnom() {
   const pag = visiveis.slice(inicio, inicio + ANOM_POR_PAG);
   const totalPags = Math.ceil(total / ANOM_POR_PAG) || 1;
 
-  document.getElementById('anom-list').innerHTML = pag.length === 0
+  consconst anomEl = document.getElementById('anom-list'); if (!anomEl) return;
+  anomEl.innerHTML = pag.length === 0
     ? '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nenhuma variação no filtro selecionado.</p>'
     : pag.map(a => {
         const sinal = a.delta > 0 ? '+' : '';
@@ -629,7 +630,6 @@ function render(data) {
       <span class="footer-badge">AI Builder · Power Automate</span>
     </div>`;
 
-  renderAnom();
   renderSparks(data.anomalias);
 }
 
