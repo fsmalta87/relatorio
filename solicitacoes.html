@@ -156,11 +156,8 @@ function fmt(n) {
 
 // Parser da narração em subcards
 function formatarNumeros(txt) {
-  // Multiplica por 100 e formata como percentual com vírgula decimal
-  return txt.replace(/(-?\d+\.\d+)/g, function(match) {
-    var num = parseFloat(match) * 100;
-    return num.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%';
-  });
+  // Os percentuais já vêm formatados pelo AI Builder — não converter
+  return txt;
 }
 
 function removerCidades(txt) {
