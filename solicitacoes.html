@@ -141,8 +141,8 @@
 </div>
 <script>
 const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-solicitacoes.json';
-const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#f87171'];
-const MESES  = ['Jan','Fev','Mar','Abr','Atual'];
+const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#10b981','#f87171'];
+const MESES  = ['Jan','Fev','Mar','Abr','Mai','Atual'];
 
 function parseNum(s) {
   if (!s || s.trim() === '') return 0;
@@ -227,7 +227,34 @@ function renderNarracao(txt) {
     if (cls === 'diretoria') {
       var DIRS = ['LESTE','CENTRO','NORTE','SUL','OESTE'];
       var dirMap = {};
+      // Primeiro tenta separar linhas que contenham múltiplas regionais coladas
+      var linhasExpandidas = [];
       b.texto.forEach(function(l) {
+        var lt = l.trim();
+        // Verificar se a linha contém mais de uma regional (ex: "LESTE: texto. CENTRO: texto")
+        var partes = lt.split(new RegExp('(?<=[.!?])\\s+(?=' + DIRS.join('|') + ')\\s*:'));
+        if (partes.length > 1) {
+          partes.forEach(function(p){ linhasExpandidas.push(p.trim()); });
+        } else {
+          // Tentar separar por padrão "NOME_REGIONAL: " no meio da linha
+          var splitRegex = new RegExp('(?:^|\\s)(' + DIRS.join('|') + ')\\s*:', 'g');
+          var matches = [];
+          var m;
+          while ((m = splitRegex.exec(lt)) !== null) {
+            matches.push({ dir: m[1], idx: m.index === 0 ? 0 : m.index + 1 });
+          }
+          if (matches.length > 1) {
+            for (var mi = 0; mi < matches.length; mi++) {
+              var start = matches[mi].idx;
+              var end2 = mi + 1 < matches.length ? matches[mi+1].idx : lt.length;
+              linhasExpandidas.push(lt.slice(start, end2).trim());
+            }
+          } else {
+            linhasExpandidas.push(lt);
+          }
+        }
+      });
+      linhasExpandidas.forEach(function(l) {
         DIRS.forEach(function(d) {
           if (l.toUpperCase().startsWith(d + ':') || l.toUpperCase().startsWith(d + ' ')) {
             dirMap[d] = l.replace(new RegExp('^' + d + '\\s*:\\s*', 'i'), '').trim();
@@ -269,7 +296,7 @@ function parseAnomalia(txt) {
     if (lt.startsWith('---')) { if(section==='narracao') section='dados'; continue; }
     if (section === 'narracao') { data.narracao += (data.narracao ? '\n' : '') + lt; continue; }
 
-    let cidade, motivo, jan, fev, mar, abr, atual, hist, delta, statusCol, diretoria = '';
+    let cidade, motivo, jan, fev, mar, abr, mai, atual, hist, delta, statusCol, diretoria = '';
     const lt2 = lt;
     if (lt2.startsWith('{')) {
       try {
@@ -280,6 +307,7 @@ function parseAnomalia(txt) {
         fev    = parseNum(obj['fev26'] || obj['Fev'] || obj['Fev/26'] || '0');
         mar    = parseNum(obj['mar26'] || obj['Mar'] || obj['Mar/26'] || '0');
         abr    = parseNum(obj['abr26'] || obj['Abr'] || obj['Abr/26'] || '0');
+        mai    = parseNum(obj['mai26'] || obj['Mai'] || obj['Mai/26'] || '0');
         atual  = parseNum(obj['Mês Atual'] || obj['MesAtual'] || obj['Atual'] || '0');
         hist   = parseNum(obj['Média'] || obj['Media'] || obj['Média Hist_x002e_Variação %Status'] || '0');
         delta  = parseFloat(obj['Variacao'] || obj['Variação %'] || '0') || 0;
@@ -315,9 +343,9 @@ function parseAnomalia(txt) {
       const sinal = delta > 0 ? '+' : '';
       data.maiorDesvio = `${sinal}${Math.round(delta * 100)}%`;
     }
-    const avgVals = [jan,fev,mar,abr].filter(v=>v>0);
+    const avgVals = [jan,fev,mar,abr,mai].filter(v=>v>0);
     const avg = avgVals.length ? avgVals.reduce((a,b)=>a+b,0)/avgVals.length : hist;
-    data.anomalias.push({ cidade, motivo, diretoria: diretoria || '', vals:[jan,fev,mar,abr,atual], hist:hist||avg, delta, tipo });
+    data.anomalias.push({ cidade, motivo, diretoria: diretoria || '', vals:[jan,fev,mar,abr,mai,atual], hist:hist||avg, delta, tipo });
   }
   return data;
 }
@@ -458,7 +486,7 @@ function renderAnom() {
             <span class="anom-city">${a.diretoria ? '<span style="font-size:10px;color:var(--muted);display:block;line-height:1.2">' + a.diretoria + '</span>' : ''}${a.cidade}</span>
             <span class="anom-motivo">${a.motivo}</span>
             <div class="anom-nums">
-              <span class="anom-atual">${fmt(a.vals[4])}</span>
+              <span class="anom-atual">${fmt(a.vals[5])}</span>
               <span class="anom-delta">${sinal}${Math.round(a.delta * 100)}%</span>
               <span class="anom-avg">méd ${fmt(a.hist)}</span>
             </div>
@@ -494,7 +522,7 @@ function renderSparks(anomalias) {
     const cls = a.delta>0?'badge-up':'badge-down';
     const bars = a.vals.map((v,i)=>{
       const h=Math.max(3,Math.round(v/maxV*26));
-      const isAnom=i===4&&Math.abs(a.delta)>30;
+      const isAnom=i===5&&Math.abs(a.delta)>30;
       const cor=isAnom?(a.delta>0?'#f87171':'#34d399'):MCORES[i];
       return '<div class="spark-b" style="height:'+h+'px;background:'+cor+'" title="'+MESES[i]+': '+fmt(v)+'"></div>';
     }).join('');
@@ -502,7 +530,7 @@ function renderSparks(anomalias) {
       +'<span class="spark-city">'+(a.diretoria?'<span style="font-size:9px;color:var(--muted);display:block;line-height:1">'+a.diretoria+'</span>':'')+a.cidade+'</span>'
       +'<span class="spark-motivo">'+a.motivo+'</span>'
       +'<div class="spark">'+bars+'</div>'
-      +'<span class="spark-val">'+fmt(a.vals[4])+'</span>'
+      +'<span class="spark-val">'+fmt(a.vals[5])+'</span>'
       +'<span class="spark-badge '+cls+'">'+sinal+Math.round(a.delta*100)+'%</span>'
       +'</div>';
   }).join('');
