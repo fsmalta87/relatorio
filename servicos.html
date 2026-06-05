@@ -38,7 +38,7 @@
   .ia-sub{border:0.5px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 14px;background:rgba(255,255,255,.02)}
   .ia-sub.critico{border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.04)}
   .ia-sub.atencao{border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.04)}
-  .ia-sub.positivo{border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.04)}
+  .ia-sub.positivo{grid-column:1/-1;border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.04)}
   .ia-sub.exec{grid-column:1/-1;border-color:rgba(56,189,248,.25);background:rgba(56,189,248,.04)}
   .ia-sub.diretoria{grid-column:1/-1;border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.04)}
   .ia-sub.diretoria .ia-sub-label{color:#fbbf24}
@@ -198,6 +198,27 @@ function parseServicos(txt) {
       let objetos = [];
       try {
         const parsed = JSON.parse(lt.replace(/,$/, ''));
+        // Se vier no formato {variables:[{value: "csv..."}]}, extrair o CSV
+        if (parsed && parsed.variables) {
+          for (const v of parsed.variables) {
+            if (v.value && typeof v.value === 'string' && v.value.includes(';')) {
+              // Processar CSV embutido na variável
+              const csvLinhas = v.value.split(/\r?\n/);
+              for (const csvL of csvLinhas) {
+                const csvLt = csvL.trim().replace(/^\uFEFF/, '');
+                if (!csvLt) continue;
+                const cols = csvLt.split(';');
+                if (cols.length < 5) continue;
+                const dir = cols[0].trim();
+                if (!dir || dir === 'Diretoria') continue;
+                const prazoRaw = cols[4].trim();
+                const { cod, desc } = parseCodDesc(cols[3].trim());
+                data.os.push({ diretoria: dir, cidade: cols[1].trim(), grupo: cols[2].trim(), cod, desc, qtd: 1, prazoRaw, prazoKey: getPrazoKey(prazoRaw) });
+              }
+            }
+          }
+          continue;
+        }
         objetos = Array.isArray(parsed) ? parsed : [parsed];
       } catch(e) { continue; }
 
@@ -228,10 +249,11 @@ function parseServicos(txt) {
       continue;
     }
 
-    // TSV legado
-    const cols = l.split('\t');
+    // CSV com ; ou TSV com tab
+    const sep = l.includes(';') ? ';' : '\t';
+    const cols = l.split(sep);
     if (cols.length < 5) continue;
-    const diretoria = cols[0].trim();
+    const diretoria = cols[0].trim().replace(/^\uFEFF/, ''); // remove BOM
     if (!diretoria || diretoria === 'Diretoria' || diretoria === 'Regional') continue;
     const prazoRaw = cols[4].trim();
     const { cod, desc } = parseCodDesc(cols[3].trim());
@@ -296,7 +318,6 @@ function calcDir(os, dir) {
 function renderNarracao(txt) {
   if (!txt || !txt.trim()) return '';
   const blocos = [
-    { key:['🏢','RESUMO POR DIRETORIA','POR DIRETORIA'], cls:'diretoria' },
     { key:['✅','DESTAQUES POSITIVOS','DESTAQUE POSITIVO'], cls:'positivo' },
     { key:['📋','LEITURA EXECUTIVA'], cls:'exec' },
   ];
@@ -316,7 +337,7 @@ function renderNarracao(txt) {
     }
     if (!matched && atual && enc[atual]) enc[atual].texto.push(lt);
   }
-  const ordem = ['diretoria','positivo','exec'];
+  const ordem = ['positivo','exec'];
   const DIRS = ['CENTRAL','LESTE','NORTE','OESTE','SUL'];
 
   const html = ordem.map(cls => {
@@ -625,7 +646,8 @@ function render(data) {
     </div>
 
     <div class="footer">
-      <span class="footer-badge">Corsan · Experiência do Cliente</span>
+      <span>Dados atualizados via Power Automate. Prazos conforme OS em aberto.</span>
+      <span class="footer-badge">AI Builder · Power Automate</span>
     </div>`;
 
   renderDirCards(fonte, dirs);
