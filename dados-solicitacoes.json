@@ -2,32 +2,29 @@
 NARRAÇÃO
 🔴 MAIORES ALTAS POR CIDADE
 
-OSORIO - Falta d'água: +15,19%, indicando possível aumento significativo de ocorrências ou reclamações operacionais.  
-GUAIBA - Religação: +3,51%, sugerindo maior demanda por restabelecimento de serviços.  
-CHARQUEADAS - Substituição de Hidrômetro: +3,46%, apontando aumento na necessidade de manutenção ou troca de equipamentos.
+OSORIO - Falta d'água: +1518,78%, indicando possível crise operacional grave na distribuição.  
+GUAIABA - Religação: +350,88%, sinalizando aumento expressivo na demanda por religação.  
+TAPES - Falta d'água: +315,25%, alerta para problemas operacionais no fornecimento de água.  
 
 🟢 MAIORES QUEDAS POR CIDADE
 
-ALVORADA - Falta d'água: -89,01%, queda positiva indicando melhora no fornecimento.  
-SANTO ANGELO - Falta d'água: -87,46%, queda positiva refletindo redução de problemas.  
-SAO LUIZ GONZAGA - Falta d'água: -88,69%, queda positiva sinalizando avanço na estabilidade do serviço.
+ALVORADA - Falta d'água: -89,01%, queda positiva indicando melhora no abastecimento.  
+SANTA ROSA - Falta d'água: -91,00%, queda positiva refletindo redução de ocorrências.  
+PANAMBI - Fatura não entregue: -95,18%, queda positiva indicando melhoria na entrega.  
 
 📊 ANÁLISE POR REGIONAL
 
-LESTE: Destacam-se altas em OSORIO (Falta d'água +15,19%) e GUAIBA (Religação +3,51%), com quedas expressivas em ALVORADA e CANOAS na falta d'água, indicando melhorias operacionais.  
-CENTRO: Predominância de quedas em falta d'água e contestação, sinalizando melhora, mas com altas em serviços financeiros e pagamentos que merecem atenção.  
-NORTE: Alta significativa em processos e faturas digitais, com quedas em falta d'água, sugerindo ajustes operacionais e maior uso de canais digitais.  
-SUL: Aumento em ligações novas e débitos, com quedas em falta d'água, indicando expansão de atendimento e melhoria no fornecimento.  
-OESTE: Crescimento em contestação e cortes, com quedas em falta d'água, refletindo maior controle operacional e atenção a cobranças.
+LESTE: Destacam-se altas expressivas em OSORIO (Falta d'água +1518,78%) e GUAIBA (Religação +350,88%), com quedas significativas em Falta d'água em várias cidades, indicando melhorias pontuais.  
+CENTRO: Predominam quedas em Falta d'água e Contestação, sinalizando melhorias, mas com altas em Atualização Cadastral e Serviços manutenção, que merecem atenção.  
+NORTE: Altas relevantes em Fatura não entregue e Débito Automático, com quedas em Falta d'água, sugerindo avanços operacionais e pontos de atenção em serviços financeiros.  
+SUL: Crescimento forte em Ligação nova e Substituição de Hidrômetro, com quedas em Falta d'água, indicando avanços operacionais e melhorias no abastecimento.  
+OESTE: Altas em Contestação, Corte e Outros, com quedas em Falta d'água e Religação, mostrando equilíbrio entre melhorias e demandas crescentes.
 
 ---
 ANOMALIAS DETECTADAS
 {"Cidade":"CANOAS","Motivo":"Negociação de Débitos","Jan":"171.483870967742","Fev":"135.25","Mar":"131.516129032258","Abr":"105.655172413793","Atual":"78.7777777777778","Media":"124.374582869855","Variacao":"-0.366608707663283","Status":"🟢 QUEDA","Diretoria":"LESTE","Mai":"77.9677419354839"}
 {"Cidade":"CANOAS","Motivo":"Contestação e Cancelamento de Fatura","Jan":"70.5483870967742","Fev":"58.1785714285714","Mar":"82.6774193548387","Abr":"70.0666666666667","Atual":"53.25","Media":"65.0684024577573","Variacao":"-0.181630438298064","Status":"🟢 QUEDA","Diretoria":"LESTE","Mai":"43.8709677419355"}
 {"Cidade":"CANOAS","Motivo":"Informar Vazamento","Jan":"32","Fev":"31.0714285714286","Mar":"29.741935483871","Abr":"33.5333333333333","Atual":"41.2222222222222","Media":"33.1532104454685","Variacao":"0.243385532451703","Status":"🔴 ALTA","Diretoria":"LESTE","Mai":"39.4193548387097"}
-{"Cidade":"CANOAS","Motivo":"Religação","Jan":"42.8064516129032","Fev":"39.3214285714286","Mar":"20.2903225806452","Abr":"34.7857142857143","Atual":"8.33333333333333","Media":"31.2474500768049","Variacao":"-0.733311572213081","Status":"🟢 QUEDA","Diretoria":"LESTE","Mai":"19.0333333333333"}
-{"Cidade":"CANOAS","Motivo":"Atualização Cadastral","Jan":"30.3870967741935","Fev":"29.2857142857143","Mar":"30.1290322580645","Abr":"20.6206896551724","Atual":"20.3333333333333","Media":"25.4522485301128","Variacao":"-0.201118388056098","Status":"🟢 QUEDA","Diretoria":"LESTE","Mai":"16.8387096774194"}
-{"Cidade":"CANOAS","Motivo":"Fatura Digital","Jan":"6.44444444444444","Fev":"6.64","Mar":"6.67741935483871","Abr":"10.8571428571429","Atual":"22.8888888888889","Media":"8.98831746031746","Variacao":"1.54651540624161","Status":"🔴 ALTA","Diretoria":"LESTE","Mai":"14.3225806451613"}
 {"Cidade":"SANTA MARIA","Motivo":"Falta d'água","Jan":"129.129032258065","Fev":"37.25","Mar":"72.258064516129","Abr":"76.5333333333333","Atual":"21.4444444444444","Media":"73.5437634408602","Variacao":"-0.708412468425159","Status":"🟢 QUEDA","Diretoria":"CENTRO","Mai":"52.5483870967742"}
 {"Cidade":"SANTA MARIA","Motivo":"Contestação e Cancelamento de Fatura","Jan":"43.3870967741936","Fev":"45.8928571428571","Mar":"57.5483870967742","Abr":"57.8333333333333","Atual":"41.2222222222222","Media":"49.3323348694316","Variacao":"-0.164397502544214","Status":"🟢 QUEDA","Diretoria":"CENTRO","Mai":"42"}
 {"Cidade":"SANTA MARIA","Motivo":"Informar Vazamento","Jan":"37.741935483871","Fev":"32.2857142857143","Mar":"35.5806451612903","Abr":"37.9333333333333","Atual":"30.4444444444444","Media":"36.3599385560676","Variacao":"-0.162692632235925","Status":"🟢 QUEDA","Diretoria":"CENTRO","Mai":"38.258064516129"}
@@ -867,37 +864,3 @@ ANOMALIAS DETECTADAS
 {"Cidade":"FELIZ","Motivo":"Negociação de Débitos","Jan":"4.40909090909091","Fev":"3.26315789473684","Mar":"3.09090909090909","Abr":"3.72222222222222","Atual":"2.4","Media":"3.48374269005848","Variacao":"-0.311085744980864","Status":"🟢 QUEDA","Diretoria":"SUL","Mai":"2.93333333333333"}
 {"Cidade":"FELIZ","Motivo":"Atualização Cadastral","Jan":"1.25","Fev":"1.1","Mar":"1.5","Abr":"1.4","Atual":"1.8","Media":"1.31666666666667","Variacao":"0.367088607594937","Status":"🔴 ALTA","Diretoria":"SUL","Mai":"1.33333333333333"}
 {"Cidade":"FELIZ","Motivo":"Fatura Digital","Jan":"1.25","Fev":"1","Mar":"1.28571428571429","Abr":"1.375","Atual":"2","Media":"1.23547619047619","Variacao":"0.618809019078821","Status":"🔴 ALTA","Diretoria":"SUL","Mai":"1.26666666666667"}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
-{"Cidade":"","Motivo":"","Jan":"","Fev":"","Mar":"","Abr":"","Atual":"","Media":"","Variacao":"","Status":"","Diretoria":"","Mai":""}
