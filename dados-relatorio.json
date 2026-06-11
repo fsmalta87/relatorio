@@ -1,19 +1,19 @@
 ---
 NARRAÇÃO
 🔴 SITUAÇÃO CRÍTICA  
-1. Guaíba, Manutenção Corretiva - Rede de abastecimento, 8.931 ligações afetadas, previsão de normalização às 17:00.  
-2. Santa Maria, Manutenção Corretiva - Rede de abastecimento, 4.369 ligações afetadas, previsão de normalização às 18:00.  
-3. Eldorado do Sul, Manutenção Corretiva - Rede de abastecimento, 2.593 ligações afetadas, previsão de normalização às 17:00.  
+1. Passo Fundo – Manutenção Corretiva - Rede de abastecimento – 1.503 ligações – previsão normalização: 19:00.  
+2. Carlos Barbosa – Manutenção Corretiva - Rede de abastecimento – 1.395 ligações – previsão normalização: 20:00.  
+3. Gravataí – Manobra Operacional Emergencial – 995 ligações – previsão normalização: 21:00.  
 
 📅 EVENTOS PROGRAMADOS  
-Não há eventos programados registrados nos dados fornecidos.  
+Nenhum evento programado registrado nos dados fornecidos.  
 
 ✅ CONCLUÍDOS RECENTEMENTE  
-Não há eventos finalizados recentemente registrados nos dados fornecidos.  
+Nenhum evento finalizado registrado nos dados fornecidos.  
 
 📋 LEITURA EXECUTIVA  
-A regional mais crítica é a de Guaíba, com maior impacto em ligações afetadas. Recomenda-se priorizar recursos para acelerar a normalização dos serviços nesta localidade.
+A regional mais crítica é Passo Fundo, com maior impacto em ligações afetadas. Recomenda-se priorizar recursos para acelerar a normalização das manutenções corretivas em andamento.
 
 ---
 DADOS
-[{"id":1132538,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Passo Fundo","dt_inicio":"11/06/2026 14:00:00","dt_inicio_rec":"11/06/2026 18:30:00","dt_fim_rec":"11/06/2026 19:00:00","ligacoes":572,"regional":null},{"id":1131575,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Montenegro","dt_inicio":"11/06/2026 15:00:00","dt_inicio_rec":"11/06/2026 16:30:00","dt_fim_rec":"11/06/2026 17:00:00","ligacoes":285,"regional":null},{"id":1131594,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Eldorado do Sul","dt_inicio":"11/06/2026 12:30:00","dt_inicio_rec":"11/06/2026 16:00:00","dt_fim_rec":"11/06/2026 17:00:00","ligacoes":2593,"regional":null},{"id":1130955,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Guaíba","dt_inicio":"11/06/2026 12:00:00","dt_inicio_rec":"11/06/2026 16:30:00","dt_fim_rec":"11/06/2026 17:00:00","ligacoes":8931,"regional":null},{"id":1130956,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Santa Maria","dt_inicio":"11/06/2026 12:30:00","dt_inicio_rec":"11/06/2026 17:00:00","dt_fim_rec":"11/06/2026 18:00:00","ligacoes":4369,"regional":null},{"id":1131287,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Carlos Barbosa","dt_inicio":"11/06/2026 15:00:00","dt_inicio_rec":"11/06/2026 20:00:00","dt_fim_rec":"11/06/2026 20:00:00","ligacoes":1395,"regional":null}]
+[{"id":1131287,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Carlos Barbosa","dt_inicio":"11/06/2026 15:00:00","dt_inicio_rec":"11/06/2026 20:00:00","dt_fim_rec":"11/06/2026 20:00:00","ligacoes":1395,"regional":null},{"id":1130935,"categoria":"Manutenção Corretiva/Emergêncial - Mecânica","status":"Em Andamento","municipio":"Bento Gonçalves","dt_inicio":"11/06/2026 09:45:00","dt_inicio_rec":"11/06/2026 18:30:00","dt_fim_rec":"11/06/2026 19:30:00","ligacoes":334,"regional":null},{"id":1130943,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Gravataí","dt_inicio":"11/06/2026 16:00:00","dt_inicio_rec":"11/06/2026 19:00:00","dt_fim_rec":"11/06/2026 19:00:00","ligacoes":517,"regional":null},{"id":1131581,"categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","status":"Em Andamento","municipio":"Gravataí","dt_inicio":"11/06/2026 17:00:00","dt_inicio_rec":"11/06/2026 20:00:00","dt_fim_rec":"11/06/2026 21:00:00","ligacoes":995,"regional":null},{"id":1131601,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Flores da Cunha","dt_inicio":"11/06/2026 17:00:00","dt_inicio_rec":"11/06/2026 18:00:00","dt_fim_rec":"11/06/2026 20:00:00","ligacoes":434,"regional":null},{"id":1132538,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Passo Fundo","dt_inicio":"11/06/2026 14:00:00","dt_inicio_rec":"11/06/2026 18:30:00","dt_fim_rec":"11/06/2026 19:00:00","ligacoes":572,"regional":null},{"id":1133490,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Passo Fundo","dt_inicio":"11/06/2026 16:30:00","dt_inicio_rec":"11/06/2026 18:00:00","dt_fim_rec":"11/06/2026 19:00:00","ligacoes":1503,"regional":null},{"id":1133506,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Rolante","dt_inicio":"11/06/2026 17:00:00","dt_inicio_rec":"11/06/2026 18:30:00","dt_fim_rec":"11/06/2026 19:00:00","ligacoes":70,"regional":null}]
