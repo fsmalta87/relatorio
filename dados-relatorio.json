@@ -1,21 +1,19 @@
 ---
 NARRAÇÃO
 🔴 SITUAÇÃO CRÍTICA  
-1. Alvorada – Manutenção Corretiva - Rede de abastecimento – 26.448 ligações – previsão normalização: 12/06/2026 20:00  
-2. Porto Alegre – Manutenção Corretiva - Rede de abastecimento – 14.240 ligações – previsão normalização: 12/06/2026 19:00  
-3. Viamão – Paralisação por alta turbidez – 13.732 ligações – previsão normalização: 12/06/2026 22:00  
+1. Caçapava do Sul, Manutenção Programada, 12.790 ligações afetadas, previsão normalização 15/06/2026 às 18:00.  
+2. Passo Fundo, Manutenção Corretiva - Rede de abastecimento, 1.447 ligações, previsão normalização 15/06/2026 às 13:00.  
+3. Bento Gonçalves, Vazamento identificado, 964 ligações, previsão normalização 15/06/2026 às 17:00.  
 
 📅 EVENTOS PROGRAMADOS  
-1. Santa Margarida do Sul – Manutenção Programada – início: 23/06/2026 07:00 – 1.490 ligações  
-2. Santa Margarida do Sul – Manutenção Programada – início: 22/06/2026 13:00 – 404 ligações  
-3. (Sem outros eventos programados relevantes)  
+Não há eventos programados listados entre os dados fornecidos.  
 
 ✅ CONCLUÍDOS RECENTEMENTE  
-Não há registros de eventos finalizados recentemente nos dados fornecidos.  
+Não há eventos finalizados recentemente nos dados fornecidos.  
 
 📋 LEITURA EXECUTIVA  
-A regional mais crítica é a de Alvorada, com maior impacto em ligações afetadas. Recomenda-se priorizar recursos para acelerar a normalização das manutenções corretivas em andamento.
+A regional mais crítica é a de Caçapava do Sul, com maior impacto em ligações afetadas. Recomenda-se priorizar recursos para acelerar a normalização da manutenção programada.
 
 ---
 DADOS
-[{"id":1136063,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Farroupilha","dt_inicio":"12/06/2026 14:00:00","dt_inicio_rec":"12/06/2026 19:00:00","dt_fim_rec":"12/06/2026 20:00:00","ligacoes":1934,"regional":null},{"id":1136380,"categoria":"Manutenção Programada","status":"Em Andamento","municipio":"Santa Margarida do Sul","dt_inicio":"23/06/2026 07:00:00","dt_inicio_rec":"23/06/2026 12:00:00","dt_fim_rec":"23/06/2026 20:00:00","ligacoes":1490,"regional":null},{"id":1134154,"categoria":"Manutenção Programada","status":"Em Andamento","municipio":"Santa Margarida do Sul","dt_inicio":"22/06/2026 13:00:00","dt_inicio_rec":"22/06/2026 16:30:00","dt_fim_rec":"22/06/2026 20:00:00","ligacoes":404,"regional":null},{"id":1134155,"categoria":"Paralisação devido alteração da qualidade de água bruta (alta turbidez)","status":"Em Andamento","municipio":"Viamão","dt_inicio":"12/06/2026 12:15:00","dt_inicio_rec":"12/06/2026 21:00:00","dt_fim_rec":"12/06/2026 22:00:00","ligacoes":13732,"regional":null},{"id":1134459,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Porto Alegre","dt_inicio":"12/06/2026 12:45:00","dt_inicio_rec":"12/06/2026 19:00:00","dt_fim_rec":"12/06/2026 19:00:00","ligacoes":14240,"regional":null},{"id":1135101,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Alvorada","dt_inicio":"12/06/2026 09:45:00","dt_inicio_rec":"12/06/2026 19:00:00","dt_fim_rec":"12/06/2026 20:00:00","ligacoes":26448,"regional":null},{"id":1135420,"categoria":"Manutenção Corretiva/Emergencial - Elétrica","status":"Em Andamento","municipio":"Frederico Westphalen","dt_inicio":"12/06/2026 16:00:00","dt_inicio_rec":"12/06/2026 23:00:00","dt_fim_rec":"12/06/2026 23:45:00","ligacoes":2051,"regional":null}]
+[{"id":1126797,"categoria":"Manutenção Programada","status":"Em Andamento","municipio":"Caçapava do Sul","dt_inicio":"15/06/2026 08:30:00","dt_inicio_rec":"15/06/2026 13:00:00","dt_fim_rec":"15/06/2026 18:00:00","ligacoes":12790,"regional":null},{"id":1142134,"categoria":"Vazamento identificado na região causando oscilação no abastecimento","status":"Em Andamento","municipio":"Bento Gonçalves","dt_inicio":"15/06/2026 08:45:00","dt_inicio_rec":"15/06/2026 16:00:00","dt_fim_rec":"15/06/2026 17:00:00","ligacoes":964,"regional":null},{"id":1142138,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Passo Fundo","dt_inicio":"15/06/2026 10:30:00","dt_inicio_rec":"15/06/2026 12:30:00","dt_fim_rec":"15/06/2026 13:00:00","ligacoes":1447,"regional":null},{"id":1142469,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Santo Ângelo","dt_inicio":"15/06/2026 09:30:00","dt_inicio_rec":"15/06/2026 11:00:00","dt_fim_rec":"15/06/2026 11:45:00","ligacoes":758,"regional":null},{"id":1142485,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Santa Maria","dt_inicio":"15/06/2026 09:45:00","dt_inicio_rec":"15/06/2026 17:00:00","dt_fim_rec":"15/06/2026 18:00:00","ligacoes":731,"regional":null},{"id":1142503,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Gravataí","dt_inicio":"15/06/2026 10:00:00","dt_inicio_rec":"15/06/2026 14:00:00","dt_fim_rec":"15/06/2026 15:00:00","ligacoes":493,"regional":null},{"id":1142774,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Farroupilha","dt_inicio":"15/06/2026 09:00:00","dt_inicio_rec":"15/06/2026 17:00:00","dt_fim_rec":"15/06/2026 17:30:00","ligacoes":47,"regional":null}]
