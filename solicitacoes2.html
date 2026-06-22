@@ -1,0 +1,57 @@
+function main(workbook: ExcelScript.Workbook): string {
+    const sheet = workbook.getActiveWorksheet();
+    const table = sheet.getTables()[0];
+    if (!table) return "";
+
+    // 1. Ordena a tabela (coluna 6 desc)
+    table.getSort().apply([{ key: 6, ascending: false }]);
+
+    // 2. Exporta para CSV filtrando só ALTA e QUEDA
+    const range = table.getRangeBetweenHeaderAndTotal();
+    const headers = table.getColumns().map(col => col.getName());
+    const values = range.getValues();
+
+    // Encontrar índices das colunas relevantes
+    const idxStatus    = headers.findIndex(h => h.toLowerCase() === 'status');
+    const idxCidade    = headers.findIndex(h => h.toLowerCase().includes('cidade'));
+    const idxVariacao  = headers.findIndex(h => h.toLowerCase().includes('varia'));
+    const idxRank      = headers.findIndex(h => h.toLowerCase() === 'rank');
+
+    // Filtrar só ALTA e QUEDA
+    const filtradas = values.filter(row => {
+        const status = idxStatus >= 0 ? String(row[idxStatus]) : '';
+        return status.includes('ALTA') || status.includes('QUEDA');
+    });
+
+    // Top 10 por cidade — usando coluna Rank se existir, senão ordena por |Variacao|
+    const porCidade: { [cidade: string]: (string | number | boolean)[][] } = {};
+    for (const row of filtradas) {
+        const cidade = idxCidade >= 0 ? String(row[idxCidade]).trim() : 'OUTROS';
+        if (!porCidade[cidade]) porCidade[cidade] = [];
+        porCidade[cidade].push(row);
+    }
+
+    const linhasSelecionadas: (string | number | boolean)[][] = [];
+    for (const cidade of Object.keys(porCidade)) {
+        const linhasCidade = porCidade[cidade];
+
+        // Ordena por |Variacao| desc se não tiver Rank
+        if (idxRank < 0 && idxVariacao >= 0) {
+            linhasCidade.sort((a, b) =>
+                Math.abs(Number(b[idxVariacao])) - Math.abs(Number(a[idxVariacao]))
+            );
+        }
+        // Pega top 10
+        linhasSelecionadas.push(...linhasCidade.slice(0, 10));
+    }
+
+    // Montar CSV
+    const rows: string[] = [];
+    rows.push(headers.map(h => `"${h}"`).join(";"));
+    for (const row of linhasSelecionadas) {
+        const linha = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(";");
+        rows.push(linha);
+    }
+
+    return rows.join("\n");
+}
