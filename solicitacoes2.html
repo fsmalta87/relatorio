@@ -1,57 +1,707 @@
-function main(workbook: ExcelScript.Workbook): string {
-    const sheet = workbook.getActiveWorksheet();
-    const table = sheet.getTables()[0];
-    if (!table) return "";
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variações — Contatos por Cidade</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0f1e;--surface:#111827;--surface2:#1a2235;--border:rgba(99,179,237,0.12);--accent:#38bdf8;--danger:#f87171;--success:#34d399;--warning:#fbbf24;--text:#e2e8f0;--muted:#64748b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;padding:24px}
+  .grid-bg{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+  .container{max-width:960px;margin:0 auto;position:relative;z-index:1}
+  .header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+  .header-left img{height:144px;margin-bottom:4px;margin-top:-8px;display:block;filter:brightness(0) invert(1)}
+  h1{font-size:18px;font-weight:500;color:#f1f5f9}
+  .header-meta{font-size:12px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace}
+  .header-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:right}
+  .header-stat-val{font-size:22px;font-weight:600;font-family:'DM Mono',monospace}
+  .header-stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+  .metric{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+  .metric-val{font-size:22px;font-weight:600;font-family:'DM Mono',monospace}
+  .metric-label{font-size:11px;color:var(--muted);margin-top:2px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+  @media(max-width:640px){.two{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+  .card-full{grid-column:1/-1}
+  .card-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
 
-    // 1. Ordena a tabela (coluna 6 desc)
-    table.getSort().apply([{ key: 6, ascending: false }]);
+  /* Subcards narração */
+  .ia-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:580px){.ia-grid{grid-template-columns:1fr}}
+  .ia-subcard{background:rgba(255,255,255,.03);border:0.5px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 14px}
+  .ia-subcard.alta{border-color:rgba(248,113,113,.2)}
+  .ia-subcard.queda{border-color:rgba(52,211,153,.2)}
+  .ia-subcard.top-alta{border-color:rgba(251,191,36,.2)}
+  .ia-subcard.top-queda{border-color:rgba(129,140,248,.2)}
+  .ia-subcard.exec{grid-column:1/-1;border-color:rgba(56,189,248,.2)}
+  .ia-subcard.diretoria .ia-subcard-label{color:#fbbf24}
+  .ia-subcard.diretoria{grid-column:1/-1;border-color:rgba(251,191,36,.2)}
+  .ia-subcard.diretoria .ia-subcard-label{color:#fbbf24}
+  .dir-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+  @media(max-width:700px){.dir-grid{grid-template-columns:repeat(2,1fr)}}
+  .dir-card{background:rgba(255,255,255,.02);border:0.5px solid var(--border);border-radius:6px;padding:10px 12px}
+  .dir-card-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#fbbf24;margin-bottom:6px}
+  .dir-card-text{font-size:11px;color:var(--text);line-height:1.6}
+  .ia-subcard-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+  .ia-subcard.alta .ia-subcard-label{color:#f87171}
+  .ia-subcard.queda .ia-subcard-label{color:#34d399}
+  .ia-subcard.top-alta .ia-subcard-label{color:#fbbf24}
+  .ia-subcard.top-queda .ia-subcard-label{color:#818cf8}
+  .ia-subcard.exec .ia-subcard-label{color:var(--accent)}
+  .ia-subcard-text{font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap}
 
-    // 2. Exporta para CSV filtrando só ALTA e QUEDA
-    const range = table.getRangeBetweenHeaderAndTotal();
-    const headers = table.getColumns().map(col => col.getName());
-    const values = range.getValues();
+  /* Filtros */
+  .filter-section{display:flex;flex-direction:column;gap:10px}
+  .filter-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .filter-label{font-size:11px;color:var(--muted);min-width:50px;flex-shrink:0}
+  .fbtn{font-size:11px;padding:4px 12px;border:0.5px solid rgba(255,255,255,0.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+  .fbtn.on-high{background:rgba(248,113,113,.12);color:#f87171;border-color:rgba(248,113,113,.3)}
+  .fbtn.on-low{background:rgba(52,211,153,.12);color:#34d399;border-color:rgba(52,211,153,.3)}
+  .fbtn.on-all{background:rgba(56,189,248,.08);color:var(--accent);border-color:rgba(56,189,248,.25)}
 
-    // Encontrar índices das colunas relevantes
-    const idxStatus    = headers.findIndex(h => h.toLowerCase() === 'status');
-    const idxCidade    = headers.findIndex(h => h.toLowerCase().includes('cidade'));
-    const idxVariacao  = headers.findIndex(h => h.toLowerCase().includes('varia'));
-    const idxRank      = headers.findIndex(h => h.toLowerCase() === 'rank');
+  /* Dropdown cidade */
+  .city-filter{position:relative}
+  .city-select-wrap{display:flex;align-items:center;gap:8px}
+  .city-search{flex:1;background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
+  .city-search:focus{border-color:var(--accent)}
+  .city-search::placeholder{color:var(--muted)}
+  .city-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:0.5px solid var(--border);border-radius:8px;max-height:220px;overflow-y:auto;z-index:100;display:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  .city-dropdown.open{display:block}
+  .city-opt,.assunto-opt{padding:8px 14px;font-size:12px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:6px}
+  .city-opt:hover,.assunto-opt:hover{background:var(--surface2)}
+  .city-opt.selected,.assunto-opt.selected{color:var(--accent)}
+  .city-opt.selected::before,.assunto-opt.selected::before{content:'✓';font-size:11px;color:var(--accent)}
+  .city-opt:not(.selected)::before,.assunto-opt:not(.selected)::before{content:'';display:inline-block;width:11px}
+  .city-clear{font-size:12px;padding:6px 12px;border:0.5px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .city-clear:hover{color:var(--text)}
 
-    // Filtrar só ALTA e QUEDA
-    const filtradas = values.filter(row => {
-        const status = idxStatus >= 0 ? String(row[idxStatus]) : '';
-        return status.includes('ALTA') || status.includes('QUEDA');
-    });
+  /* Dropdown assunto */
+  .assunto-filter{position:relative}
+  .assunto-search{width:100%;background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
+  .assunto-search:focus{border-color:var(--accent)}
+  .assunto-search::placeholder{color:var(--muted)}
+  .assunto-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:0.5px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;z-index:100;display:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  .assunto-dropdown.open{display:block}
 
-    // Top 10 por cidade — usando coluna Rank se existir, senão ordena por |Variacao|
-    const porCidade: { [cidade: string]: (string | number | boolean)[][] } = {};
-    for (const row of filtradas) {
-        const cidade = idxCidade >= 0 ? String(row[idxCidade]).trim() : 'OUTROS';
-        if (!porCidade[cidade]) porCidade[cidade] = [];
-        porCidade[cidade].push(row);
-    }
+  /* Tags */
+  .tags-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;min-height:4px}
+  .city-tag,.assunto-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 8px;background:rgba(56,189,248,.1);border:0.5px solid rgba(56,189,248,.3);border-radius:4px;color:var(--accent)}
+  .assunto-tag{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.25);color:#fbbf24}
+  .city-tag button,.assunto-tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:13px;line-height:1;padding:0}
 
-    const linhasSelecionadas: (string | number | boolean)[][] = [];
-    for (const cidade of Object.keys(porCidade)) {
-        const linhasCidade = porCidade[cidade];
+  /* Lista variações */
+  .anom-item{display:flex;align-items:stretch;margin-bottom:6px;border-radius:8px;overflow:hidden;border:0.5px solid rgba(255,255,255,.08)}
+  .anom-item.high{border-color:rgba(248,113,113,.2)}
+  .anom-item.low{border-color:rgba(52,211,153,.2)}
+  .anom-accent{width:3px;flex-shrink:0}
+  .high .anom-accent{background:#f87171}
+  .low .anom-accent{background:#34d399}
+  .anom-body{display:flex;align-items:center;gap:8px;padding:9px 12px;flex:1;min-width:0;background:rgba(255,255,255,.02)}
+  .anom-city{font-size:12px;font-weight:500;color:#f1f5f9;min-width:110px;flex-shrink:0}
+  .anom-motivo{font-size:12px;color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .anom-nums{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;gap:1px}
+  .anom-atual{font-size:12px;font-weight:500;font-family:'DM Mono',monospace;color:#f1f5f9}
+  .anom-delta{font-size:10px;font-family:'DM Mono',monospace;font-weight:500}
+  .high .anom-delta{color:#f87171}
+  .low .anom-delta{color:#34d399}
+  .anom-avg{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace}
 
-        // Ordena por |Variacao| desc se não tiver Rank
-        if (idxRank < 0 && idxVariacao >= 0) {
-            linhasCidade.sort((a, b) =>
-                Math.abs(Number(b[idxVariacao])) - Math.abs(Number(a[idxVariacao]))
-            );
-        }
-        // Pega top 10
-        linhasSelecionadas.push(...linhasCidade.slice(0, 10));
-    }
+  /* Sparks */
+  .spark-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;padding:9px 12px;border-radius:8px;border:0.5px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)}
+  .spark-city{font-size:12px;font-weight:500;color:#f1f5f9;min-width:100px;flex-shrink:0}
+  .spark-motivo{font-size:11px;color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .spark{display:flex;align-items:flex-end;gap:2px;height:28px;flex-shrink:0}
+  .spark-b{width:9px;border-radius:2px 2px 0 0;flex-shrink:0}
+  .spark-val{font-size:11px;font-family:'DM Mono',monospace;min-width:40px;text-align:right;font-weight:500;color:#f1f5f9;flex-shrink:0}
+  .spark-badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500;flex-shrink:0}
+  .badge-up{background:rgba(248,113,113,.12);color:#f87171}
+  .badge-down{background:rgba(52,211,153,.12);color:#34d399}
+  .legend{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+  .legend-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+  .pager{display:flex;align-items:center;justify-content:space-between;margin-top:12px;font-size:12px;color:var(--muted)}
+  .pager-btns{display:flex;gap:6px}
+  .pbtn{padding:4px 10px;border:0.5px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;font-size:11px}
+  .pbtn:disabled{opacity:.35;cursor:not-allowed}
+  .pbtn:not(:disabled):hover{border-color:var(--accent);color:var(--accent)}
+  .footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);flex-wrap:wrap;gap:8px}
+  .footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600}
+  .empty{text-align:center;padding:48px 20px;color:var(--muted)}
+  .empty h2{font-size:16px;color:#f1f5f9;margin-bottom:8px}
+  .ia-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="container">
+  <div id="app"><div class="empty"><h2>Carregando dados...</h2><p style="font-size:13px;margin-top:6px">Buscando análise mais recente...</p></div></div>
+</div>
+<script>
+const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-solicitacoes.json';
+const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#10b981','#f87171'];
+const MESES  = ['Jan','Fev','Mar','Abr','Mai','Atual'];
 
-    // Montar CSV
-    const rows: string[] = [];
-    rows.push(headers.map(h => `"${h}"`).join(";"));
-    for (const row of linhasSelecionadas) {
-        const linha = row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(";");
-        rows.push(linha);
-    }
-
-    return rows.join("\n");
+function parseNum(s) {
+  if (!s || s.trim() === '') return 0;
+  return parseFloat(s.trim()) || 0;
 }
+
+function fmt(n) {
+  if (!n && n !== 0) return '—';
+  return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// Parser da narração em subcards
+function formatarNumeros(txt) {
+  // Os percentuais já vêm formatados pelo AI Builder — não converter
+  return txt;
+}
+
+function removerCidades(txt) {
+  return txt.replace(/ — [A-ZÁÉÍÓÚÃÕÂÊÔÇÀ ]+$/gm, '');
+}
+
+function renderNarracao(txt) {
+  if (!txt || !txt.trim()) return '';
+  var blocos = [
+    { key: ['🔴','MAIORES ALTAS','ALTAS POR CIDADE','VARIAÇÃO ALTA','VARIACÃO ALTA'], cls: 'alta', formatNum: true, remCidade: false },
+    { key: ['🟢','MAIORES QUEDAS','QUEDAS POR CIDADE','VARIAÇÃO BAIXA','VARIACÃO BAIXA','QUEDAS EXPRESSIVAS'], cls: 'queda', formatNum: true, remCidade: false },
+    { key: ['📊','ANÁLISE POR REGIONAL','ANALISE POR REGIONAL','POR REGIONAL'], cls: 'diretoria', formatNum: false, remCidade: false },
+    { key: ['TOP 5 ASSUNTOS EM ALTA','ASSUNTOS EM ALTA'], cls: 'top-alta', formatNum: false, remCidade: true },
+    { key: ['TOP 5 ASSUNTOS EM QUEDA','ASSUNTOS EM QUEDA'], cls: 'top-queda', formatNum: false, remCidade: true },
+    { key: ['RESUMO POR DIRETORIA','POR DIRETORIA'], cls: 'diretoria', formatNum: false, remCidade: false },
+    { key: ['📋','LEITURA EXECUTIVA','EXECUTIVA'], cls: 'exec', formatNum: false, remCidade: false },
+  ];
+  var linhas = txt.split('\n');
+  var atual = null;
+  var atualBloco = null;
+  var encontrados = {};
+  for (var i = 0; i < linhas.length; i++) {
+    var l = linhas[i];
+    var lt = l.trim();
+    if (!lt) continue;
+    var matched = false;
+    for (var j = 0; j < blocos.length; j++) {
+      var b = blocos[j];
+      if (b.key.some(function(k){ return lt.startsWith(k) || lt.toUpperCase().startsWith(k.toUpperCase()); })) {
+        atual = b.cls; atualBloco = b;
+        // Verificar se há texto colado após o título na mesma linha
+        var tituloUsado = b.key.find(function(k){ return lt.startsWith(k) || lt.toUpperCase().startsWith(k.toUpperCase()); });
+        var labelLinha = lt;
+        var restoLinha = '';
+        if (tituloUsado) {
+          // Separar título do conteúdo colado
+          var posResto = tituloUsado.length;
+          // Avança enquanto for letra maiúscula do título
+          while (posResto < lt.length && lt[posResto] !== ' ' && lt.charCodeAt(posResto) > 64 && lt.charCodeAt(posResto) < 91) posResto++;
+          if (posResto < lt.length && lt.slice(posResto).trim().length > 0) {
+            labelLinha = lt.slice(0, posResto).trim();
+            restoLinha = lt.slice(posResto).trim();
+          }
+        }
+        if (!encontrados[atual]) encontrados[atual] = { label: labelLinha, texto: [], bloco: b };
+        if (restoLinha) encontrados[atual].texto.push(restoLinha);
+        matched = true; break;
+      }
+    }
+    if (!matched && atual && encontrados[atual]) {
+      encontrados[atual].texto.push(lt);
+    }
+  }
+  var ordem = ['alta','queda','diretoria','top-alta','top-queda','exec'];
+  var DIRETORIAS = ['Leste','Norte','Centro','Sul','Oeste'];
+
+  var html = ordem.map(function(cls) {
+    var b = encontrados[cls];
+    if (!b) return '';
+    var textoFinal = b.texto.join('\n');
+    if (b.bloco.formatNum) textoFinal = formatarNumeros(textoFinal);
+    if (b.bloco.remCidade) textoFinal = removerCidades(textoFinal);
+
+    if (cls === 'diretoria') {
+      var DIRS = ['LESTE','CENTRO','NORTE','SUL','OESTE'];
+      var dirMap = {};
+      // Primeiro tenta separar linhas que contenham múltiplas regionais coladas
+      var linhasExpandidas = [];
+      b.texto.forEach(function(l) {
+        var lt = l.trim();
+        // Verificar se a linha contém mais de uma regional (ex: "LESTE: texto. CENTRO: texto")
+        var partes = lt.split(new RegExp('(?<=[.!?])\\s+(?=' + DIRS.join('|') + ')\\s*:'));
+        if (partes.length > 1) {
+          partes.forEach(function(p){ linhasExpandidas.push(p.trim()); });
+        } else {
+          // Tentar separar por padrão "NOME_REGIONAL: " no meio da linha
+          var splitRegex = new RegExp('(?:^|\\s)(' + DIRS.join('|') + ')\\s*:', 'g');
+          var matches = [];
+          var m;
+          while ((m = splitRegex.exec(lt)) !== null) {
+            matches.push({ dir: m[1], idx: m.index === 0 ? 0 : m.index + 1 });
+          }
+          if (matches.length > 1) {
+            for (var mi = 0; mi < matches.length; mi++) {
+              var start = matches[mi].idx;
+              var end2 = mi + 1 < matches.length ? matches[mi+1].idx : lt.length;
+              linhasExpandidas.push(lt.slice(start, end2).trim());
+            }
+          } else {
+            linhasExpandidas.push(lt);
+          }
+        }
+      });
+      linhasExpandidas.forEach(function(l) {
+        DIRS.forEach(function(d) {
+          if (l.toUpperCase().startsWith(d + ':') || l.toUpperCase().startsWith(d + ' ')) {
+            dirMap[d] = l.replace(new RegExp('^' + d + '\\s*:\\s*', 'i'), '').trim();
+          }
+        });
+      });
+      // Se nenhuma regional foi mapeada, mostra texto narrativo
+      var temDirs = Object.keys(dirMap).length > 0;
+      if (!temDirs) {
+        return '<div class="ia-subcard ' + cls + '"><div class="ia-subcard-label">' + b.label + '</div><div class="ia-subcard-text">' + b.texto.join('\n') + '</div></div>';
+      }
+      var cardsDir = DIRS.map(function(d) {
+        var texto = dirMap[d] || '—';
+        return '<div class="dir-card"><div class="dir-card-name">' + d + '</div><div class="dir-card-text">' + texto + '</div></div>';
+      }).join('');
+      return '<div class="ia-subcard ' + cls + '"><div class="ia-subcard-label">' + b.label + '</div><div class="dir-grid">' + cardsDir + '</div></div>';
+    }
+
+    return '<div class="ia-subcard ' + cls + '"><div class="ia-subcard-label">' + b.label + '</div><div class="ia-subcard-text">' + textoFinal + '</div></div>';
+  }).join('');
+  return '<div class="ia-label">Análise gerada por IA</div><div class="ia-grid">' + html + '</div>';
+}
+
+function parseAnomalia(txt) {
+  const data = {
+    gerado: new Date().toLocaleString('pt-BR'),
+    totalAltas: 0, totalQuedas: 0, maiorDesvio: '',
+    narracao: '', anomalias: []
+  };
+  const linhas = txt.split('\n');
+  let section = 'dados';
+  let maiorAbs = 0;
+  for (let i = 0; i < linhas.length; i++) {
+    const l = linhas[i];
+    const lt = l.trim();
+    if (!lt) continue;
+    if (lt.includes('VARIAÇÕES DETECTADAS') || lt.includes('ANOMALIAS DETECTADAS')) { section='dados'; continue; }
+    if (lt.includes('NARRAÇÃO') || lt.includes('NARRACAO')) { section='narracao'; continue; }
+    if (lt.startsWith('---')) { if(section==='narracao') section='dados'; continue; }
+    if (section === 'narracao') { data.narracao += (data.narracao ? '\n' : '') + lt; continue; }
+
+    let cidade, motivo, jan, fev, mar, abr, mai, atual, hist, delta, statusCol, diretoria = '';
+    const lt2 = lt;
+    if (lt2.startsWith('{')) {
+      try {
+        const obj = JSON.parse(lt2.replace(/,$/, ''));
+        cidade = (obj['CIDADE'] || obj['Cidade'] || '').trim();
+        motivo = (obj['motivos de contato (grupos)'] || obj['Motivo'] || '').trim();
+        jan    = parseNum(obj['jan26'] || obj['Jan'] || obj['Jan/26'] || '0');
+        fev    = parseNum(obj['fev26'] || obj['Fev'] || obj['Fev/26'] || '0');
+        mar    = parseNum(obj['mar26'] || obj['Mar'] || obj['Mar/26'] || '0');
+        abr    = parseNum(obj['abr26'] || obj['Abr'] || obj['Abr/26'] || '0');
+        mai    = parseNum(obj['mai26'] || obj['Mai'] || obj['Mai/26'] || '0');
+        atual  = parseNum(obj['Mês Atual'] || obj['MesAtual'] || obj['Atual'] || '0');
+        hist   = parseNum(obj['Média'] || obj['Media'] || obj['Média Hist_x002e_Variação %Status'] || '0');
+        delta  = parseFloat(obj['Variacao'] || obj['Variação %'] || '0') || 0;
+        statusCol = (obj['Status'] || '').trim();
+        diretoria = (obj['Diretoria'] || obj['diretoria'] || '').trim();
+      } catch(e) { continue; }
+    } else {
+      // Suporte a CSV com ; (novo formato Office Script) e TSV com tab (legado)
+      // Remove aspas duplas de cada campo
+      function limparCampo(s) { return (s||'').trim().replace(/^"|"$/g,'').trim(); }
+
+      const isCSV = l.includes(';');
+      const cols = isCSV ? l.split(';') : l.split('\t');
+
+      if (isCSV) {
+        // Novo formato: Regional;Unidade;Cidade;Motivo;Jan;Fev;Mar;Abr;Mai;Jun;MédiaHist;Variação%;Status;Rank
+        if (cols.length < 12) continue;
+        diretoria = limparCampo(cols[0]);
+        // cols[1] = unidade (ignorar)
+        cidade    = limparCampo(cols[2]);
+        motivo    = limparCampo(cols[3]);
+        jan       = parseNum(limparCampo(cols[4]));
+        fev       = parseNum(limparCampo(cols[5]));
+        mar       = parseNum(limparCampo(cols[6]));
+        abr       = parseNum(limparCampo(cols[7]));
+        mai       = parseNum(limparCampo(cols[8]));
+        atual     = parseNum(limparCampo(cols[9]));  // Jun = mês atual
+        hist      = parseNum(limparCampo(cols[10]));
+        delta     = parseFloat(limparCampo(cols[11])) || 0;
+        statusCol = limparCampo(cols[12]);
+        // cols[13] = rank (ignorar)
+      } else {
+        // Formato TSV legado
+        if (cols.length < 9) continue;
+        const offset = cols[0].trim() === '' ? 1 : 0;
+        cidade    = (cols[0 + offset] || '').trim();
+        motivo    = (cols[1 + offset] || '').trim();
+        jan       = parseNum(cols[2 + offset]);
+        fev       = parseNum(cols[3 + offset]);
+        mar       = parseNum(cols[4 + offset]);
+        abr       = parseNum(cols[5 + offset]);
+        mai       = parseNum(cols[6 + offset]);
+        atual     = parseNum(cols[7 + offset]);
+        hist      = parseNum(cols[8 + offset]);
+        const varStr = (cols[9 + offset] || '').trim().replace('%','').replace('+','');
+        delta     = parseFloat(varStr) || 0;
+        statusCol = (cols[10 + offset] || cols[11 + offset] || '').trim();
+        diretoria = (cols[12 + offset] || '').trim();
+      }
+    }
+    if (!cidade || cidade === 'CIDADE' || cidade === 'Unidade' || cidade === 'RS' || cidade === 'f_motivos_contato_CIDADE') continue;
+    if (!motivo || motivo === 'motivos de contato (grupos)' || motivo.startsWith('f_motivos')) continue;
+    // Ignorar status Normal (só altas e quedas)
+    const isAlta  = statusCol.includes('ALTA')  || statusCol.includes('🔴');
+    const isQueda = statusCol.includes('QUEDA') || statusCol.includes('🟢');
+    if (!isAlta && !isQueda) continue;
+    const tipo = isAlta ? 'high' : 'low';
+    if (isAlta) data.totalAltas++;
+    if (isQueda) data.totalQuedas++;
+    if (Math.abs(delta) > maiorAbs) {
+      maiorAbs = Math.abs(delta);
+      const sinal = delta > 0 ? '+' : '';
+      data.maiorDesvio = `${sinal}${Math.round(delta * 100)}%`;
+    }
+    const avgVals = [jan,fev,mar,abr,mai].filter(v=>v>0);
+    const avg = avgVals.length ? avgVals.reduce((a,b)=>a+b,0)/avgVals.length : hist;
+    data.anomalias.push({ cidade, motivo, diretoria: diretoria || '', vals:[jan,fev,mar,abr,mai,atual], hist:hist||avg, delta, tipo });
+  }
+  return data;
+}
+
+let anomalias_global = [];
+let filtros = { high: true, low: true };
+let cidadeFiltro = 'todas';
+let assuntoFiltro = 'todos';
+let diretoriaFiltro = 'todas';
+let paginaAnom = 1;
+const ANOM_POR_PAG = 30;
+let paginaSpark = 1;
+const SPARK_POR_PAG = 20;
+
+function filtrar(tipo) {
+  filtros[tipo] = !filtros[tipo];
+  atualizarBtnsFiltro();
+  paginaAnom = 1; paginaSpark = 1;
+  renderAnom();
+  renderSparks(anomalias_global);
+}
+function filtrarAll() {
+  const novoEstado = !(filtros.high && filtros.low);
+  filtros = { high: novoEstado, low: novoEstado };
+  atualizarBtnsFiltro();
+  renderAnom();
+  renderSparks(anomalias_global);
+}
+function atualizarBtnsFiltro() {
+  const allOn = filtros.high && filtros.low;
+  document.querySelectorAll('.fbtn[data-tipo]').forEach(b => {
+    const t = b.dataset.tipo;
+    if (t === 'all') b.className = 'fbtn' + (allOn ? ' on-all' : '');
+    else b.className = 'fbtn' + (filtros[t] ? ' on-' + t : '');
+  });
+}
+function filtrarDir(dir) {
+  diretoriaFiltro = dir;
+  document.querySelectorAll('.fbtn[data-dir]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.dir === dir ? ' on-all' : '');
+  });
+  renderAnom();
+  renderSparks(anomalias_global);
+}
+
+// Cidade
+function selecionarCidade(cidade, el) {
+  cidadeFiltro = cidade;
+  document.querySelectorAll('.city-opt').forEach(o => o.classList.remove('selected'));
+  if (el) el.classList.add('selected');
+  const s = document.getElementById('citySearch');
+  if (s) s.value = cidade === 'todas' ? '' : cidade;
+  fecharDropdown('cityDropdown');
+  atualizarTagCidade();
+  paginaAnom = 1; paginaSpark = 1; renderAnom(); renderSparks(anomalias_global);
+}
+function selecionarCidadeByEl(el) {
+  const cidade = el.dataset.cidade;
+  selecionarCidade(cidade, el);
+}
+function toggleDropdown(id) { const dd=document.getElementById(id); if(dd) dd.classList.toggle('open'); }
+function fecharDropdown(id) { const dd=document.getElementById(id); if(dd) dd.classList.remove('open'); }
+function filterCidade(val) {
+  document.getElementById('cityDropdown')?.classList.add('open');
+  document.querySelectorAll('.city-opt').forEach(o => {
+    o.style.display=(o.dataset.cidade==='todas'||o.dataset.cidade.toLowerCase().includes(val.toLowerCase()))?'':'none';
+  });
+}
+function limparCidade() {
+  selecionarCidade('todas', document.querySelector('.city-opt[data-cidade="todas"]'));
+  const s=document.getElementById('citySearch'); if(s) s.value='';
+  document.querySelectorAll('.city-opt').forEach(o => o.style.display='');
+}
+function atualizarTagCidade() {
+  const t=document.getElementById('cityTags'); if(!t) return;
+  t.innerHTML = cidadeFiltro==='todas' ? '' :
+    `<span class="city-tag">${cidadeFiltro}<button onclick="limparCidade()">×</button></span>`;
+}
+
+// Assunto
+function selecionarAssunto(assunto, el) {
+  assuntoFiltro = assunto;
+  document.querySelectorAll('.assunto-opt').forEach(o => o.classList.remove('selected'));
+  if (el) el.classList.add('selected');
+  const s = document.getElementById('assuntoSearch');
+  if (s) s.value = assunto === 'todos' ? '' : assunto;
+  fecharDropdown('assuntoDropdown');
+  atualizarTagAssunto();
+  paginaAnom = 1; paginaSpark = 1; renderAnom(); renderSparks(anomalias_global);
+}
+function selecionarAssuntoByEl(el) {
+  const assunto = el.dataset.assunto;
+  selecionarAssunto(assunto, el);
+}
+function filterAssunto(val) {
+  document.getElementById('assuntoDropdown')?.classList.add('open');
+  document.querySelectorAll('.assunto-opt').forEach(o => {
+    o.style.display=(o.dataset.assunto==='todos'||o.dataset.assunto.toLowerCase().includes(val.toLowerCase()))?'':'none';
+  });
+}
+function limparAssunto() {
+  selecionarAssunto('todos', document.querySelector('.assunto-opt[data-assunto="todos"]'));
+  const s=document.getElementById('assuntoSearch'); if(s) s.value='';
+  document.querySelectorAll('.assunto-opt').forEach(o => o.style.display='');
+}
+function atualizarTagAssunto() {
+  const t=document.getElementById('assuntoTags'); if(!t) return;
+  t.innerHTML = assuntoFiltro==='todos' ? '' :
+    `<span class="assunto-tag">${assuntoFiltro}<button onclick="limparAssunto()">×</button></span>`;
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.city-filter')) fecharDropdown('cityDropdown');
+  if (!e.target.closest('.assunto-filter')) fecharDropdown('assuntoDropdown');
+});
+
+function renderAnom() {
+  const visiveis = anomalias_global
+    .filter(a => filtros[a.tipo]
+      && (diretoriaFiltro === 'todas' || a.diretoria === diretoriaFiltro)
+      && (cidadeFiltro === 'todas' || a.cidade === cidadeFiltro)
+      && (assuntoFiltro === 'todos' || a.motivo === assuntoFiltro))
+    .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+
+  const total = visiveis.length;
+  const inicio = (paginaAnom - 1) * ANOM_POR_PAG;
+  const pag = visiveis.slice(inicio, inicio + ANOM_POR_PAG);
+  const totalPags = Math.ceil(total / ANOM_POR_PAG) || 1;
+
+  const anomEl = document.getElementById('anom-list'); if (!anomEl) return;
+  anomEl.innerHTML = pag.length === 0
+    ? '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nenhuma variação no filtro selecionado.</p>'
+    : pag.map(a => {
+        const sinal = a.delta > 0 ? '+' : '';
+        return `<div class="anom-item ${a.tipo}">
+          <div class="anom-accent"></div>
+          <div class="anom-body">
+            <span class="anom-city">${a.diretoria ? '<span style="font-size:10px;color:var(--muted);display:block;line-height:1.2">' + a.diretoria + '</span>' : ''}${a.cidade}</span>
+            <span class="anom-motivo">${a.motivo}</span>
+            <div class="anom-nums">
+              <span class="anom-atual">${fmt(a.vals[5])}</span>
+              <span class="anom-delta">${sinal}${Math.round(a.delta * 100)}%</span>
+              <span class="anom-avg">méd ${fmt(a.hist)}</span>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+  const pi = document.getElementById('anom-pager-info');
+  const pp = document.getElementById('anom-btn-prev');
+  const pn = document.getElementById('anom-btn-next');
+  if (pi) pi.textContent = 'Página ' + paginaAnom + ' de ' + totalPags + ' · ' + total + ' registros';
+  if (pp) pp.disabled = paginaAnom <= 1;
+  if (pn) pn.disabled = paginaAnom >= totalPags;
+}
+
+function renderSparks(anomalias) {
+  const filtradas = anomalias
+    .filter(a => filtros[a.tipo]
+      && (diretoriaFiltro==='todas'||a.diretoria===diretoriaFiltro)
+      && (cidadeFiltro==='todas'||a.cidade===cidadeFiltro)
+      && (assuntoFiltro==='todos'||a.motivo===assuntoFiltro));
+  const sorted = [...filtradas].sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta));
+  const total = sorted.length;
+  const inicio = (paginaSpark - 1) * SPARK_POR_PAG;
+  const top = sorted.slice(inicio, inicio + SPARK_POR_PAG);
+  const totalPags = Math.ceil(total / SPARK_POR_PAG) || 1;
+
+  const el = document.getElementById('spark-list');
+  if (!el) return;
+  el.innerHTML = top.map(a => {
+    const maxV = Math.max(...a.vals, 0.1);
+    const sinal = a.delta>0?'+':'';
+    const cls = a.delta>0?'badge-up':'badge-down';
+    const bars = a.vals.map((v,i)=>{
+      const h=Math.max(3,Math.round(v/maxV*26));
+      const isAnom=i===5&&Math.abs(a.delta)>30;
+      const cor=isAnom?(a.delta>0?'#f87171':'#34d399'):MCORES[i];
+      return '<div class="spark-b" style="height:'+h+'px;background:'+cor+'" title="'+MESES[i]+': '+fmt(v)+'"></div>';
+    }).join('');
+    return '<div class="spark-row">'
+      +'<span class="spark-city">'+(a.diretoria?'<span style="font-size:9px;color:var(--muted);display:block;line-height:1">'+a.diretoria+'</span>':'')+a.cidade+'</span>'
+      +'<span class="spark-motivo">'+a.motivo+'</span>'
+      +'<div class="spark">'+bars+'</div>'
+      +'<span class="spark-val">'+fmt(a.vals[5])+'</span>'
+      +'<span class="spark-badge '+cls+'">'+sinal+Math.round(a.delta*100)+'%</span>'
+      +'</div>';
+  }).join('');
+
+
+  const pi = document.getElementById('spark-pager-info');
+  const pp = document.getElementById('spark-btn-prev');
+  const pn = document.getElementById('spark-btn-next');
+  if (pi) pi.textContent = 'Página ' + paginaSpark + ' de ' + totalPags + ' · ' + total + ' registros';
+  if (pp) pp.disabled = paginaSpark <= 1;
+  if (pn) pn.disabled = paginaSpark >= totalPags;}
+
+
+function render(data) {
+  anomalias_global = data.anomalias;
+  const fonte = data.resumo && data.resumo.length > 0 ? data.resumo : data.anomalias;
+  const cidades = data.cidades || [...new Set(data.anomalias.map(a=>a.cidade))].sort();
+  const assuntos = [...new Set(data.anomalias.map(a=>a.motivo))].sort();
+  const diretorias = [...new Set(data.anomalias.map(a=>a.diretoria).filter(Boolean))].sort();
+
+  const cidadeOpts = [
+    '<div class="city-opt selected" data-cidade="todas" onclick="selecionarCidadeByEl(this)"><span>Todas as cidades</span></div>',
+    ...cidades.map(c=>'<div class="city-opt" data-cidade="' + c + '" onclick="selecionarCidadeByEl(this)">' + c + '</div>')
+  ].join('');
+
+  const assuntoOpts = (
+    ['<div class="assunto-opt selected" data-assunto="todos" onclick="selecionarAssuntoByEl(this)"><span>Todos os assuntos</span></div>'].concat(
+      assuntos.map(a=>'<div class="assunto-opt" data-assunto="' + a + '" onclick="selecionarAssuntoByEl(this)">' + a + '</div>')
+    ).join('')
+  );
+
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <div class="header-left">
+        <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
+        <h1>Análise de Variações — Média de Contatos por Cidade</h1>
+        <div class="header-meta">Top 10 motivos por cidade · Gerado em ${data.gerado}</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-val" style="color:var(--danger)">${data.totalAltas + data.totalQuedas}</div>
+        <div class="header-stat-label">variações detectadas</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="metric-val" style="color:var(--danger)">${data.totalAltas}</div><div class="metric-label">altas atípicas</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--success)">${data.totalQuedas}</div><div class="metric-label">quedas atípicas</div></div>
+      <div class="metric"><div class="metric-val">30%</div><div class="metric-label">limiar de variação</div></div>
+      <div class="metric"><div class="metric-val" style="color:var(--warning)">${data.maiorDesvio||'—'}</div><div class="metric-label">maior desvio</div></div>
+    </div>
+
+    ${data.narracao ? `
+    <div class="two" style="margin-bottom:14px">
+      <div class="card card-full">${renderNarracao(data.narracao)}</div>
+    </div>` : ''}
+
+    <div class="two">
+
+      <div class="card card-full">
+        <div class="card-title">Filtros</div>
+        <div class="filter-section">
+          <div class="filter-row">
+            <span class="filter-label">Status</span>
+            <button class="fbtn on-all" data-tipo="all" onclick="filtrarAll()">Todos</button>
+            <button class="fbtn on-high" data-tipo="high" onclick="filtrar('high')">Altas</button>
+            <button class="fbtn on-low" data-tipo="low" onclick="filtrar('low')">Quedas</button>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label">Diretoria</span>
+            <div style="display:flex;gap:6px;flex-wrap:wrap" id="dir-btns">
+              <button class="fbtn on" data-dir="todas" onclick="filtrarDir('todas')">Todas</button>
+              ${diretorias.map(d => '<button class="fbtn" data-dir="' + d + '" onclick="filtrarDir(\'' + d + '\')">' + d + '</button>').join('')}
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label">Cidade</span>
+            <div class="city-filter" style="flex:1">
+              <div class="city-select-wrap">
+                <input type="text" class="city-search" id="citySearch" placeholder="Buscar cidade..." autocomplete="off"
+                  onclick="toggleDropdown('cityDropdown')" oninput="filterCidade(this.value)">
+                <button class="city-clear" onclick="limparCidade()">Limpar</button>
+                <div class="city-dropdown" id="cityDropdown">${cidadeOpts}</div>
+              </div>
+              <div class="tags-row" id="cityTags"></div>
+            </div>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label">Assunto</span>
+            <div class="assunto-filter" style="flex:1">
+              <input type="text" class="assunto-search" id="assuntoSearch" placeholder="Buscar assunto..." autocomplete="off"
+                onclick="toggleDropdown('assuntoDropdown')" oninput="filterAssunto(this.value)">
+              <div class="assunto-dropdown" id="assuntoDropdown">${assuntoOpts}</div>
+              <div class="tags-row" id="assuntoTags"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-full">
+        <div class="card-title">Evolução mensal — top variações com contexto de cidade</div>
+        <div id="spark-list"></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-sq" style="background:#378ADD"></span>Jan</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#BA7517"></span>Fev</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#1D9E75"></span>Mar</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#534AB7"></span>Abr</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#f87171"></span>Atual (alta)</span>
+          <span class="legend-item"><span class="legend-sq" style="background:#34d399"></span>Atual (queda)</span>
+        </div>
+        <div class="pager">
+          <span id="spark-pager-info"></span>
+          <div class="pager-btns">
+            <button class="pbtn" id="spark-btn-prev" onclick="paginaSpark--;renderSparks(anomalias_global)">← Anterior</button>
+            <button class="pbtn" id="spark-btn-next" onclick="paginaSpark++;renderSparks(anomalias_global)">Próxima →</button>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+
+    <div class="footer">
+      <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Abr. Calculado no Excel.</span>
+      <span class="footer-badge">AI Builder · Power Automate</span>
+    </div>`;
+
+  renderSparks(data.anomalias);
+}
+
+
+fetch(JSON_URL + '?t=' + Date.now())
+  .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+  .then(txt => {
+    if (!txt || !txt.trim()) throw new Error('Arquivo vazio');
+    const data = parseAnomalia(txt);
+    if (!data.anomalias.length) throw new Error('Nenhuma variação encontrada — verifique o arquivo JSON');
+    render(data);
+  })
+  .catch(err => {
+    document.getElementById('app').innerHTML =
+      `<div class="empty"><h2>Erro ao carregar</h2>
+       <p style="font-size:13px;margin-top:6px">${err.message}</p>
+       <p style="font-size:11px;margin-top:8px;color:var(--muted)">URL: ${JSON_URL}</p></div>`;
+  });
+</script>
+</body>
+</html>
