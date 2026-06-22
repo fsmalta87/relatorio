@@ -1,19 +1,19 @@
 ---
 NARRAÇÃO
 🔴 SITUAÇÃO CRÍTICA  
-1. Regional: Não informada, Município: Cachoeirinha, Categoria: Paralisação por energia, Ligações: 29.036, Previsão: 19/06/2026 21:00  
-2. Regional: Leste, Município: Tramandaí, Categoria: Manutenção Corretiva, Ligações: 8.857, Previsão: 19/06/2026 19:00  
-3. Regional: Não informada, Município: Canoas, Categoria: Manutenção Corretiva, Ligações: 7.560, Previsão: 19/06/2026 23:00  
+1. Regional Centro, Salto do Jacuí, Manobra Operacional Emergencial, 4.269 ligações, normalização prevista para 11h00.  
+2. Sem regional definida, Carlos Barbosa, Vazamento causando oscilação, 6.373 ligações, normalização prevista para 17h00.  
+3. Sem regional definida, Alvorada, Manutenção Programada, 3.513 ligações, normalização prevista para 13h30.  
 
 📅 EVENTOS PROGRAMADOS  
-Nenhum evento programado informado nos dados fornecidos.  
+Nenhum evento programado listado entre os dados fornecidos.  
 
 ✅ CONCLUÍDOS RECENTEMENTE  
-Nenhum evento finalizado informado nos dados fornecidos.  
+Nenhum evento finalizado listado entre os dados fornecidos.  
 
 📋 LEITURA EXECUTIVA  
-A regional mais crítica é a Leste, com maior impacto em Tramandaí e Osório. Recomenda-se priorizar recursos para restabelecimento rápido nas áreas com maior número de ligações afetadas.
+A regional Centro é a mais crítica, com maior impacto em ligações afetadas. Recomenda-se priorizar recursos para normalização rápida das manobras emergenciais e manutenções corretivas.
 
 ---
 DADOS
-[{"id":1154687,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Tramandaí","dt_inicio":"19/06/2026 16:30:00","dt_inicio_rec":"19/06/2026 18:00:00","dt_fim_rec":"19/06/2026 19:00:00","ligacoes":8857,"regional":"LESTE"},{"id":1155901,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Canoas","dt_inicio":"19/06/2026 17:30:00","dt_inicio_rec":"19/06/2026 22:00:00","dt_fim_rec":"19/06/2026 23:00:00","ligacoes":7560,"regional":null},{"id":1154643,"categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","status":"Em Andamento","municipio":"Barros Cassal","dt_inicio":"19/06/2026 06:00:00","dt_inicio_rec":"19/06/2026 19:00:00","dt_fim_rec":"19/06/2026 20:00:00","ligacoes":1891,"regional":"CENTRO"},{"id":1154651,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Imbé","dt_inicio":"19/06/2026 15:00:00","dt_inicio_rec":"19/06/2026 18:00:00","dt_fim_rec":"19/06/2026 19:00:00","ligacoes":3155,"regional":null},{"id":1156234,"categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","status":"Em Andamento","municipio":"Cachoeirinha","dt_inicio":"19/06/2026 16:00:00","dt_inicio_rec":"19/06/2026 19:00:00","dt_fim_rec":"19/06/2026 21:00:00","ligacoes":29036,"regional":null},{"id":1156533,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Osório","dt_inicio":"19/06/2026 16:30:00","dt_inicio_rec":"19/06/2026 18:30:00","dt_fim_rec":"19/06/2026 19:15:00","ligacoes":876,"regional":"LESTE"}]
+[{"id":1142455,"categoria":"Manutenção Programada","status":"Em Andamento","municipio":"Alvorada","dt_inicio":"22/06/2026 08:30:00","dt_inicio_rec":"22/06/2026 13:00:00","dt_fim_rec":"22/06/2026 13:30:00","ligacoes":3513,"regional":null},{"id":1163268,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Jaguarão","dt_inicio":"22/06/2026 10:00:00","dt_inicio_rec":"22/06/2026 12:00:00","dt_fim_rec":"22/06/2026 13:00:00","ligacoes":626,"regional":"SUL"},{"id":1163283,"categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","status":"Em Andamento","municipio":"Salto do Jacuí","dt_inicio":"22/06/2026 08:50:00","dt_inicio_rec":"22/06/2026 11:00:00","dt_fim_rec":"22/06/2026 11:00:00","ligacoes":4269,"regional":"CENTRO"},{"id":1163593,"categoria":"Manutenção Corretiva/Emergencial - Elétrica","status":"Em Andamento","municipio":"Ajuricaba","dt_inicio":"22/06/2026 09:50:00","dt_inicio_rec":"22/06/2026 12:00:00","dt_fim_rec":"22/06/2026 12:30:00","ligacoes":1874,"regional":"CENTRO"},{"id":1163636,"categoria":"Vazamento identificado na região causando oscilação no abastecimento","status":"Em Andamento","municipio":"Vicente Dutra","dt_inicio":"22/06/2026 08:00:00","dt_inicio_rec":"22/06/2026 11:00:00","dt_fim_rec":"22/06/2026 12:00:00","ligacoes":472,"regional":"NORTE"},{"id":1163907,"categoria":"Vazamento identificado na região causando oscilação no abastecimento","status":"Em Andamento","municipio":"Carlos Barbosa","dt_inicio":"22/06/2026 08:00:00","dt_inicio_rec":"22/06/2026 16:00:00","dt_fim_rec":"22/06/2026 17:00:00","ligacoes":6373,"regional":null}]
