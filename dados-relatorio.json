@@ -1,19 +1,19 @@
 ---
 NARRAÇÃO
 🔴 SITUAÇÃO CRÍTICA  
-1. Regional Oeste, Três Passos, Paralisação por alta turbidez, 5.362 ligações, normalização prevista até 22/06/2026 22:00.  
-2. Regional Centro, Palmeira das Missões, Manutenção Corretiva, 1.965 ligações, normalização prevista até 22/06/2026 20:00.  
-3. Regional Centro, Santa Maria, Manutenção Corretiva, 1.560 ligações, normalização prevista até 22/06/2026 19:30.  
+1. Regional NORTE, Farroupilha, Manobra Operacional Emergencial, 2.305 ligações, normalização prevista para 16h.  
+2. Regional OESTE, Boa Vista do Buricá, Manutenção Corretiva - Adutora, 2.272 ligações, normalização prevista para 17h.  
+3. Regional OESTE, Alegrete, Paralisação por oscilação de energia, 2.135 ligações, normalização prevista para 12h30.
 
 📅 EVENTOS PROGRAMADOS  
-Nenhum evento programado registrado nos dados fornecidos.  
+Não há eventos com status "Programado" nos dados fornecidos.
 
 ✅ CONCLUÍDOS RECENTEMENTE  
-Nenhum evento finalizado registrado nos dados fornecidos.  
+Não há eventos finalizados recentemente nos dados fornecidos.
 
 📋 LEITURA EXECUTIVA  
-A regional Oeste é a mais crítica devido ao alto número de ligações afetadas em Três Passos. Recomenda-se priorizar recursos para acelerar a normalização da qualidade da água.
+A regional NORTE é a mais crítica, concentrando os maiores impactos em ligações afetadas. Recomenda-se priorizar recursos operacionais para acelerar a normalização dos eventos emergenciais nessa regional.
 
 ---
 DADOS
-[{"id":1163898,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Santa Maria","dt_inicio":"22/06/2026 15:10:00","dt_inicio_rec":"22/06/2026 19:00:00","dt_fim_rec":"22/06/2026 19:30:00","ligacoes":1560,"regional":"CENTRO"},{"id":1163599,"categoria":"Paralisação devido alteração da qualidade de água bruta (alta turbidez)","status":"Em Andamento","municipio":"Três Passos","dt_inicio":"22/06/2026 13:30:00","dt_inicio_rec":"22/06/2026 20:00:00","dt_fim_rec":"22/06/2026 22:00:00","ligacoes":5362,"regional":"OESTE"},{"id":1163610,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Palmeira das Missões","dt_inicio":"22/06/2026 16:00:00","dt_inicio_rec":"22/06/2026 18:00:00","dt_fim_rec":"22/06/2026 20:00:00","ligacoes":1965,"regional":"CENTRO"},{"id":1163629,"categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","status":"Em Andamento","municipio":"Barão","dt_inicio":"22/06/2026 14:00:00","dt_inicio_rec":"22/06/2026 19:00:00","dt_fim_rec":"22/06/2026 19:00:00","ligacoes":1120,"regional":"NORTE"}]
+[{"id":1165815,"categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","status":"Em Andamento","municipio":"Frederico Westphalen","dt_inicio":"23/06/2026 09:00:00","dt_inicio_rec":"23/06/2026 11:00:00","dt_fim_rec":"23/06/2026 14:00:00","ligacoes":1422,"regional":"NORTE"},{"id":1165210,"categoria":"Vazamento identificado na região causando oscilação no abastecimento","status":"Em Andamento","municipio":"São Marcos","dt_inicio":"23/06/2026 09:20:00","dt_inicio_rec":"23/06/2026 13:00:00","dt_fim_rec":"23/06/2026 18:00:00","ligacoes":905,"regional":"NORTE"},{"id":1165207,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Bento Gonçalves","dt_inicio":"23/06/2026 10:00:00","dt_inicio_rec":"23/06/2026 13:00:00","dt_fim_rec":"23/06/2026 14:00:00","ligacoes":280,"regional":"NORTE"},{"id":1165493,"categoria":"Manobra Operacional Emergencial ocasionando oscilação de abastecimento na região","status":"Em Andamento","municipio":"Farroupilha","dt_inicio":"23/06/2026 10:00:00","dt_inicio_rec":"23/06/2026 15:00:00","dt_fim_rec":"23/06/2026 16:00:00","ligacoes":2305,"regional":"NORTE"},{"id":1165814,"categoria":"Vazamento identificado na região causando oscilação no abastecimento","status":"Em Andamento","municipio":"Gravataí","dt_inicio":"23/06/2026 08:30:00","dt_inicio_rec":"23/06/2026 12:00:00","dt_fim_rec":"23/06/2026 13:00:00","ligacoes":675,"regional":null},{"id":1164872,"categoria":"Manutenção Corretiva - Adutora","status":"Em Andamento","municipio":"Arroio do Meio","dt_inicio":"23/06/2026 09:00:00","dt_inicio_rec":"23/06/2026 19:00:00","dt_fim_rec":"23/06/2026 20:00:00","ligacoes":1075,"regional":"CENTRO"},{"id":1165172,"categoria":"Manutenção Corretiva - Adutora","status":"Em Andamento","municipio":"Boa Vista do Buricá","dt_inicio":"23/06/2026 07:00:00","dt_inicio_rec":"23/06/2026 12:00:00","dt_fim_rec":"23/06/2026 17:00:00","ligacoes":2272,"regional":"OESTE"},{"id":1165175,"categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","status":"Em Andamento","municipio":"Alegrete","dt_inicio":"23/06/2026 09:30:00","dt_inicio_rec":"23/06/2026 12:00:00","dt_fim_rec":"23/06/2026 12:30:00","ligacoes":2135,"regional":"OESTE"},{"id":1136380,"categoria":"Manutenção Programada","status":"Em Andamento","municipio":"Santa Margarida do Sul","dt_inicio":"23/06/2026 07:00:00","dt_inicio_rec":"23/06/2026 12:00:00","dt_fim_rec":"23/06/2026 20:00:00","ligacoes":1490,"regional":null}]
