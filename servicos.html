@@ -1,1 +1,717 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análise de Serviços — Corsan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0f1e;--surface:#111827;--surface2:#1a2235;
+    --border:rgba(99,179,237,0.12);--accent:#38bdf8;
+    --text:#e2e8f0;--muted:#64748b;
+    --ca:#34d399;--cb:#fbbf24;--cc:#f87171;
+    --cd:#a78bfa;--ce:#f97316;--cf:#ec4899;
+    --cg:#6366f1;--ch:#94a3b8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;padding:24px}
+  .grid-bg{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+  .container{max-width:960px;margin:0 auto;position:relative;z-index:1}
+  .header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+  .header-left img{height:144px;margin-bottom:4px;margin-top:-8px;display:block;filter:brightness(0) invert(1)}
+  h1{font-size:18px;font-weight:500;color:#f1f5f9}
+  .header-meta{font-size:12px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace}
+  .header-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:right}
+  .header-stat-val{font-size:22px;font-weight:600;font-family:'DM Mono',monospace}
+  .header-stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px}
+  .metric{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+  .metric-val{font-size:20px;font-weight:600;font-family:'DM Mono',monospace}
+  .metric-label{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+  .block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+  .block-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+
+  /* IA subcards */
+  .ia-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:600px){.ia-grid{grid-template-columns:1fr}}
+  .ia-sub{border:0.5px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 14px;background:rgba(255,255,255,.02)}
+  .ia-sub.critico{border-color:rgba(248,113,113,.25);background:rgba(248,113,113,.04)}
+  .ia-sub.atencao{border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.04)}
+  .ia-sub.positivo{grid-column:1/-1;border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.04)}
+  .ia-sub.exec{grid-column:1/-1;border-color:rgba(56,189,248,.25);background:rgba(56,189,248,.04)}
+  .ia-sub.diretoria{grid-column:1/-1;border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.04)}
+  .ia-sub.diretoria .ia-sub-label{color:#fbbf24}
+  .dir-resumo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+  @media(max-width:700px){.dir-resumo-grid{grid-template-columns:repeat(2,1fr)}}
+  .dir-resumo-card{background:rgba(255,255,255,.02);border:0.5px solid var(--border);border-radius:6px;padding:10px 12px}
+  .dir-resumo-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#fbbf24;margin-bottom:6px}
+  .dir-resumo-text{font-size:11px;color:var(--text);line-height:1.6}
+  .ia-sub-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+  .ia-sub.critico .ia-sub-label{color:#f87171}
+  .ia-sub.atencao .ia-sub-label{color:#fbbf24}
+  .ia-sub.positivo .ia-sub-label{color:#34d399}
+  .ia-sub.exec .ia-sub-label{color:var(--accent)}
+  .ia-sub-text{font-size:12px;color:var(--text);line-height:1.7;white-space:pre-wrap}
+
+  /* Cards diretoria */
+  .dir-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  @media(max-width:640px){.dir-grid{grid-template-columns:repeat(2,1fr)}}
+  .dir-card{border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s}
+  .dir-card:hover{border-color:rgba(56,189,248,.3);background:rgba(56,189,248,.04)}
+  .dir-card.active{border-color:rgba(56,189,248,.5);background:rgba(56,189,248,.08)}
+  .dir-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+  .dir-card.active .dir-name{color:var(--accent)}
+  .dir-criticas{font-size:20px;font-weight:600;font-family:'DM Mono',monospace}
+  .dir-sub{font-size:10px;color:var(--muted);margin-top:1px;margin-bottom:8px}
+  .dir-bar{display:flex;height:4px;border-radius:2px;overflow:hidden;gap:1px;margin-top:6px}
+  .dir-bar-seg{height:100%;min-width:1px}
+
+  /* Filtros */
+  .filter-section{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+  .filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .filter-label{font-size:11px;color:var(--muted);min-width:52px;flex-shrink:0}
+  .fbtn{font-size:11px;padding:4px 10px;border:0.5px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap}
+  .fbtn.on{background:rgba(56,189,248,.1);color:var(--accent);border-color:rgba(56,189,248,.3)}
+  .fbtn.on-c{background:rgba(248,113,113,.1);color:#f87171;border-color:rgba(248,113,113,.3)}
+  .fbtn.on-b{background:rgba(251,191,36,.1);color:#fbbf24;border-color:rgba(251,191,36,.3)}
+  .fbtn.on-a{background:rgba(52,211,153,.1);color:#34d399;border-color:rgba(52,211,153,.3)}
+
+  /* Dropdown */
+  .dd-wrap{position:relative;flex:1;max-width:300px}
+  .dd-input{width:100%;background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;padding:7px 12px;font-size:12px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
+  .dd-input:focus{border-color:var(--accent)}
+  .dd-input::placeholder{color:var(--muted)}
+  .dd-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:0.5px solid var(--border);border-radius:8px;max-height:200px;overflow-y:auto;z-index:100;display:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  .dd-list.open{display:block}
+  .dd-opt{padding:7px 14px;font-size:12px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:6px}
+  .dd-opt:hover{background:var(--surface2)}
+  .dd-opt.sel{color:var(--accent)}
+  .dd-opt.sel::before{content:'✓';font-size:10px}
+  .dd-opt:not(.sel)::before{content:'';display:inline-block;width:10px}
+  .tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;min-height:4px}
+  .tag{display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 8px;background:rgba(56,189,248,.1);border:0.5px solid rgba(56,189,248,.25);border-radius:4px;color:var(--accent)}
+  .tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:12px;padding:0;line-height:1}
+
+  /* Lista OS */
+  .os-item{display:flex;align-items:stretch;margin-bottom:6px;border-radius:8px;overflow:hidden;border:0.5px solid rgba(255,255,255,.06)}
+  .os-acc{width:3px;flex-shrink:0}
+  .os-body{display:flex;align-items:center;gap:10px;padding:9px 12px;flex:1;min-width:0;background:rgba(255,255,255,.02)}
+  .os-info{flex:1;min-width:0}
+  .os-grupo{font-size:12px;font-weight:500;color:#f1f5f9}
+  .os-desc{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px}
+  .os-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+  .os-dir-cidade{font-size:10px;color:var(--muted)}
+  .prazo-badge{font-size:10px;padding:2px 7px;border-radius:3px;font-weight:500;white-space:nowrap}
+  .note{font-size:11px;color:var(--muted);margin-top:8px}
+
+  /* Legenda prazos */
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .leg{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+  .leg-sq{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+  /* Paginação */
+  .pager{display:flex;align-items:center;justify-content:space-between;margin-top:12px;font-size:12px;color:var(--muted)}
+  .pager-btns{display:flex;gap:6px}
+  .pbtn{padding:4px 10px;border:0.5px solid rgba(255,255,255,.15);border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;font-size:11px}
+  .pbtn:disabled{opacity:.35;cursor:not-allowed}
+  .pbtn:not(:disabled):hover{border-color:var(--accent);color:var(--accent)}
+
+  /* Export button */
+  .export-btn{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:5px 12px;border:0.5px solid rgba(52,211,153,.3);border-radius:6px;background:rgba(52,211,153,.08);color:#34d399;cursor:pointer;transition:all .15s;white-space:nowrap}
+  .export-btn:hover{background:rgba(52,211,153,.16);border-color:rgba(52,211,153,.5)}
+  .export-btn svg{width:12px;height:12px;flex-shrink:0}
+
+  .footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);flex-wrap:wrap;gap:8px}
+  .footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600}
+  .empty{text-align:center;padding:48px 20px;color:var(--muted)}
+  .empty h2{font-size:16px;color:#f1f5f9;margin-bottom:8px}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="container">
+  <div id="app"><div class="empty"><h2>Carregando dados...</h2><p style="font-size:13px;margin-top:6px">Buscando análise mais recente...</p></div></div>
+</div>
+<script>
+const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-servicos.json';
+
+const PRAZO_CFG = {
+  'a)': { label:'Dentro do prazo', cor:'#34d399', cls:'pb-a', ordem:0 },
+  'b)': { label:'Vence amanhã',    cor:'#fbbf24', cls:'pb-b', ordem:1 },
+  'c)': { label:'Vence hoje',      cor:'#f87171', cls:'pb-c', ordem:2 },
+  'd)': { label:'1–10 dias',       cor:'#a78bfa', cls:'pb-d', ordem:3 },
+  'e)': { label:'11–20 dias',      cor:'#f97316', cls:'pb-e', ordem:4 },
+  'f)': { label:'21–30 dias',      cor:'#ec4899', cls:'pb-f', ordem:5 },
+  'g)': { label:'31–60 dias',      cor:'#6366f1', cls:'pb-g', ordem:6 },
+  'h)': { label:'61–360 dias',     cor:'#94a3b8', cls:'pb-h', ordem:7 },
+};
+
+const PRAZO_CORES_CSS = `
+  .pb-a{background:rgba(52,211,153,.12);color:#34d399}
+  .pb-b{background:rgba(251,191,36,.12);color:#fbbf24}
+  .pb-c{background:rgba(248,113,113,.12);color:#f87171}
+  .pb-d{background:rgba(167,139,250,.12);color:#a78bfa}
+  .pb-e{background:rgba(249,115,22,.12);color:#f97316}
+  .pb-f{background:rgba(236,72,153,.12);color:#ec4899}
+  .pb-g{background:rgba(99,102,241,.12);color:#6366f1}
+  .pb-h{background:rgba(148,163,184,.12);color:#94a3b8}
+`;
+const styleEl = document.createElement('style');
+styleEl.textContent = PRAZO_CORES_CSS;
+document.head.appendChild(styleEl);
+
+function getPrazoKey(prazo) {
+  const p = (prazo || '').trim().toLowerCase();
+  for (const k of Object.keys(PRAZO_CFG)) {
+    if (p.startsWith(k)) return k;
+  }
+  return 'a)';
+}
+
+function parseCodDesc(txt) {
+  const idx = (txt||'').indexOf('-');
+  if (idx < 0) return { cod: '', desc: txt };
+  return { cod: txt.slice(0, idx).trim(), desc: txt.slice(idx+1).trim() };
+}
+
+function parseServicos(txt) {
+  const data = {
+    gerado: new Date().toLocaleString('pt-BR'),
+    narracao: '', os: [], resumo: []
+  };
+  const linhas = txt.split('\n');
+  let section = 'dados';
+  let arrayCount = 0; // conta quantos arrays JSON já encontramos
+
+  for (let i = 0; i < linhas.length; i++) {
+    const l = linhas[i];
+    const lt = l.trim();
+    if (!lt) continue;
+
+    if (lt.includes('NARRAÇÃO') || lt.includes('NARRACAO')) { section='narracao'; continue; }
+    if (lt.includes('DADOS')) { section='dados'; continue; }
+    if (lt.startsWith('---')) { if(section==='narracao') section='dados'; continue; }
+
+    if (section === 'narracao') {
+      data.narracao += (data.narracao ? '\n' : '') + lt;
+      continue;
+    }
+
+    // Arrays JSON — primeiro é o resumo (com QTD), segundo é o detalhe (com Cidade)
+    if (lt.startsWith('[') || lt.startsWith('{')) {
+      let objetos = [];
+      try {
+        const parsed = JSON.parse(lt.replace(/,$/, ''));
+        // Se vier no formato {variables:[{value: "csv..."}]}, extrair o CSV
+        if (parsed && parsed.variables) {
+          for (const v of parsed.variables) {
+            if (v.value && typeof v.value === 'string' && v.value.includes(';')) {
+              // Processar CSV embutido na variável
+              const csvLinhas = v.value.split(/\r?\n/);
+              for (const csvL of csvLinhas) {
+                const csvLt = csvL.trim().replace(/^\uFEFF/, '');
+                if (!csvLt) continue;
+                const cols = csvLt.split(';');
+                if (cols.length < 5) continue;
+                const dir = cols[0].trim();
+                if (!dir || dir === 'Diretoria') continue;
+                const prazoRaw = cols[4].trim();
+                const { cod, desc } = parseCodDesc(cols[3].trim());
+                data.os.push({ diretoria: dir, cidade: cols[1].trim(), grupo: cols[2].trim(), cod, desc, qtd: 1, prazoRaw, prazoKey: getPrazoKey(prazoRaw) });
+              }
+            }
+          }
+          continue;
+        }
+        objetos = Array.isArray(parsed) ? parsed : [parsed];
+      } catch(e) { continue; }
+
+      for (const obj of objetos) {
+        const prazoRaw = (obj['Prazo OS backlog'] || obj['Prazo'] || '').trim();
+        const prazoKey = getPrazoKey(prazoRaw);
+
+        // Resumo: tem QTD mas não tem Cidade nem Código/Descrição
+        if (obj['QTD'] || obj['Qtd'] || obj['qtd']) {
+          const qtd = parseInt(obj['QTD'] || obj['Qtd'] || obj['qtd'] || '1') || 1;
+          data.resumo.push({
+            diretoria: (obj['Regional'] || obj['Diretoria'] || '').trim(),
+            grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
+            qtd, prazoRaw, prazoKey
+          });
+        } else {
+          // Detalhe: tem Cidade e Código/Descrição
+          const { cod, desc } = parseCodDesc(obj['Código/Descrição'] || obj['Codigo'] || '');
+          data.os.push({
+            diretoria: (obj['Diretoria'] || obj['Regional'] || '').trim(),
+            cidade: (obj['Cidade'] || '').trim(),
+            grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
+            cod, desc, qtd: 1,
+            prazoRaw, prazoKey
+          });
+        }
+      }
+      continue;
+    }
+
+    // CSV com ; ou TSV com tab
+    const sep = l.includes(';') ? ';' : '\t';
+    const cols = l.split(sep);
+    if (cols.length < 5) continue;
+    const diretoria = cols[0].trim().replace(/^\uFEFF/, ''); // remove BOM
+    if (!diretoria || diretoria === 'Diretoria' || diretoria === 'Regional') continue;
+    const prazoRaw = cols[4].trim();
+    const { cod, desc } = parseCodDesc(cols[3].trim());
+    data.os.push({
+      diretoria, cidade: cols[1].trim(), grupo: cols[2].trim(),
+      cod, desc, qtd: 1, prazoRaw, prazoKey: getPrazoKey(prazoRaw)
+    });
+  }
+
+  // Se só veio resumo (sem detalhe), usa o resumo expandido na lista
+  if (data.os.length === 0 && data.resumo.length > 0) {
+    data.os = data.resumo.map(r => ({
+      diretoria: r.diretoria, cidade: '', grupo: r.grupo,
+      cod: '', desc: '', qtd: r.qtd, prazoRaw: r.prazoRaw, prazoKey: r.prazoKey
+    }));
+  }
+
+  // Guardar cidades únicas antes do agrupamento
+  data.cidades = [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
+
+  // Agrupar linhas iguais somando qtd
+  data.os = agruparOS(data.os);
+
+  return data;
+}
+
+function agruparOS(lista) {
+  const mapa = {};
+  for (const o of lista) {
+    const key = [o.diretoria, o.cidade, o.grupo, o.cod, o.prazoKey].join('||');
+    if (mapa[key]) {
+      mapa[key].qtd += (o.qtd || 1);
+    } else {
+      mapa[key] = Object.assign({}, o, { qtd: o.qtd || 1 });
+    }
+  }
+  return Object.values(mapa);
+}
+
+function sumQtd(arr) { return arr.reduce(function(s,o){ return s + (o.qtd||1); }, 0); }
+
+function calcMetrics(os) {
+  const total = sumQtd(os);
+  const criticas = sumQtd(os.filter(o => ['c)','d)','e)','f)','g)','h)'].includes(o.prazoKey)));
+  const amanha = sumQtd(os.filter(o => o.prazoKey === 'b)'));
+  const prazo = sumQtd(os.filter(o => o.prazoKey === 'a)'));
+  const venceHoje = sumQtd(os.filter(o => o.prazoKey === 'c)'));
+  return { total, criticas, amanha, prazo, venceHoje };
+}
+
+function calcDir(os, dir) {
+  const sub = dir === 'todas' ? os : os.filter(o => o.diretoria === dir);
+  const total = sumQtd(sub);
+  const hoje   = sumQtd(sub.filter(o => o.prazoKey === 'c)'));
+  const amanha = sumQtd(sub.filter(o => o.prazoKey === 'b)'));
+  const backlog= sumQtd(sub.filter(o => ['d)','e)','f)','g)','h)'].includes(o.prazoKey)));
+  const prazo  = sumQtd(sub.filter(o => o.prazoKey === 'a)'));
+  const criticas = hoje + backlog;
+  return { total, hoje, amanha, backlog, prazo, criticas };
+}
+
+function renderNarracao(txt) {
+  if (!txt || !txt.trim()) return '';
+  const blocos = [
+    { key:['✅','DESTAQUES POSITIVOS','DESTAQUE POSITIVO'], cls:'positivo' },
+    { key:['📋','LEITURA EXECUTIVA'], cls:'exec' },
+  ];
+  const linhas = txt.split('\n');
+  let atual = null; let atualBloco = null;
+  const enc = {};
+  for (const l of linhas) {
+    const lt = l.trim(); if (!lt) continue;
+    let matched = false;
+    for (const b of blocos) {
+      // Só é título se a linha COMEÇA com um dos marcadores
+      if (b.key.some(k => lt.startsWith(k) || lt.toUpperCase().startsWith(k.toUpperCase()))) {
+        atual = b.cls; atualBloco = b;
+        if (!enc[atual]) enc[atual] = { label: lt, texto: [], bloco: b };
+        matched = true; break;
+      }
+    }
+    if (!matched && atual && enc[atual]) enc[atual].texto.push(lt);
+  }
+  const ordem = ['positivo','exec'];
+  const DIRS = ['CENTRAL','LESTE','NORTE','OESTE','SUL'];
+
+  const html = ordem.map(cls => {
+    const b = enc[cls]; if (!b) return '';
+
+    if (cls === 'diretoria') {
+      var dirMap = {};
+      b.texto.forEach(function(l) {
+        DIRS.forEach(function(d) {
+          if (l.toUpperCase().startsWith(d + ':') || l.toUpperCase().startsWith(d + ' ')) {
+            dirMap[d] = l.replace(new RegExp('^' + d + '\\s*:\\s*', 'i'), '');
+          }
+        });
+      });
+      var cardsDir = DIRS.map(function(d) {
+        return '<div class="dir-resumo-card"><div class="dir-resumo-name">' + d + '</div><div class="dir-resumo-text">' + (dirMap[d] || '—') + '</div></div>';
+      }).join('');
+      return '<div class="ia-sub ' + cls + '"><div class="ia-sub-label">' + b.label + '</div><div class="dir-resumo-grid">' + cardsDir + '</div></div>';
+    }
+
+    return '<div class="ia-sub ' + cls + '"><div class="ia-sub-label">' + b.label + '</div><div class="ia-sub-text">' + b.texto.join('\n') + '</div></div>';
+  }).join('');
+  return html ? `<div class="ia-grid">${html}</div>` : `<div style="font-size:13px;color:var(--muted);white-space:pre-wrap;line-height:1.7">${txt}</div>`;
+}
+
+let os_global = [];
+let filtDiretoria = 'todas';
+let filtPrazo = 'todas';
+let filtGrupo = 'todos';
+let filtCidade = 'todas';
+let pagina = 1;
+const POR_PAG = 30;
+
+function filtrarOS() {
+  return os_global.filter(o =>
+    (filtDiretoria === 'todas' || o.diretoria === filtDiretoria) &&
+
+    (filtGrupo === 'todos' || o.grupo === filtGrupo) &&
+    (filtCidade === 'todas' || !o.cidade || o.cidade === filtCidade) &&
+    (filtPrazo === 'todas' || (filtPrazo === 'urgente' ? ['b)','c)'].includes(o.prazoKey) : o.prazoKey === filtPrazo))
+  ).sort((a,b) => {
+    const op = (PRAZO_CFG[b.prazoKey]?.ordem||0) - (PRAZO_CFG[a.prazoKey]?.ordem||0);
+    return op !== 0 ? op : (b.qtd||1) - (a.qtd||1);
+  });
+}
+
+function exportarExcel() {
+  const lista = filtrarOS();
+  if (!lista.length) { alert('Nenhuma OS para exportar no filtro atual.'); return; }
+
+  const linhas = lista.map(o => ({
+    'Diretoria': o.diretoria || '',
+    'Cidade': o.cidade || '',
+    'Grupo': o.grupo || '',
+    'Código': o.cod || '',
+    'Descrição': o.desc || '',
+    'Quantidade': o.qtd || 1,
+    'Prazo': (PRAZO_CFG[o.prazoKey] || PRAZO_CFG['a)']).label,
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(linhas);
+  ws['!cols'] = [
+    { wch: 12 }, // Diretoria
+    { wch: 22 }, // Cidade
+    { wch: 28 }, // Grupo
+    { wch: 12 }, // Código
+    { wch: 50 }, // Descrição
+    { wch: 12 }, // Quantidade
+    { wch: 18 }, // Prazo
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Serviços');
+
+  const agora = new Date();
+  const stamp = agora.toISOString().slice(0,10);
+  XLSX.writeFile(wb, `servicos_corsan_${stamp}.xlsx`);
+}
+
+function renderOS() {
+  const lista = filtrarOS();
+  const total = lista.length;
+  const inicio = (pagina-1)*POR_PAG;
+  const pag = lista.slice(inicio, inicio+POR_PAG);
+  const totalPags = Math.ceil(total/POR_PAG) || 1;
+
+  document.getElementById('os-count').textContent = `${total} OS`;
+  document.getElementById('os-list').innerHTML = pag.length === 0
+    ? '<p style="font-size:13px;color:var(--muted);padding:12px 0">Nenhuma OS no filtro selecionado.</p>'
+    : pag.map(o => {
+        const cfg = PRAZO_CFG[o.prazoKey] || PRAZO_CFG['a)'];
+        const qtdBadge = o.qtd > 1 ? `<span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);margin-right:4px">${o.qtd} OS</span>` : '';
+        return `<div class="os-item">
+          <div class="os-acc" style="background:${cfg.cor}"></div>
+          <div class="os-body">
+            <div class="os-info">
+              <div class="os-grupo">${o.grupo}</div>
+              <div class="os-desc">${o.cod ? o.cod + ' — ' : ''}${o.desc}</div>
+            </div>
+            <div class="os-right">
+              <span class="os-dir-cidade">${o.diretoria}${o.cidade ? ' / ' + o.cidade : ''}</span>
+              <span style="display:flex;align-items:center;gap:4px">${qtdBadge}<span class="prazo-badge ${cfg.cls}">${cfg.label}</span></span>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+  document.getElementById('pager-info').textContent = `Página ${pagina} de ${totalPags} · ${total} registros`;
+  document.getElementById('btn-prev').disabled = pagina <= 1;
+  document.getElementById('btn-next').disabled = pagina >= totalPags;
+}
+
+function renderDirCards(os, dirs) {
+  const el = document.getElementById('dir-cards');
+  if (!el) return;
+  const mono = 'DM Mono,monospace';
+  const sans = 'DM Sans,sans-serif';
+
+  function miniCard(bg, border, cor, titulo, valor) {
+    return '<div style="background:' + bg + ';border:0.5px solid ' + border + ';border-radius:5px;padding:5px 7px">' +
+      '<div style="font-size:9px;color:' + cor + ';font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px">' + titulo + '</div>' +
+      '<div style="font-size:13px;font-weight:500;font-family:' + mono + ';color:#f1f5f9">' + valor + '</div>' +
+    '</div>';
+  }
+
+  el.innerHTML = dirs.map(d => {
+    const s = calcDir(os, d);
+    const nome = d === 'todas' ? 'Todas' : d;
+    const corHoje = s.hoje > 0 ? '#f87171' : '#34d399';
+    return '<div class="dir-card' + (filtDiretoria===d?' active':'') + '" onclick="selecionarDir(\'' + d + '\')">' +
+      '<div class="dir-name">' + nome + '</div>' +
+      '<div class="dir-criticas" style="color:' + corHoje + '">' + s.hoje.toLocaleString('pt-BR') + '</div>' +
+      '<div class="dir-sub">' + s.total.toLocaleString('pt-BR') + ' OS total</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:8px">' +
+        miniCard('rgba(248,113,113,.08)', 'rgba(248,113,113,.2)', '#f87171', 'Vence hoje',   s.hoje.toLocaleString('pt-BR')) +
+        miniCard('rgba(251,191,36,.08)',  'rgba(251,191,36,.2)',  '#fbbf24', 'Vence amanhã', s.amanha.toLocaleString('pt-BR')) +
+        miniCard('rgba(167,139,250,.08)', 'rgba(167,139,250,.2)', '#a78bfa', 'Atrasado',      s.backlog.toLocaleString('pt-BR')) +
+        miniCard('rgba(52,211,153,.08)',  'rgba(52,211,153,.2)',  '#34d399', 'No prazo',     s.prazo.toLocaleString('pt-BR')) +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function selecionarDir(d) {
+  filtDiretoria = d;
+  pagina = 1;
+  document.querySelectorAll('.dir-card').forEach(el => {
+    el.classList.toggle('active', el.getAttribute('onclick') === "selecionarDir('" + d + "')");
+  });
+  document.querySelectorAll('.fbtn[data-reg]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.reg === d ? ' on' : '');
+  });
+  renderOS();
+}
+
+function filtrarReg(reg) {
+  filtDiretoria = reg;
+  pagina = 1;
+  document.querySelectorAll('.fbtn[data-reg]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.reg === reg ? ' on' : '');
+  });
+  // Atualizar cards de diretoria
+  document.querySelectorAll('.dir-card').forEach(el => {
+    const onclick = el.getAttribute('onclick') || '';
+    el.classList.toggle('active', onclick.includes("'" + reg + "'") || (reg === 'todas' && onclick.includes("'todas'")));
+  });
+  renderOS();
+}
+
+function selecionarPrazo(p, btn) {
+  filtPrazo = p;
+  pagina = 1;
+  document.querySelectorAll('.fbtn[data-prazo]').forEach(b => {
+    b.className = 'fbtn' + (b.dataset.prazo === p ? (p==='todas'?' on':p==='b)'?' on-b':' on-c') : '');
+  });
+  renderOS();
+}
+
+function handleCidade(el) { selecionarByEl('cidade', el); }
+function handleGrupo(el) { selecionarByEl('grupo', el); }
+function selecionarByEl(tipo, el) {
+  const val = el.dataset[tipo];
+  if (tipo === 'grupo') { filtGrupo = val; atualizarTag('grupoTag', val, 'todos', 'limparGrupo'); }
+  if (tipo === 'cidade') { filtCidade = val; atualizarTag('cidadeTag', val, 'todas', 'limparCidade'); }
+  document.querySelectorAll('.dd-opt[data-' + tipo + ']').forEach(o => o.classList.toggle('sel', o.dataset[tipo] === val));
+  const inp = document.getElementById(tipo + 'Input');
+  if (inp) inp.value = (val === 'todos' || val === 'todas') ? '' : val;
+  fecharDD(tipo + 'DD');
+  pagina = 1;
+  renderOS();
+}
+
+function atualizarTag(id, val, vazio, fnLimpar) {
+  const el = document.getElementById(id); if (!el) return;
+  el.innerHTML = (val === vazio || !val) ? '' :
+    `<span class="tag">${val}<button onclick="${fnLimpar}()">×</button></span>`;
+}
+
+function limparGrupo() {
+  filtGrupo = 'todos';
+  const inp = document.getElementById('grupoInput'); if (inp) inp.value = '';
+  document.querySelectorAll('.dd-opt[data-grupo]').forEach(o => o.classList.toggle('sel', o.dataset.grupo === 'todos'));
+  atualizarTag('grupoTag','todos','todos','limparGrupo');
+  pagina = 1; renderOS();
+}
+function limparCidade() {
+  filtCidade = 'todas';
+  const inp = document.getElementById('cidadeInput'); if (inp) inp.value = '';
+  document.querySelectorAll('.dd-opt[data-cidade]').forEach(o => o.classList.toggle('sel', o.dataset.cidade === 'todas'));
+  atualizarTag('cidadeTag','todas','todas','limparCidade');
+  pagina = 1; renderOS();
+}
+
+function toggleDD(id) { document.getElementById(id)?.classList.toggle('open'); }
+function fecharDD(id) { document.getElementById(id)?.classList.remove('open'); }
+function filterDD(id, val) {
+  document.getElementById(id)?.classList.add('open');
+  document.querySelectorAll(`#${id} .dd-opt`).forEach(o => {
+    o.style.display = (o.dataset.grupo==='todos'||o.dataset.cidade==='todas'||
+      (o.textContent||'').toLowerCase().includes(val.toLowerCase())) ? '' : 'none';
+  });
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dd-wrap')) {
+    document.querySelectorAll('.dd-list').forEach(d => d.classList.remove('open'));
+  }
+});
+
+function render(data) {
+  os_global = data.os;
+  const fonte = data.resumo && data.resumo.length > 0 ? data.resumo : data.os;
+  const m = calcMetrics(fonte);
+  const dirs = [...new Set(fonte.map(o=>o.diretoria).filter(Boolean))].sort();
+  const grupos = [...new Set(data.os.map(o=>o.grupo).filter(Boolean))].sort();
+  const cidades = data.cidades || [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
+
+  const cidadeOpts = cidades.length > 0 ? (
+    ['<div class="dd-opt sel" data-cidade="todas" onclick="handleCidade(this)">Todas as cidades</div>'].concat(
+      cidades.map(function(c){ return '<div class="dd-opt" data-cidade="' + c + '" onclick="handleCidade(this)">' + c + '</div>'; })
+    ).join('')
+  ) : '';
+
+  const grupoOpts = ['<div class="dd-opt sel" data-grupo="todos" onclick="handleGrupo(this)">Todos os grupos</div>'].concat(
+    grupos.map(function(g){ return '<div class="dd-opt" data-grupo="' + g + '" onclick="handleGrupo(this)">' + g + '</div>'; })
+  ).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="header">
+      <div class="header-left">
+        <img src="https://comunicados.corsan.com.br/comunicados/logo_corsan_horizontal_RGB.png" alt="Corsan">
+        <h1>Análise de Serviços</h1>
+        <div class="header-meta">Gerado em ${data.gerado}</div>
+      </div>
+      <div class="header-stat">
+        <div class="header-stat-val">${m.total.toLocaleString('pt-BR')}</div>
+        <div class="header-stat-label">OS em aberto</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric"><div class="metric-val" style="color:#f87171">${m.venceHoje.toLocaleString('pt-BR')}</div><div class="metric-label">Vence hoje</div></div>
+      <div class="metric"><div class="metric-val" style="color:#fbbf24">${m.amanha.toLocaleString('pt-BR')}</div><div class="metric-label">Vence amanhã</div></div>
+      <div class="metric"><div class="metric-val" style="color:#a78bfa">${(m.total-m.prazo-m.amanha-m.venceHoje).toLocaleString('pt-BR')}</div><div class="metric-label">Atrasado (>1 dia)</div></div>
+      <div class="metric"><div class="metric-val" style="color:#34d399">${m.prazo.toLocaleString('pt-BR')}</div><div class="metric-label">Dentro do prazo</div></div>
+    </div>
+
+    ${data.narracao ? `
+    <div class="block">
+      <div class="block-title">Análise gerada por IA</div>
+      ${renderNarracao(data.narracao)}
+    </div>` : ''}
+
+    <div class="block">
+      <div class="block-title">Visão por diretoria — clique para filtrar</div>
+      <div class="dir-grid" id="dir-cards"></div>
+    </div>
+
+    <div class="block">
+      <div class="block-title">Filtros</div>
+      <div class="filter-section">
+        <div class="filter-row">
+          <span class="filter-label">Prazo</span>
+          <button class="fbtn on" data-prazo="todas" onclick="selecionarPrazo('todas',this)">Todos</button>
+          <button class="fbtn" data-prazo="c)" onclick="selecionarPrazo('c)',this)">Vence hoje</button>
+          <button class="fbtn" data-prazo="b)" onclick="selecionarPrazo('b)',this)">Vence amanhã</button>
+          <button class="fbtn" data-prazo="d)" onclick="selecionarPrazo('d)',this)">1–10 dias</button>
+          <button class="fbtn" data-prazo="e)" onclick="selecionarPrazo('e)',this)">11–20 dias</button>
+          <button class="fbtn" data-prazo="f)" onclick="selecionarPrazo('f)',this)">21–30 dias</button>
+          <button class="fbtn" data-prazo="g)" onclick="selecionarPrazo('g)',this)">31–60 dias</button>
+          <button class="fbtn" data-prazo="h)" onclick="selecionarPrazo('h)',this)">61–360 dias</button>
+          <button class="fbtn" data-prazo="a)" onclick="selecionarPrazo('a)',this)">Dentro do prazo</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Regional</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap" id="reg-btns">
+            <button class="fbtn on" data-reg="todas" onclick="filtrarReg('todas')">Todas</button>
+            ${dirs.map(d => '<button class="fbtn" data-reg="' + d + '" onclick="filtrarReg(\'' + d + '\')">' + d + '</button>').join('')}
+          </div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Grupo</span>
+          <div class="dd-wrap">
+            <input class="dd-input" id="grupoInput" placeholder="Buscar grupo..." autocomplete="off"
+              onclick="toggleDD('grupoDD')" oninput="filterDD('grupoDD',this.value)">
+            <div class="dd-list" id="grupoDD">${grupoOpts}</div>
+          </div>
+          <div class="tag-row" id="grupoTag"></div>
+        </div>
+
+      </div>
+      ${cidades.length > 0 ? `
+      <div class="filter-row">
+        <span class="filter-label">Cidade</span>
+        <div class="dd-wrap">
+          <input class="dd-input" id="cidadeInput" placeholder="Buscar cidade..." autocomplete="off"
+            onclick="toggleDD('cidadeDDx')" oninput="filterDD('cidadeDDx',this.value)">
+          <div class="dd-list" id="cidadeDDx">${cidadeOpts}</div>
+        </div>
+        <div class="tag-row" id="cidadeTag"></div>
+      </div>` : ''}
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+        <span class="block-title" style="margin:0" id="os-count"></span>
+        <button class="export-btn" onclick="exportarExcel()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Exportar Excel
+        </button>
+      </div>
+      <div id="os-list"></div>
+
+      <div class="legend">
+        ${Object.entries(PRAZO_CFG).map(([k,v])=>`<span class="leg"><span class="leg-sq" style="background:${v.cor}"></span>${v.label}</span>`).join('')}
+      </div>
+
+      <div class="pager">
+        <span id="pager-info"></span>
+        <div class="pager-btns">
+          <button class="pbtn" id="btn-prev" onclick="pagina--;renderOS()">← Anterior</button>
+          <button class="pbtn" id="btn-next" onclick="pagina++;renderOS()">Próxima →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>Dados atualizados via Power Automate. Prazos conforme OS em aberto.</span>
+      <span class="footer-badge">AI Builder · Power Automate</span>
+    </div>`;
+
+  renderDirCards(fonte, dirs);
+  renderOS();
+}
+
+fetch(JSON_URL + '?t=' + Date.now())
+  .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+  .then(txt => {
+    if (!txt || !txt.trim()) throw new Error('Arquivo vazio');
+    const data = parseServicos(txt);
+    if (!data.os.length) throw new Error('Nenhuma OS encontrada — verifique o arquivo servicos.json');
+    render(data);
+  })
+  .catch(err => {
+    document.getElementById('app').innerHTML =
+      `<div class="empty"><h2>Erro ao carregar</h2>
+       <p style="font-size:13px;margin-top:6px">${err.message}</p>
+       <p style="font-size:11px;margin-top:8px;color:var(--muted)">URL: ${JSON_URL}</p></div>`;
+  });
+</script>
+</body>
+</html>
