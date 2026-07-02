@@ -1,19 +1,19 @@
 ---
 NARRAÇÃO
 🔴 SITUAÇÃO CRÍTICA  
-1. Regional CENTRO, Colorado, Manutenção Corretiva/Emergêncial - Mecânica, 861 ligações, normalização prevista para 20:30.  
-2. Regional CENTRO, Cachoeira do Sul, Manutenção Corretiva - Rede de abastecimento, 823 ligações, normalização prevista para 21:00.  
-3. Regional CENTRO, Encruzilhada do Sul, Manutenção Corretiva - Rede de abastecimento, 748 ligações, normalização prevista para 20:00.  
+1. Regional NORTE, Lagoa Vermelha, Paralisação por energia, 10.611 ligações, previsão normalização 18:00.  
+2. Sem regional, Antônio Prado, Paralisação por energia, 3.499 ligações, previsão normalização 18:00.  
+3. Regional SUL, Santa Vitória do Palmar, Paralisação por energia, 1.596 ligações, previsão normalização 12:45.  
 
 📅 EVENTOS PROGRAMADOS  
-Não há eventos programados listados nos dados fornecidos.  
+Nenhum evento programado informado nos dados fornecidos.  
 
 ✅ CONCLUÍDOS RECENTEMENTE  
-Não há eventos finalizados listados nos dados fornecidos.  
+Nenhum evento finalizado informado nos dados fornecidos.  
 
 📋 LEITURA EXECUTIVA  
-A regional CENTRO é a mais crítica, concentrando os maiores impactos em ligações. Recomenda-se priorizar recursos e equipes para acelerar a normalização dos eventos em andamento.
+A regional NORTE é a mais crítica, concentrando o maior impacto em ligações afetadas. Recomenda-se priorizar a restauração do fornecimento de energia para normalizar o abastecimento.
 
 ---
 DADOS
-[{"id":1191112,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Cachoeira do Sul","dt_inicio":"01/07/2026 17:15:00","dt_inicio_rec":"01/07/2026 20:00:00","dt_fim_rec":"01/07/2026 21:00:00","ligacoes":823,"regional":"CENTRO"},{"id":1191139,"categoria":"Vazamento identificado na região causando oscilação no abastecimento","status":"Em Andamento","municipio":"Panambi","dt_inicio":"01/07/2026 15:30:00","dt_inicio_rec":"01/07/2026 18:30:00","dt_fim_rec":"01/07/2026 20:30:00","ligacoes":497,"regional":"CENTRO"},{"id":1191411,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Arroio dos Ratos","dt_inicio":"01/07/2026 15:30:00","dt_inicio_rec":"01/07/2026 19:30:00","dt_fim_rec":"01/07/2026 20:00:00","ligacoes":357,"regional":"SUL"},{"id":1190168,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Lagoa dos Patos","dt_inicio":"01/07/2026 13:30:00","dt_inicio_rec":"01/07/2026 19:00:00","dt_fim_rec":"01/07/2026 22:00:00","ligacoes":288,"regional":null},{"id":1190481,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Imbé","dt_inicio":"01/07/2026 15:00:00","dt_inicio_rec":"01/07/2026 18:00:00","dt_fim_rec":"01/07/2026 18:30:00","ligacoes":300,"regional":"LESTE"},{"id":1190521,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Encruzilhada do Sul","dt_inicio":"01/07/2026 14:45:00","dt_inicio_rec":"01/07/2026 18:00:00","dt_fim_rec":"01/07/2026 20:00:00","ligacoes":748,"regional":"CENTRO"},{"id":1190524,"categoria":"Manutenção Corretiva/Emergêncial - Mecânica","status":"Em Andamento","municipio":"Colorado","dt_inicio":"01/07/2026 17:00:00","dt_inicio_rec":"01/07/2026 20:00:00","dt_fim_rec":"01/07/2026 20:30:00","ligacoes":861,"regional":"CENTRO"}]
+[{"id":1192373,"categoria":"Manutenção Emergencial - Ação de Vandalismo e/ou Intervenção Popular","status":"Em Andamento","municipio":"Farroupilha","dt_inicio":"02/07/2026 09:00:00","dt_inicio_rec":"02/07/2026 16:00:00","dt_fim_rec":"02/07/2026 16:45:00","ligacoes":1174,"regional":"NORTE"},{"id":1192378,"categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","status":"Em Andamento","municipio":"Antônio Prado","dt_inicio":"02/07/2026 10:00:00","dt_inicio_rec":"02/07/2026 17:00:00","dt_fim_rec":"02/07/2026 18:00:00","ligacoes":3499,"regional":null},{"id":1192390,"categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","status":"Em Andamento","municipio":"Santa Vitória do Palmar","dt_inicio":"02/07/2026 09:00:00","dt_inicio_rec":"02/07/2026 12:30:00","dt_fim_rec":"02/07/2026 12:45:00","ligacoes":1596,"regional":"SUL"},{"id":1193013,"categoria":"Manutenção Corretiva - Rede de abastecimento","status":"Em Andamento","municipio":"Antônio Prado","dt_inicio":"02/07/2026 09:30:00","dt_inicio_rec":"02/07/2026 16:00:00","dt_fim_rec":"02/07/2026 17:00:00","ligacoes":169,"regional":"NORTE"},{"id":1192051,"categoria":"Paralisação devido interrupção/oscilação no fornecimento de energia elétrica","status":"Em Andamento","municipio":"Lagoa Vermelha","dt_inicio":"02/07/2026 06:30:00","dt_inicio_rec":"02/07/2026 12:00:00","dt_fim_rec":"02/07/2026 18:00:00","ligacoes":10611,"regional":"NORTE"}]
