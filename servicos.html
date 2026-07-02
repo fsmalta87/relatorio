@@ -117,11 +117,17 @@
   .pbtn:disabled{opacity:.35;cursor:not-allowed}
   .pbtn:not(:disabled):hover{border-color:var(--accent);color:var(--accent)}
 
+  /* Export button */
+  .export-btn{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:5px 12px;border:0.5px solid rgba(52,211,153,.3);border-radius:6px;background:rgba(52,211,153,.08);color:#34d399;cursor:pointer;transition:all .15s;white-space:nowrap}
+  .export-btn:hover{background:rgba(52,211,153,.16);border-color:rgba(52,211,153,.5)}
+  .export-btn svg{width:12px;height:12px;flex-shrink:0}
+
   .footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);flex-wrap:wrap;gap:8px}
   .footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600}
   .empty{text-align:center;padding:48px 20px;color:var(--muted)}
   .empty h2{font-size:16px;color:#f1f5f9;margin-bottom:8px}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="grid-bg"></div>
@@ -384,6 +390,39 @@ function filtrarOS() {
   });
 }
 
+function exportarExcel() {
+  const lista = filtrarOS();
+  if (!lista.length) { alert('Nenhuma OS para exportar no filtro atual.'); return; }
+
+  const linhas = lista.map(o => ({
+    'Diretoria': o.diretoria || '',
+    'Cidade': o.cidade || '',
+    'Grupo': o.grupo || '',
+    'Código': o.cod || '',
+    'Descrição': o.desc || '',
+    'Quantidade': o.qtd || 1,
+    'Prazo': (PRAZO_CFG[o.prazoKey] || PRAZO_CFG['a)']).label,
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(linhas);
+  ws['!cols'] = [
+    { wch: 12 }, // Diretoria
+    { wch: 22 }, // Cidade
+    { wch: 28 }, // Grupo
+    { wch: 12 }, // Código
+    { wch: 50 }, // Descrição
+    { wch: 12 }, // Quantidade
+    { wch: 18 }, // Prazo
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Serviços');
+
+  const agora = new Date();
+  const stamp = agora.toISOString().slice(0,10);
+  XLSX.writeFile(wb, `servicos_corsan_${stamp}.xlsx`);
+}
+
 function renderOS() {
   const lista = filtrarOS();
   const total = lista.length;
@@ -627,8 +666,12 @@ function render(data) {
         <div class="tag-row" id="cidadeTag"></div>
       </div>` : ''}
 
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
         <span class="block-title" style="margin:0" id="os-count"></span>
+        <button class="export-btn" onclick="exportarExcel()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Exportar Excel
+        </button>
       </div>
       <div id="os-list"></div>
 
