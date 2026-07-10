@@ -608,7 +608,7 @@ function render(data) {
     <div class="metrics">
       <div class="metric"><div class="metric-val" style="color:var(--danger)">${data.totalAltas}</div><div class="metric-label">altas atípicas</div></div>
       <div class="metric"><div class="metric-val" style="color:var(--success)">${data.totalQuedas}</div><div class="metric-label">quedas atípicas</div></div>
-      <div class="metric"><div class="metric-val">30%</div><div class="metric-label">limiar de variação</div></div>
+      <div class="metric"><div class="metric-val">15%</div><div class="metric-label">limiar de variação</div></div>
       <div class="metric"><div class="metric-val" style="color:var(--warning)">${data.maiorDesvio||'—'}</div><div class="metric-label">maior desvio</div></div>
     </div>
 
@@ -686,7 +686,7 @@ function render(data) {
     </div>
 
     <div class="footer">
-      <span>Top 10 motivos por cidade. Limiar 30% vs. média Jan–Jun. Calculado no Excel.</span>
+      <span>Top 10 motivos por cidade. Limiar 15% vs. média Jan–Jun. Calculado no Excel.</span>
       <span class="footer-badge">AI Builder · Power Automate</span>
     </div>`;
 
