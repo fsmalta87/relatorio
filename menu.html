@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel Operacional — Corsan</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0a0f1e">
+<meta name="theme-color" content="#ffffff">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,9 +14,9 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:#0a0f1e;--surface:#111827;--surface2:#1a2235;
-    --border:rgba(99,179,237,0.12);--accent:#38bdf8;
-    --text:#e2e8f0;--muted:#64748b;
+    --bg:#ffffff;--surface:#f9fafb;--surface2:#f3f4f6;
+    --border:#e5e7eb;--accent:#2563eb;
+    --text:#111827;--muted:#6b7280;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
@@ -27,8 +27,8 @@
   .grid-bg{
     position:fixed;inset:0;z-index:0;
     background-image:
-      linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);
+      linear-gradient(rgba(37,99,235,0.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(37,99,235,0.025) 1px,transparent 1px);
     background-size:40px 40px;pointer-events:none;
   }
   .wrap{
@@ -37,7 +37,7 @@
     gap:48px;padding:40px 24px;max-width:900px;width:100%;
   }
   .logo-area{display:flex;flex-direction:column;align-items:center;gap:16px}
-  .logo-area img{height:240px;filter:brightness(0) invert(1);display:block}
+  .logo-area img{height:100px;display:block}
   .subtitle{
     font-size:13px;color:var(--muted);letter-spacing:.08em;
     text-transform:uppercase;font-weight:500;
@@ -48,42 +48,43 @@
   .cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;width:100%}
   @media(max-width:640px){.cards{grid-template-columns:1fr}}
   .card{
-    background:var(--surface);border:1px solid var(--border);
+    background:#fff;border:1px solid var(--border);
     border-radius:16px;padding:28px 24px;
     display:flex;flex-direction:column;align-items:flex-start;gap:12px;
     text-decoration:none;color:inherit;
-    transition:border-color .2s, transform .15s, background .2s;
+    transition:border-color .2s, transform .15s, background .2s, box-shadow .2s;
     position:relative;overflow:hidden;cursor:pointer;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);
   }
   .card::before{
     content:'';position:absolute;top:0;left:0;right:0;height:2px;
     transition:opacity .2s;opacity:0;
   }
-  .card.agua::before{background:linear-gradient(90deg,#38bdf8,#818cf8)}
-  .card.solicitacoes::before{background:linear-gradient(90deg,#f87171,#fbbf24)}
-  .card:hover{transform:translateY(-2px);background:var(--surface2)}
+  .card.agua::before{background:linear-gradient(90deg,#2563eb,#4f46e5)}
+  .card.solicitacoes::before{background:linear-gradient(90deg,#dc2626,#d97706)}
+  .card:hover{transform:translateY(-2px);background:var(--surface2);box-shadow:0 4px 14px rgba(0,0,0,.08)}
   .card:hover::before{opacity:1}
-  .card:hover.agua{border-color:rgba(56,189,248,.3)}
-  .card:hover.solicitacoes{border-color:rgba(248,113,113,.3)}
-  .card.servicos::before{background:linear-gradient(90deg,#34d399,#fbbf24)}
-  .card:hover.servicos{border-color:rgba(52,211,153,.3)}
-  .card.servicos .card-icon{background:rgba(52,211,153,.1)}
-  .card.servicos .card-arrow{color:#34d399}
+  .card:hover.agua{border-color:rgba(37,99,235,.3)}
+  .card:hover.solicitacoes{border-color:rgba(220,38,38,.3)}
+  .card.servicos::before{background:linear-gradient(90deg,#16a34a,#d97706)}
+  .card:hover.servicos{border-color:rgba(22,163,74,.3)}
+  .card.servicos .card-icon{background:rgba(22,163,74,.1)}
+  .card.servicos .card-arrow{color:#16a34a}
   .card-icon{
     width:44px;height:44px;border-radius:12px;
     display:flex;align-items:center;justify-content:center;
     font-size:22px;flex-shrink:0;
   }
-  .card.agua .card-icon{background:rgba(56,189,248,.1)}
-  .card.solicitacoes .card-icon{background:rgba(248,113,113,.1)}
-  .card-title{font-size:15px;font-weight:500;color:#f1f5f9;line-height:1.3}
+  .card.agua .card-icon{background:rgba(37,99,235,.1)}
+  .card.solicitacoes .card-icon{background:rgba(220,38,38,.1)}
+  .card-title{font-size:15px;font-weight:500;color:#111827;line-height:1.3}
   .card-desc{font-size:12px;color:var(--muted);line-height:1.6}
   .card-arrow{
     margin-top:auto;font-size:12px;display:flex;align-items:center;gap:4px;
     transition:gap .2s;
   }
-  .card.agua .card-arrow{color:#38bdf8}
-  .card.solicitacoes .card-arrow{color:#f87171}
+  .card.agua .card-arrow{color:#2563eb}
+  .card.solicitacoes .card-arrow{color:#dc2626}
   .card:hover .card-arrow{gap:8px}
   .footer{
     font-size:11px;color:var(--muted);text-align:center;
@@ -91,12 +92,12 @@
   }
   .install-btn{
     display:flex;align-items:center;gap:8px;
-    background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.2);
+    background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);
     color:var(--accent);font-family:'DM Sans',sans-serif;font-size:12px;
     padding:8px 16px;border-radius:8px;cursor:pointer;
     transition:background .15s;margin:0 auto;
   }
-  .install-btn:hover{background:rgba(56,189,248,.15)}
+  .install-btn:hover{background:rgba(37,99,235,.15)}
   .install-btn.hidden{display:none}
 </style>
 </head>
