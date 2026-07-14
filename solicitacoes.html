@@ -133,6 +133,89 @@
   .empty{text-align:center;padding:48px 20px;color:var(--muted)}
   .empty h2{font-size:16px;color:#111827;margin-bottom:8px}
   .ia-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+
+/* ═══════════════════════════════════════
+   PAINEL DE ZOOM — ANÁLISE DETALHADA
+═══════════════════════════════════════ */
+.spark-row,.anom-item{cursor:pointer}
+.spark-row:hover,.anom-item:hover{border-color:#93c5fd;box-shadow:0 3px 10px rgba(37,99,235,.08)}
+.detail-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(15,23,42,.48);
+  display:none;align-items:center;justify-content:center;
+  padding:20px
+}
+.detail-overlay.open{display:flex}
+.detail-modal{
+  width:min(920px,96vw);max-height:92vh;overflow:auto;
+  background:#fff;border:1px solid #dbe3ef;border-radius:12px;
+  box-shadow:0 24px 60px rgba(15,23,42,.24)
+}
+.detail-modal-hd{
+  position:sticky;top:0;z-index:2;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:14px 16px;background:#fff;border-bottom:1px solid #e5e7eb
+}
+.detail-modal-title{font-size:15px;font-weight:700;color:#1e3a8a}
+.detail-modal-sub{font-size:10px;color:#64748b;margin-top:3px}
+.detail-close{
+  width:30px;height:30px;border:1px solid #d1d5db;border-radius:6px;
+  background:#fff;color:#64748b;font-size:18px;cursor:pointer
+}
+.detail-close:hover{background:#f8fafc;color:#dc2626}
+.detail-modal-body{padding:14px 16px 16px}
+.detail-summary{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;margin-bottom:12px
+}
+.detail-kpi{
+  border:1px solid #e5e7eb;border-radius:8px;padding:9px 10px;background:#f8fafc
+}
+.detail-kpi-val{font:700 17px 'DM Mono',monospace;color:#1e3a8a}
+.detail-kpi-label{font-size:8.5px;color:#94a3b8;margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
+.detail-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:10px}
+.detail-card{border:1px solid #e5e7eb;border-radius:9px;padding:11px 12px;background:#fff}
+.detail-card-title{font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.detail-chart{
+  display:flex;align-items:flex-end;gap:9px;height:250px;padding:16px 8px 0
+}
+.detail-bar-wrap{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%
+}
+.detail-bar{
+  width:100%;max-width:46px;border-radius:5px 5px 0 0;margin-top:auto;
+  transition:height .25s ease
+}
+.detail-bar-value{font:600 9px 'DM Mono',monospace;color:#334155}
+.detail-bar-label{font-size:9px;color:#64748b}
+.detail-insight{font-size:11px;color:#334155;line-height:1.6}
+.detail-insight strong{color:#1e3a8a}
+.detail-history{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.detail-history-row{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:6px 7px;border:1px solid #f1f5f9;border-radius:6px;background:#fafcff;
+  font-size:9.5px
+}
+.detail-history-row strong{font-family:'DM Mono',monospace}
+.detail-status{
+  display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;
+  font-size:9px;font-weight:700
+}
+.detail-status.high{background:#fee2e2;color:#b91c1c}
+.detail-status.low{background:#dcfce7;color:#15803d}
+@media(max-width:760px){
+  .detail-summary{grid-template-columns:repeat(2,1fr)}
+  .detail-grid{grid-template-columns:1fr}
+  .detail-chart{height:210px;gap:5px}
+}
+
+
+.spark-row,.anom-item{cursor:pointer}
+.spark-row:hover,.anom-item:hover{
+  border-color:#93c5fd;
+  box-shadow:0 3px 10px rgba(37,99,235,.10);
+}
+
 </style>
 </head>
 <body>
@@ -389,6 +472,7 @@ let paginaAnom = 1;
 const ANOM_POR_PAG = 30;
 let paginaSpark = 1;
 const SPARK_POR_PAG = 20;
+let detalheSelecionado = null;
 
 function filtrar(tipo) {
   filtros[tipo] = !filtros[tipo];
@@ -510,7 +594,8 @@ function renderAnom() {
     ? '<p style="font-size:13px;color:var(--muted);padding:8px 0">Nenhuma variação no filtro selecionado.</p>'
     : pag.map(a => {
         const sinal = a.delta > 0 ? '+' : '';
-        return `<div class="anom-item ${a.tipo}">
+        const idxGlobal = anomalias_global.indexOf(a);
+        return `<div class="anom-item ${a.tipo}" onclick="abrirDetalhe(${idxGlobal})">
           <div class="anom-accent"></div>
           <div class="anom-body">
             <span class="anom-city">${a.diretoria ? '<span style="font-size:10px;color:var(--muted);display:block;line-height:1.2">' + a.diretoria + '</span>' : ''}${a.cidade}</span>
@@ -556,7 +641,8 @@ function renderSparks(anomalias) {
       const cor=isAnom?(a.delta>0?'#dc2626':'#16a34a'):MCORES[i];
       return '<div class="spark-b" style="height:'+h+'px;background:'+cor+'" title="'+MESES[i]+': '+fmt(v)+'"></div>';
     }).join('');
-    return '<div class="spark-row">'
+    const idxGlobal = anomalias_global.indexOf(a);
+    return '<div class="spark-row" onclick="abrirDetalhe(' + idxGlobal + ')">'
       +'<span class="spark-city">'+(a.diretoria?'<span style="font-size:9px;color:var(--muted);display:block;line-height:1">'+a.diretoria+'</span>':'')+a.cidade+'</span>'
       +'<span class="spark-motivo">'+a.motivo+'</span>'
       +'<div class="spark">'+bars+'</div>'
@@ -572,6 +658,83 @@ function renderSparks(anomalias) {
   if (pi) pi.textContent = 'Página ' + paginaSpark + ' de ' + totalPags + ' · ' + total + ' registros';
   if (pp) pp.disabled = paginaSpark <= 1;
   if (pn) pn.disabled = paginaSpark >= totalPags;}
+
+
+
+function abrirDetalhe(index) {
+  const a = anomalias_global[index];
+  if (!a) return;
+  detalheSelecionado = a;
+
+  const modal = document.getElementById('detailOverlay');
+  if (!modal) return;
+
+  const maxV = Math.max(...a.vals, a.hist || 0, 0.1);
+  const sinal = a.delta > 0 ? '+' : '';
+  const statusTxt = a.tipo === 'high' ? 'Alta atípica' : 'Queda atípica';
+  const statusCls = a.tipo === 'high' ? 'high' : 'low';
+  const statusColor = a.tipo === 'high' ? '#dc2626' : '#16a34a';
+
+  document.getElementById('detailTitle').textContent = a.cidade + ' — ' + a.motivo;
+  document.getElementById('detailSub').textContent = (a.diretoria || 'Sem diretoria') + ' · análise mensal';
+
+  document.getElementById('detailBody').innerHTML = `
+    <div class="detail-summary">
+      <div class="detail-kpi"><div class="detail-kpi-val">${fmt(a.vals[6])}</div><div class="detail-kpi-label">Mês atual</div></div>
+      <div class="detail-kpi"><div class="detail-kpi-val">${fmt(a.hist)}</div><div class="detail-kpi-label">Média histórica</div></div>
+      <div class="detail-kpi"><div class="detail-kpi-val" style="color:${statusColor}">${sinal}${Math.round(a.delta*100)}%</div><div class="detail-kpi-label">Variação</div></div>
+      <div class="detail-kpi"><div class="detail-status ${statusCls}">${statusTxt}</div><div class="detail-kpi-label" style="margin-top:7px">Classificação</div></div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-card">
+        <div class="detail-card-title">Evolução mensal</div>
+        <div class="detail-chart">
+          ${a.vals.map((v,i)=>{
+            const h = Math.max(8, Math.round(v/maxV*190));
+            const color = i===6 ? statusColor : MCORES[i];
+            return `<div class="detail-bar-wrap">
+              <div class="detail-bar-value">${fmt(v)}</div>
+              <div class="detail-bar" style="height:${h}px;background:${color}" title="${MESES[i]}: ${fmt(v)}"></div>
+              <div class="detail-bar-label">${MESES[i]}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="detail-card-title">Leitura analítica</div>
+        <div class="detail-insight">
+          A solicitação <strong>${a.motivo}</strong>, em <strong>${a.cidade}</strong>,
+          apresenta ${a.tipo==='high'?'alta':'queda'} de
+          <strong>${sinal}${Math.round(a.delta*100)}%</strong> em relação à média histórica.
+          O valor atual é <strong>${fmt(a.vals[6])}</strong>, frente à média de
+          <strong>${fmt(a.hist)}</strong>.
+          <br><br>
+          Recomenda-se validar ocorrências operacionais, indisponibilidades,
+          alterações de processo, sazonalidade e concentração por período antes
+          de definir ações corretivas.
+        </div>
+
+        <div class="detail-history">
+          ${a.vals.map((v,i)=>`<div class="detail-history-row"><span>${MESES[i]}</span><strong>${fmt(v)}</strong></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharDetalhe() {
+  const modal = document.getElementById('detailOverlay');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') fecharDetalhe();
+});
 
 
 function render(data) {
@@ -688,6 +851,19 @@ function render(data) {
     <div class="footer">
       <span>Top 10 motivos por cidade. Limiar 15% vs. média Jan–Jun. Calculado no Excel.</span>
       <span class="footer-badge">AI Builder · Power Automate</span>
+    </div>
+
+    <div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)fecharDetalhe()">
+      <div class="detail-modal">
+        <div class="detail-modal-hd">
+          <div>
+            <div class="detail-modal-title" id="detailTitle"></div>
+            <div class="detail-modal-sub" id="detailSub"></div>
+          </div>
+          <button class="detail-close" type="button" onclick="fecharDetalhe()" aria-label="Fechar">×</button>
+        </div>
+        <div class="detail-modal-body" id="detailBody"></div>
+      </div>
     </div>`;
 
   renderSparks(data.anomalias);
