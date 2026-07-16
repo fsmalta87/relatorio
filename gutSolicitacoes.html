@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GUT Automático — tipos de Contato</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0f1e;--surface:#111827;--surface2:#1a2235;--border:rgba(99,179,237,0.12);--accent:#38bdf8;--danger:#f87171;--success:#34d399;--warning:#fbbf24;--text:#e2e8f0;--muted:#64748b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;padding:24px}
+  .grid-bg{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(56,189,248,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+  .wrap{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+
+  header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:16px;flex-wrap:wrap}
+  .eyebrow{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;font-family:'DM Mono',monospace}
+  h1{font-size:18px;font-weight:500;color:#f1f5f9}
+  .sub{font-size:12.5px;color:var(--muted);margin-top:5px;max-width:600px;line-height:1.6}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px;position:relative;z-index:1}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+  .stat .n{font-size:22px;font-weight:600;font-family:'DM Mono',monospace;color:#f1f5f9}
+  .stat .l{font-size:11px;color:var(--muted);margin-top:2px}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative;z-index:1}
+  .card-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+
+  .tabs{display:flex;gap:6px;margin-bottom:14px;border-bottom:1px solid var(--border)}
+  .tab{background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab:hover{color:var(--text)}
+
+  .controls{display:flex;gap:8px;align-items:center;margin:14px 0 12px;flex-wrap:wrap}
+  .search{background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 12px;width:220px;outline:none}
+  .search:focus{border-color:var(--accent)}
+  .search::placeholder{color:var(--muted)}
+
+  .toggle-group{display:flex;background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;overflow:hidden}
+  .toggle-btn{background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11.5px;padding:7px 13px;cursor:pointer;white-space:nowrap;transition:all .15s}
+  .toggle-btn.active{background:rgba(56,189,248,.1);color:var(--accent)}
+
+  .count-note{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+
+  .table-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  thead th{text-align:left;padding:10px 12px;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;position:sticky;top:0;background:var(--surface);z-index:1;font-family:'DM Mono',monospace}
+  thead th:hover{color:var(--accent)}
+  thead th.sorted{color:var(--accent)}
+  thead th .arrow{font-size:9px;margin-left:3px;opacity:.7}
+  tbody tr{border-bottom:1px solid rgba(255,255,255,.06)}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(255,255,255,.02)}
+  tbody tr.top{background:rgba(56,189,248,.05)}
+  td{padding:8px 12px;color:var(--text);white-space:nowrap}
+  td.num{font-family:'DM Mono',monospace;text-align:right;color:var(--muted)}
+  td.name{font-weight:500;color:#f1f5f9}
+  td.regional{color:var(--muted);font-size:11.5px;font-family:'DM Mono',monospace}
+  .rank{font-family:'DM Mono',monospace;color:var(--muted);font-size:11px;width:26px;text-align:right}
+  .badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:18px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:#0a0f1e}
+  .score-cell{font-family:'DM Mono',monospace;text-align:right;font-weight:600;font-size:13px}
+  .body-scroll{max-height:600px;overflow-y:auto}
+
+  footer{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);line-height:1.6;max-width:760px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  footer .footer-text{flex:1;min-width:260px}
+  footer code{font-family:'DM Mono',monospace;background:rgba(56,189,248,.08);padding:1px 5px;border-radius:4px;color:var(--accent)}
+  .footer-badge{background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.15);color:var(--accent);padding:3px 10px;border-radius:4px;font-size:10px;font-weight:600;white-space:nowrap;font-family:'DM Mono',monospace}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">Melhoria Contínua · Corsan/Aegea</p>
+      <h1>GUT Automático — Solicitações por Motivo de Contato</h1>
+      <p class="sub">Gravidade, Urgência e Tendência recalculadas ao vivo a partir da base de Solicitações em 🔴 ALTA — quintis sobre a distribuição real de Cidades e Motivos, sem clusters escolhidos manualmente.</p>
+    </div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" data-tab="cidade">Por Cidade</button>
+      <button class="tab" data-tab="motivo">Por Motivo</button>
+      <button class="tab" data-tab="regional">Por Regional</button>
+    </div>
+
+    <div class="controls">
+      <input class="search" id="search" placeholder="Buscar cidade ou motivo…">
+      <div class="toggle-group" id="scoreToggle">
+        <button class="toggle-btn active" data-mode="ponderado">Score ponderado por volume</button>
+        <button class="toggle-btn" data-mode="gut">Score GUT puro (G×U×T)</button>
+      </div>
+      <span class="count-note" id="countNote"></span>
+    </div>
+
+    <div class="table-wrap">
+      <div class="body-scroll">
+        <table>
+          <thead id="thead"></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-text"><b>Como funciona:</b> agrupamos as linhas por Cidade (ou por Motivo), calculamos volume total, variação % média e % de séries em crescimento constante, e convertemos cada métrica num quintil (1–5) comparado a todas as outras cidades/motivos da base. <code>Score GUT = G × U × T</code>. <code>Score ponderado = Score GUT × Volume total</code> — evita que cidades pequenas com variação extrema mas pouco volume real dominem o ranking. Clique nos cabeçalhos para reordenar.</span>
+    <span class="footer-badge">AI Builder · Power Automate</span>
+  </footer>
+</div>
+
+<script id="gut-raw-data" type="application/json">
+[{"regional": "LESTE", "cidade": "GRAVATAI", "motivo": "Atualização Cadastral", "meses": [25.1, 21.5, 26.0, 19.9, 15.3, 17.3, 35.0], "varPct": 67.87}, {"regional": "LESTE", "cidade": "VIAMAO", "motivo": "Consultar Status da Solicitação", "meses": [22.8, 27.3, 41.4, 44.5, 35.1, 36.8, 72.0], "varPct": 107.79}, {"regional": "LESTE", "cidade": "VIAMAO", "motivo": "Atualização Cadastral", "meses": [23.5, 24.4, 28.5, 21.4, 15.8, 23.4, 37.0], "varPct": 62.04}, {"regional": "LESTE", "cidade": "VIAMAO", "motivo": "Religação", "meses": [9.2, 7.9, 17.7, 9.8, 5.3, 23.3, 51.0], "varPct": 318.03}, {"regional": "LESTE", "cidade": "CACHOEIRINHA", "motivo": "Consultar Status da Solicitação", "meses": [12.3, 17.2, 19.1, 24.9, 23.5, 21.1, 26.0], "varPct": 32.09}, {"regional": "NORTE", "cidade": "PASSO FUNDO", "motivo": "Religação", "meses": [16.4, 12.0, 18.9, 17.6, 22.5, 23.9, 31.0], "varPct": 67.12}, {"regional": "SUL", "cidade": "RIO GRANDE", "motivo": "Informar Vazamento", "meses": [13.6, 16.5, 19.0, 21.4, 24.9, 20.9, 26.0], "varPct": 34.14}, {"regional": "SUL", "cidade": "RIO GRANDE", "motivo": "Atualização Cadastral", "meses": [14.1, 13.1, 15.6, 12.4, 12.0, 14.8, 18.0], "varPct": 31.71}, {"regional": "LESTE", "cidade": "TRAMANDAI", "motivo": "Motivos Gerais e Improdutivos", "meses": [5.9, 3.6, 5.2, 2.8, 2.9, 2.5, 5.0], "varPct": 31.0}, {"regional": "LESTE", "cidade": "IMBE", "motivo": "Atualização Cadastral", "meses": [6.0, 4.9, 7.6, 7.0, 5.9, 7.5, 10.0], "varPct": 54.24}, {"regional": "LESTE", "cidade": "GUAIBA", "motivo": "Consultar Status da Solicitação", "meses": [7.3, 9.1, 11.6, 13.4, 12.4, 12.8, 14.0], "varPct": 26.13}, {"regional": "LESTE", "cidade": "CAPAO DA CANOA", "motivo": "Demonstrativo de Débitos", "meses": [64.6, 77.1, 76.7, 88.9, 82.9, 81.0, 134.0], "varPct": 70.63}, {"regional": "LESTE", "cidade": "CAPAO DA CANOA", "motivo": "Religação", "meses": [9.3, 12.1, 14.9, 13.2, 8.0, 6.5, 17.0], "varPct": 59.38}, {"regional": "OESTE", "cidade": "SANTO ANGELO", "motivo": "Consultar Status da Solicitação", "meses": [4.8, 7.9, 7.6, 5.5, 5.8, 3.7, 7.0], "varPct": 18.98}, {"regional": "CENTRO", "cidade": "CACHOEIRA DO SUL", "motivo": "Religação", "meses": [13.9, 16.7, 15.9, 11.2, 12.8, 7.8, 17.0], "varPct": 30.27}, {"regional": "CENTRO", "cidade": "VENANCIO AIRES", "motivo": "Demonstrativo de Débitos", "meses": [40.0, 89.5, 95.5, 74.8, 65.7, 54.1, 87.0], "varPct": 24.4}, {"regional": "LESTE", "cidade": "CIDREIRA", "motivo": "Outros Serviços Financeiros", "meses": [2.9, 3.0, 3.0, 2.5, 3.3, 3.2, 4.0], "varPct": 34.08}, {"regional": "CENTRO", "cidade": "PANAMBI", "motivo": "Demonstrativo de Débitos", "meses": [30.1, 33.5, 78.3, 66.5, 48.1, 36.0, 57.0], "varPct": 16.92}, {"regional": "CENTRO", "cidade": "PANAMBI", "motivo": "Religação", "meses": [5.7, 8.0, 3.4, 1.5, 4.3, 5.0, 15.0], "varPct": 222.58}, {"regional": "SUL", "cidade": "SAPIRANGA", "motivo": "Demonstrativo de Débitos", "meses": [48.8, 73.6, 64.6, 62.2, 61.0, 58.6, 88.0], "varPct": 43.17}, {"regional": "SUL", "cidade": "SAPIRANGA", "motivo": "Consultar Status da Solicitação", "meses": [4.3, 4.5, 4.1, 5.0, 4.1, 3.6, 6.0], "varPct": 40.62}, {"regional": "LESTE", "cidade": "XANGRI-LA", "motivo": "Demonstrativo de Débitos", "meses": [49.9, 47.3, 48.2, 49.4, 51.5, 53.2, 98.0], "varPct": 96.33}, {"regional": "LESTE", "cidade": "XANGRI-LA", "motivo": "Consultar Status da Solicitação", "meses": [3.6, 3.6, 5.1, 4.0, 4.9, 3.2, 5.0], "varPct": 22.95}, {"regional": "SUL", "cidade": "ESTANCIA VELHA", "motivo": "Demonstrativo de Débitos", "meses": [47.0, 60.6, 61.5, 61.3, 55.2, 53.3, 72.0], "varPct": 27.47}, {"regional": "SUL", "cidade": "ESTANCIA VELHA", "motivo": "Religação", "meses": [8.0, 8.2, 5.9, 3.7, 5.0, 4.0, 7.0], "varPct": 20.69}, {"regional": "SUL", "cidade": "MONTENEGRO", "motivo": "Religação", "meses": [9.0, 12.6, 8.6, 9.7, 6.7, 6.3, 14.0], "varPct": 58.79}, {"regional": "SUL", "cidade": "MONTENEGRO", "motivo": "Atualização Cadastral", "meses": [4.4, 4.0, 3.5, 3.2, 3.9, 4.1, 5.0], "varPct": 29.87}, {"regional": "CENTRO", "cidade": "CARAZINHO", "motivo": "Consultar Status da Solicitação", "meses": [3.9, 6.7, 4.7, 4.0, 4.5, 3.3, 7.0], "varPct": 54.98}, {"regional": "SUL", "cidade": "CAMPO BOM", "motivo": "Informar Vazamento", "meses": [9.9, 8.8, 8.0, 7.3, 8.5, 8.7, 10.0], "varPct": 17.19}, {"regional": "NORTE", "cidade": "VACARIA", "motivo": "Religação", "meses": [4.1, 5.5, 14.5, 7.4, 6.0, 4.0, 8.0], "varPct": 15.66}, {"regional": "LESTE", "cidade": "TORRES", "motivo": "Demonstrativo de Débitos", "meses": [40.0, 40.6, 40.7, 47.6, 47.7, 46.0, 64.0], "varPct": 46.23}, {"regional": "LESTE", "cidade": "TORRES", "motivo": "Atualização Cadastral", "meses": [5.3, 4.3, 3.2, 3.8, 2.9, 3.3, 6.0], "varPct": 57.89}, {"regional": "NORTE", "cidade": "CANELA", "motivo": "Religação", "meses": [3.9, 3.2, 6.7, 3.6, 3.9, 3.8, 9.0], "varPct": 115.14}, {"regional": "OESTE", "cidade": "ALEGRETE", "motivo": "Religação", "meses": [8.2, 8.7, 7.1, 3.7, 3.9, 7.0, 9.0], "varPct": 39.9}, {"regional": "NORTE", "cidade": "GRAMADO", "motivo": "Religação", "meses": [4.0, 3.9, 3.3, 4.1, 4.1, 3.4, 17.0], "varPct": 347.37}, {"regional": "LESTE", "cidade": "OSORIO", "motivo": "Demonstrativo de Débitos", "meses": [31.7, 36.0, 36.1, 40.5, 40.5, 42.4, 52.0], "varPct": 37.32}, {"regional": "SUL", "cidade": "TAQUARA", "motivo": "Demonstrativo de Débitos", "meses": [33.7, 35.3, 38.1, 42.1, 38.6, 35.4, 55.0], "varPct": 47.85}, {"regional": "SUL", "cidade": "TAQUARA", "motivo": "Religação", "meses": [6.7, 9.4, 7.1, 4.3, 6.1, 5.5, 8.0], "varPct": 22.76}, {"regional": "SUL", "cidade": "PAROBE", "motivo": "Religação", "meses": [5.7, 9.6, 7.0, 7.8, 9.2, 7.3, 9.0], "varPct": 15.88}, {"regional": "NORTE", "cidade": "FARROUPILHA", "motivo": "Religação", "meses": [3.9, 2.8, 3.4, 4.4, 2.5, 3.1, 6.0], "varPct": 79.1}, {"regional": "SUL", "cidade": "NOVA SANTA RITA", "motivo": "Demonstrativo de Débitos", "meses": [28.2, 28.7, 29.2, 33.6, 32.3, 30.7, 49.0], "varPct": 60.92}, {"regional": "SUL", "cidade": "SANTA VITORIA DO PALMAR", "motivo": "Falta d'água", "meses": [5.7, 6.0, 2.7, 2.6, 2.1, 4.8, 6.0], "varPct": 50.63}, {"regional": "SUL", "cidade": "SANTA VITORIA DO PALMAR", "motivo": "Informar Vazamento", "meses": [4.0, 3.4, 2.6, 2.5, 3.5, 2.5, 5.0], "varPct": 62.16}, {"regional": "CENTRO", "cidade": "LAJEADO", "motivo": "Demonstrativo de Débitos", "meses": [36.2, 73.1, 83.0, 74.8, 60.4, 53.4, 90.0], "varPct": 41.77}, {"regional": "CENTRO", "cidade": "LAJEADO", "motivo": "Informar Vazamento", "meses": [11.6, 13.2, 10.4, 10.1, 9.3, 7.1, 17.0], "varPct": 65.32}, {"regional": "CENTRO", "cidade": "LAJEADO", "motivo": "Religação", "meses": [6.3, 8.0, 10.0, 7.1, 8.1, 7.7, 26.0], "varPct": 230.51}, {"regional": "CENTRO", "cidade": "TAQUARI", "motivo": "Religação", "meses": [3.2, 4.0, 3.3, 2.2, 2.4, 4.6, 7.0], "varPct": 113.2}, {"regional": "CENTRO", "cidade": "TUPANCIRETA", "motivo": "Demonstrativo de Débitos", "meses": [8.9, 18.5, 41.3, 31.6, 20.6, 17.7, 30.0], "varPct": 29.87}, {"regional": "SUL", "cidade": "CAMAQUA", "motivo": "2ª Via de Fatura", "meses": [61.7, 78.6, 76.6, 75.3, 74.6, 66.0, 90.0], "varPct": 24.77}, {"regional": "SUL", "cidade": "CAMAQUA", "motivo": "Demonstrativo de Débitos", "meses": [30.1, 34.0, 31.6, 35.5, 36.2, 36.3, 75.0], "varPct": 120.91}, {"regional": "SUL", "cidade": "CHARQUEADAS", "motivo": "Demonstrativo de Débitos", "meses": [30.0, 32.3, 31.1, 32.7, 36.5, 36.0, 54.0], "varPct": 63.14}, {"regional": "SUL", "cidade": "CHARQUEADAS", "motivo": "Atualização Cadastral", "meses": [2.5, 2.5, 2.9, 3.3, 2.5, 3.1, 6.0], "varPct": 114.29}, {"regional": "SUL", "cidade": "IGREJINHA", "motivo": "Religação", "meses": [3.8, 6.7, 4.5, 4.7, 5.7, 3.7, 6.0], "varPct": 23.71}, {"regional": "SUL", "cidade": "IGREJINHA", "motivo": "Consultar Status da Solicitação", "meses": [1.7, 1.8, 1.9, 2.9, 4.5, 2.3, 6.0], "varPct": 138.41}, {"regional": "OESTE", "cidade": "SANTIAGO", "motivo": "Falta d'água", "meses": [3.9, 4.6, 3.9, 2.5, 3.9, 3.8, 76.0], "varPct": 1917.7}, {"regional": "OESTE", "cidade": "SANTIAGO", "motivo": "Religação", "meses": [2.9, 3.2, 3.7, 4.5, 3.3, 2.6, 7.0], "varPct": 107.92}, {"regional": "CENTRO", "cidade": "PALMEIRA DAS MISSOES", "motivo": "Demonstrativo de Débitos", "meses": [15.4, 28.6, 31.3, 30.5, 24.3, 24.6, 37.0], "varPct": 43.5}, {"regional": "OESTE", "cidade": "ITAQUI", "motivo": "Fatura Digital", "meses": [1.1, 1.0, 3.0, 1.8, 1.3, 1.5, 2.0], "varPct": 23.71}, {"regional": "LESTE", "cidade": "SANTO ANTONIO DA PATRULHA", "motivo": "2ª Via de Fatura", "meses": [57.3, 61.5, 61.5, 67.3, 61.6, 50.7, 82.0], "varPct": 36.7}, {"regional": "LESTE", "cidade": "SANTO ANTONIO DA PATRULHA", "motivo": "Demonstrativo de Débitos", "meses": [25.8, 22.8, 25.4, 26.8, 30.2, 27.0, 43.0], "varPct": 63.29}, {"regional": "OESTE", "cidade": "ROSARIO DO SUL", "motivo": "Demonstrativo de Débitos", "meses": [17.7, 19.6, 20.8, 22.4, 22.0, 20.8, 48.0], "varPct": 133.58}, {"regional": "NORTE", "cidade": "FLORES DA CUNHA", "motivo": "Demonstrativo de Débitos", "meses": [21.6, 24.5, 24.3, 22.6, 20.9, 20.9, 42.0], "varPct": 86.94}, {"regional": "NORTE", "cidade": "FLORES DA CUNHA", "motivo": "Religação", "meses": [1.6, 3.4, 2.0, 2.5, 3.2, 2.9, 3.0], "varPct": 15.38}, {"regional": "CENTRO", "cidade": "CACAPAVA DO SUL", "motivo": "Informar Vazamento", "meses": [4.0, 3.9, 3.4, 2.5, 2.9, 3.2, 5.0], "varPct": 50.75}, {"regional": "CENTRO", "cidade": "CACAPAVA DO SUL", "motivo": "Religação", "meses": [3.4, 3.3, 2.9, 2.8, 2.5, 2.5, 9.0], "varPct": 210.34}, {"regional": "NORTE", "cidade": "SAO FRANCISCO DE PAULA", "motivo": "Demonstrativo de Débitos", "meses": [18.7, 20.8, 18.7, 20.2, 21.1, 21.4, 41.0], "varPct": 103.47}, {"regional": "NORTE", "cidade": "SAO FRANCISCO DE PAULA", "motivo": "Religação", "meses": [4.4, 5.7, 3.4, 3.4, 3.3, 2.9, 11.0], "varPct": 185.71}, {"regional": "OESTE", "cidade": "SAO LUIZ GONZAGA", "motivo": "Demonstrativo de Débitos", "meses": [18.4, 16.9, 20.7, 20.3, 24.5, 20.5, 39.0], "varPct": 92.91}, {"regional": "SUL", "cidade": "PORTAO", "motivo": "Informar Vazamento", "meses": [2.8, 2.6, 2.3, 2.2, 2.4, 2.0, 3.0], "varPct": 25.87}, {"regional": "SUL", "cidade": "SAO JERONIMO", "motivo": "Demonstrativo de Débitos", "meses": [15.0, 17.7, 16.3, 16.6, 15.3, 16.2, 19.5], "varPct": 20.49}, {"regional": "SUL", "cidade": "SAO JERONIMO", "motivo": "Informar Vazamento", "meses": [2.4, 2.6, 2.8, 2.5, 2.6, 2.1, 4.0], "varPct": 60.0}, {"regional": "NORTE", "cidade": "FREDERICO WESTPHALEN", "motivo": "2ª Via de Fatura", "meses": [39.0, 46.4, 46.1, 46.9, 45.5, 40.6, 51.0], "varPct": 15.69}, {"regional": "NORTE", "cidade": "FREDERICO WESTPHALEN", "motivo": "Demonstrativo de Débitos", "meses": [25.2, 21.3, 22.2, 20.9, 22.3, 23.1, 52.0], "varPct": 131.11}, {"regional": "NORTE", "cidade": "FREDERICO WESTPHALEN", "motivo": "Calendário de Leitura", "meses": [1.4, 1.3, 1.8, 1.1, 1.1, 1.3, 3.0], "varPct": 125.0}, {"regional": "SUL", "cidade": "SAO LOURENCO DO SUL", "motivo": "Demonstrativo de Débitos", "meses": [18.0, 13.8, 14.2, 17.8, 17.1, 18.3, 38.0], "varPct": 129.84}, {"regional": "NORTE", "cidade": "LAGOA VERMELHA", "motivo": "Informar Vazamento", "meses": [3.3, 3.0, 3.6, 3.7, 4.5, 2.7, 4.0], "varPct": 15.38}, {"regional": "NORTE", "cidade": "GETULIO VARGAS", "motivo": "Demonstrativo de Débitos", "meses": [11.9, 19.2, 20.1, 20.5, 22.0, 23.3, 23.0], "varPct": 17.95}, {"regional": "CENTRO", "cidade": "NAO-ME-TOQUE", "motivo": "Demonstrativo de Débitos", "meses": [9.0, 8.2, 25.8, 21.5, 17.9, 12.9, 27.0], "varPct": 69.99}, {"regional": "CENTRO", "cidade": "NAO-ME-TOQUE", "motivo": "Cobrança Indevida", "meses": [1.0, 1.0, 1.9, 1.3, 1.0, 1.0, 3.0], "varPct": 150.0}, {"regional": "SUL", "cidade": "TRES COROAS", "motivo": "Religação", "meses": [6.0, 5.3, 5.5, 3.7, 2.8, 2.4, 6.0], "varPct": 40.08}, {"regional": "NORTE", "cidade": "GARIBALDI", "motivo": "2ª Via de Fatura", "meses": [34.5, 40.4, 38.7, 47.0, 40.4, 32.5, 52.0], "varPct": 33.62}, {"regional": "NORTE", "cidade": "GARIBALDI", "motivo": "Demonstrativo de Débitos", "meses": [13.8, 14.7, 14.3, 17.6, 20.0, 16.3, 24.0], "varPct": 48.91}, {"regional": "NORTE", "cidade": "GARIBALDI", "motivo": "Informar Vazamento", "meses": [4.0, 4.7, 3.8, 2.9, 2.7, 2.6, 4.0], "varPct": 15.94}, {"regional": "NORTE", "cidade": "GARIBALDI", "motivo": "Religação", "meses": [2.5, 2.9, 1.8, 1.9, 2.0, 1.6, 4.0], "varPct": 88.98}, {"regional": "CENTRO", "cidade": "SAO SEPE", "motivo": "Demonstrativo de Débitos", "meses": [10.7, 19.8, 16.2, 15.6, 13.4, 13.6, 18.0], "varPct": 20.94}, {"regional": "CENTRO", "cidade": "SAO SEPE", "motivo": "Religação", "meses": [2.2, 2.6, 2.4, 1.6, 1.9, 1.9, 4.0], "varPct": 90.48}, {"regional": "CENTRO", "cidade": "RIO PARDO", "motivo": "Demonstrativo de Débitos", "meses": [19.9, 35.2, 37.1, 35.3, 28.2, 26.3, 41.0], "varPct": 35.16}, {"regional": "NORTE", "cidade": "NOVA PRATA", "motivo": "2ª Via de Fatura", "meses": [43.1, 46.5, 36.2, 45.4, 26.9, 22.4, 43.0], "varPct": 17.01}, {"regional": "NORTE", "cidade": "NOVA PRATA", "motivo": "Demonstrativo de Débitos", "meses": [13.1, 16.6, 18.7, 13.8, 11.6, 12.6, 17.0], "varPct": 18.06}, {"regional": "SUL", "cidade": "ARAMBARE", "motivo": "2ª Via de Fatura", "meses": [24.3, 32.5, 33.1, 32.2, 30.4, 26.1, 51.0], "varPct": 71.33}, {"regional": "SUL", "cidade": "ARAMBARE", "motivo": "Demonstrativo de Débitos", "meses": [9.7, 9.7, 8.5, 11.2, 10.2, 9.8, 20.0], "varPct": 103.05}, {"regional": "NORTE", "cidade": "MARAU", "motivo": "Demonstrativo de Débitos", "meses": [23.6, 24.6, 30.9, 27.1, 24.5, 24.6, 52.0], "varPct": 100.9}, {"regional": "NORTE", "cidade": "MARAU", "motivo": "Atualização Cadastral", "meses": [2.3, 2.3, 2.0, 1.7, 1.6, 2.1, 7.0], "varPct": 250.0}, {"regional": "NORTE", "cidade": "SAO MARCOS", "motivo": "Demonstrativo de Débitos", "meses": [13.3, 12.1, 11.9, 10.3, 10.2, 9.4, 19.0], "varPct": 69.64}, {"regional": "NORTE", "cidade": "SAO MARCOS", "motivo": "Consumo Final", "meses": [1.6, 1.3, 2.0, 1.3, 1.0, 1.5, 2.0], "varPct": 37.93}, {"regional": "CENTRO", "cidade": "SAO PEDRO DO SUL", "motivo": "Demonstrativo de Débitos", "meses": [6.5, 8.3, 11.8, 16.4, 10.6, 8.4, 15.0], "varPct": 45.16}, {"regional": "NORTE", "cidade": "NOVA PETROPOLIS", "motivo": "2ª Via de Fatura", "meses": [26.2, 36.2, 30.3, 31.3, 30.9, 25.0, 35.0], "varPct": 16.73}, {"regional": "NORTE", "cidade": "NOVA PETROPOLIS", "motivo": "Demonstrativo de Débitos", "meses": [8.9, 10.0, 11.0, 11.5, 12.3, 12.1, 22.0], "varPct": 100.61}, {"regional": "NORTE", "cidade": "NOVA PETROPOLIS", "motivo": "Atualização Cadastral", "meses": [1.8, 1.3, 1.7, 1.3, 1.6, 1.3, 3.0], "varPct": 100.0}, {"regional": "LESTE", "cidade": "PALMARES DO SUL", "motivo": "Demonstrativo de Débitos", "meses": [9.2, 9.6, 9.3, 8.8, 7.9, 9.0, 14.0], "varPct": 56.13}, {"regional": "NORTE", "cidade": "SARANDI", "motivo": "Demonstrativo de Débitos", "meses": [12.7, 11.1, 10.1, 10.2, 10.3, 9.4, 13.0], "varPct": 22.26}, {"regional": "CENTRO", "cidade": "ENCRUZILHADA DO SUL", "motivo": "Demonstrativo de Débitos", "meses": [7.2, 12.5, 10.8, 13.5, 11.4, 12.0, 22.0], "varPct": 95.85}, {"regional": "OESTE", "cidade": "TRES DE MAIO", "motivo": "Informar Vazamento", "meses": [1.9, 2.7, 2.9, 2.2, 2.2, 2.2, 3.0], "varPct": 27.66}, {"regional": "NORTE", "cidade": "TAPEJARA", "motivo": "Demonstrativo de Débitos", "meses": [12.8, 11.1, 12.8, 10.6, 10.8, 13.2, 18.0], "varPct": 51.47}, {"regional": "OESTE", "cidade": "HORIZONTINA", "motivo": "Demonstrativo de Débitos", "meses": [7.3, 8.2, 8.0, 9.7, 8.8, 9.9, 11.0], "varPct": 27.17}, {"regional": "SUL", "cidade": "CANGUÇU", "motivo": "Demonstrativo de Débitos", "meses": [11.2, 9.5, 8.7, 11.7, 12.4, 13.9, 27.0], "varPct": 140.36}, {"regional": "SUL", "cidade": "JAGUARAO", "motivo": "Demonstrativo de Débitos", "meses": [17.1, 17.7, 20.8, 23.4, 22.4, 23.6, 40.0], "varPct": 92.0}, {"regional": "SUL", "cidade": "JAGUARAO", "motivo": "Religação", "meses": [5.0, 6.2, 4.9, 5.6, 4.1, 3.8, 6.0], "varPct": 21.62}, {"regional": "SUL", "cidade": "JAGUARAO", "motivo": "Atualização Cadastral", "meses": [1.3, 1.6, 2.4, 2.1, 1.6, 2.1, 3.0], "varPct": 62.16}, {"regional": "SUL", "cidade": "JAGUARAO", "motivo": "Consumo Final", "meses": [1.9, 1.4, 2.1, 1.6, 1.5, 1.5, 2.0], "varPct": 20.0}, {"regional": "NORTE", "cidade": "CARLOS BARBOSA", "motivo": "2ª Via de Fatura", "meses": [21.6, 22.1, 21.1, 19.8, 29.3, 26.8, 28.0], "varPct": 19.4}, {"regional": "OESTE", "cidade": "DOM PEDRITO", "motivo": "Demonstrativo de Débitos", "meses": [16.4, 14.8, 15.5, 18.2, 17.2, 20.0, 34.0], "varPct": 99.8}, {"regional": "OESTE", "cidade": "DOM PEDRITO", "motivo": "Informar Vazamento", "meses": [3.0, 2.9, 3.0, 2.8, 3.6, 3.5, 4.0], "varPct": 27.66}, {"regional": "SUL", "cidade": "BARRA DO RIBEIRO", "motivo": "2ª Via de Fatura", "meses": [15.1, 15.6, 18.1, 16.7, 17.1, 16.0, 19.0], "varPct": 15.62}, {"regional": "SUL", "cidade": "BARRA DO RIBEIRO", "motivo": "Demonstrativo de Débitos", "meses": [6.8, 7.4, 7.1, 7.3, 8.7, 7.2, 9.0], "varPct": 21.35}, {"regional": "SUL", "cidade": "BARRA DO RIBEIRO", "motivo": "Informar Vazamento", "meses": [2.1, 1.7, 2.3, 1.5, 1.8, 1.6, 3.0], "varPct": 63.64}, {"regional": "CENTRO", "cidade": "ESPUMOSO", "motivo": "2ª Via de Fatura", "meses": [10.5, 21.5, 16.2, 16.5, 15.3, 15.3, 20.0], "varPct": 25.92}, {"regional": "CENTRO", "cidade": "ESPUMOSO", "motivo": "Demonstrativo de Débitos", "meses": [4.4, 10.5, 6.9, 7.1, 5.9, 8.2, 10.0], "varPct": 39.53}, {"regional": "CENTRO", "cidade": "JULIO DE CASTILHOS", "motivo": "Consultar Status da Solicitação", "meses": [1.5, 1.0, 1.6, 1.2, 1.3, 1.8, 2.0], "varPct": 42.86}, {"regional": "OESTE", "cidade": "QUARAI", "motivo": "Demonstrativo de Débitos", "meses": [14.1, 15.3, 14.9, 17.6, 18.5, 16.7, 25.0], "varPct": 54.48}]
+</script>
+
+<script>
+const RAW = JSON.parse(document.getElementById('gut-raw-data').textContent);
+
+// ---------- 1) Tendência por linha ----------
+function tendencia(meses){
+  const pares = meses.map((v,i)=>[i,v]).filter(p => p[1] !== null && p[1] !== undefined);
+  if(pares.length < 3) return 'insuficiente';
+  const vs = pares.map(p=>p[1]);
+  const crescente = vs.slice(0,-1).every((v,i)=> vs[i+1] >= v*0.95);
+  const prevAvg = vs.slice(0,-1).reduce((a,b)=>a+b,0) / Math.max(vs.length-1,1);
+  const last = vs[vs.length-1];
+  const isSpike = last > prevAvg*1.4 && !crescente;
+  if(crescente && last > vs[0]*1.1) return 'crescimento_constante';
+  if(isSpike) return 'pico_isolado';
+  return 'variavel';
+}
+
+RAW.forEach(r => { r.tendencia = tendencia(r.meses); r.mAtual = r.meses[r.meses.length-1]; });
+
+// ---------- 2) Agregação por chave (cidade, motivo ou regional) ----------
+function agregarPor(chave){
+  const grupos = {};
+  RAW.forEach(r=>{
+    const k = r[chave];
+    if(!grupos[k]) grupos[k] = {itens:[], regionais:new Set(), cidades:new Set(), motivos:new Set()};
+    grupos[k].itens.push(r);
+    grupos[k].regionais.add(r.regional);
+    grupos[k].cidades.add(r.cidade);
+    grupos[k].motivos.add(r.motivo);
+  });
+
+  const out = Object.entries(grupos).map(([nome, g])=>{
+    const volTotal = g.itens.reduce((s,r)=> s + (r.mAtual ?? 0), 0);
+    const varMedia = g.itens.reduce((s,r)=> s + (r.varPct ?? 0), 0) / g.itens.length;
+    const pctCresc = g.itens.filter(r=>r.tendencia==='crescimento_constante').length / g.itens.length * 100;
+    const regionalPrincipal = [...g.regionais][0] || 'N/D';
+    return {
+      nome, regional: regionalPrincipal,
+      nCidades: g.cidades.size,
+      nMotivos: g.motivos.size,
+      nContra: chave==='motivo' ? g.cidades.size : g.motivos.size,
+      volTotal, varMedia, pctCresc,
+      itens: g.itens
+    };
+  });
+  return out;
+}
+
+// ---------- 3) Quintil por percentil (rank médio, igual à versão Python) ----------
+function quintis(lista, campo){
+  // Rank percentual método "average" (igual ao pandas .rank(pct=True)):
+  // trata empates pela posição média do grupo.
+  const valores = lista.map(x=>x[campo]).slice().sort((a,b)=>a-b);
+  const n = valores.length;
+  function percentil(x){
+    let menores = 0, iguais = 0;
+    valores.forEach(v=>{ if(v<x) menores++; else if(v===x) iguais++; });
+    const rankMedio = menores + (iguais+1)/2;
+    return rankMedio / n;
+  }
+  lista.forEach(item=>{
+    const p = percentil(item[campo]);
+    item['q_'+campo] = Math.min(5, Math.max(1, Math.ceil(p*5)));
+  });
+}
+
+const porCidade = agregarPor('cidade');
+const porMotivo = agregarPor('motivo');
+const porRegional = agregarPor('regional');
+
+[porCidade, porMotivo, porRegional].forEach(lista=>{
+  quintis(lista, 'volTotal');
+  quintis(lista, 'varMedia');
+  quintis(lista, 'pctCresc');
+  lista.forEach(item=>{
+    item.G = item.q_volTotal;
+    item.U = item.q_varMedia;
+    item.T = item.q_pctCresc;
+    item.scoreGUT = item.G * item.U * item.T;
+    item.scorePonderado = item.scoreGUT * item.volTotal;
+  });
+});
+
+// ---------- 4) Render ----------
+const cores = {5:'#f87171',4:'#fb923c',3:'#fbbf24',2:'#a3d977',1:'#34d399'};
+function badge(n){ return `<span class="badge" style="background:${cores[n]}">${n}</span>`; }
+
+let tabAtual = 'cidade';
+let modoScore = 'ponderado';
+let ordenarPor = 'scorePonderado';
+let ordemAsc = false;
+let busca = '';
+
+function statsGerais(){
+  const nCidades = new Set(RAW.map(r=>r.cidade)).size;
+  const nMotivos = new Set(RAW.map(r=>r.motivo)).size;
+  const nRegionais = new Set(RAW.map(r=>r.regional)).size;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="n">${RAW.length}</div><div class="l">Linhas ALTA</div></div>
+    <div class="stat"><div class="n">${nCidades}</div><div class="l">Cidades</div></div>
+    <div class="stat"><div class="n">${nMotivos}</div><div class="l">Motivos</div></div>
+    <div class="stat"><div class="n">${nRegionais}</div><div class="l">Regionais</div></div>
+  `;
+}
+statsGerais();
+
+function colunas(){
+  if(tabAtual === 'cidade'){
+    return [
+      {key:'nome', label:'Cidade'},
+      {key:'regional', label:'Regional'},
+      {key:'nContra', label:'Nº Motivos'},
+      {key:'volTotal', label:'Volume'},
+      {key:'varMedia', label:'Var. média %'},
+      {key:'pctCresc', label:'% Cresc. const.'},
+      {key:'G', label:'G'},{key:'U', label:'U'},{key:'T', label:'T'},
+      {key:'scoreGUT', label:'Score GUT'},
+      {key:'scorePonderado', label:'Score ponderado'},
+    ];
+  }
+  if(tabAtual === 'regional'){
+    return [
+      {key:'nome', label:'Regional'},
+      {key:'nCidades', label:'Nº Cidades'},
+      {key:'nMotivos', label:'Nº Motivos'},
+      {key:'volTotal', label:'Volume'},
+      {key:'varMedia', label:'Var. média %'},
+      {key:'pctCresc', label:'% Cresc. const.'},
+      {key:'G', label:'G'},{key:'U', label:'U'},{key:'T', label:'T'},
+      {key:'scoreGUT', label:'Score GUT'},
+      {key:'scorePonderado', label:'Score ponderado'},
+    ];
+  }
+  return [
+    {key:'nome', label:'Motivo'},
+    {key:'nContra', label:'Nº Cidades'},
+    {key:'volTotal', label:'Volume'},
+    {key:'varMedia', label:'Var. média %'},
+    {key:'pctCresc', label:'% Cresc. const.'},
+    {key:'G', label:'G'},{key:'U', label:'U'},{key:'T', label:'T'},
+    {key:'scoreGUT', label:'Score GUT'},
+    {key:'scorePonderado', label:'Score ponderado'},
+  ];
+}
+
+function renderHead(){
+  const cols = colunas();
+  const thead = document.getElementById('thead');
+  thead.innerHTML = '<tr>' + '<th></th>' + cols.map(c=>{
+    const sorted = ordenarPor===c.key;
+    const arrow = sorted ? (ordemAsc ? '▲' : '▼') : '';
+    return `<th class="${sorted?'sorted':''}" data-key="${c.key}">${c.label}<span class="arrow">${arrow}</span></th>`;
+  }).join('') + '</tr>';
+  thead.querySelectorAll('th[data-key]').forEach(th=>{
+    th.addEventListener('click', ()=>{
+      const k = th.dataset.key;
+      if(ordenarPor===k) ordemAsc = !ordemAsc; else { ordenarPor = k; ordemAsc = false; }
+      render();
+    });
+  });
+}
+
+function listaAtiva(){
+  if(tabAtual==='cidade') return porCidade;
+  if(tabAtual==='motivo') return porMotivo;
+  return porRegional;
+}
+
+function fmt(n, casas=1){
+  if(n===undefined || n===null || isNaN(n)) return '—';
+  return n.toLocaleString('pt-BR', {minimumFractionDigits:casas, maximumFractionDigits:casas});
+}
+
+function render(){
+  renderHead();
+  let lista = listaAtiva().slice();
+
+  if(busca.trim()){
+    const b = busca.trim().toLowerCase();
+    lista = lista.filter(x => x.nome.toLowerCase().includes(b) || (x.regional||'').toLowerCase().includes(b));
+  }
+
+  lista.sort((a,b)=>{
+    let va = a[ordenarPor], vb = b[ordenarPor];
+    if(typeof va === 'string') return ordemAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+    return ordemAsc ? va-vb : vb-va;
+  });
+
+  document.getElementById('countNote').textContent = `${lista.length} de ${listaAtiva().length}`;
+
+  const chaveScoreDestaque = modoScore==='ponderado' ? 'scorePonderado' : 'scoreGUT';
+  const top10 = lista.slice().sort((a,b)=>b[chaveScoreDestaque]-a[chaveScoreDestaque]).slice(0,10).map(x=>x.nome);
+
+  const cols = colunas();
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = lista.map((item, i)=>{
+    const isTop = top10.includes(item.nome);
+    const cells = cols.map(c=>{
+      if(c.key==='nome') return `<td class="name">${item.nome}</td>`;
+      if(c.key==='regional') return `<td class="regional">${item.regional}</td>`;
+      if(['G','U','T'].includes(c.key)) return `<td class="num">${badge(item[c.key])}</td>`;
+      if(c.key==='nContra') return `<td class="num">${item[c.key]}</td>`;
+      if(c.key==='nCidades') return `<td class="num">${item.nCidades}</td>`;
+      if(c.key==='nMotivos') return `<td class="num">${item.nMotivos}</td>`;
+      if(c.key==='volTotal') return `<td class="num">${fmt(item.volTotal)}</td>`;
+      if(c.key==='varMedia') return `<td class="num">${fmt(item.varMedia)}%</td>`;
+      if(c.key==='pctCresc') return `<td class="num">${fmt(item.pctCresc,0)}%</td>`;
+      if(c.key==='scoreGUT') return `<td class="score-cell" style="color:${modoScore==='gut'?'var(--accent)':'var(--text-dim)'}">${fmt(item.scoreGUT,0)}</td>`;
+      if(c.key==='scorePonderado') return `<td class="score-cell" style="color:${modoScore==='ponderado'?'var(--accent)':'var(--text-dim)'}">${fmt(item.scorePonderado,0)}</td>`;
+      return `<td>${item[c.key]}</td>`;
+    }).join('');
+    return `<tr class="${isTop?'top':''}"><td class="rank">${i+1}</td>${cells}</tr>`;
+  }).join('');
+}
+
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    tabAtual = btn.dataset.tab;
+    ordenarPor = 'scorePonderado';
+    ordemAsc = false;
+    render();
+  });
+});
+
+document.querySelectorAll('#scoreToggle .toggle-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#scoreToggle .toggle-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    modoScore = btn.dataset.mode;
+    ordenarPor = modoScore==='ponderado' ? 'scorePonderado' : 'scoreGUT';
+    ordemAsc = false;
+    render();
+  });
+});
+
+document.getElementById('search').addEventListener('input', (e)=>{
+  busca = e.target.value;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
