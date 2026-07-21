@@ -27,6 +27,12 @@
   .card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
   .card-full{grid-column:1/-1}
   .card-title{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .card-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+  .card-title-row .card-title{margin-bottom:0}
+  .export-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid #16a34a;border-radius:7px;background:#16a34a;color:#fff;font:600 11px 'DM Sans',sans-serif;cursor:pointer;transition:all .15s;box-shadow:0 1px 2px rgba(22,163,74,.16)}
+  .export-btn:hover{background:#15803d;border-color:#15803d;transform:translateY(-1px)}
+  .export-btn:active{transform:translateY(0)}
+  .export-btn svg{width:15px;height:15px;fill:currentColor}
 
 
   /* Subcards narração */
@@ -223,6 +229,7 @@
 <div class="container">
   <div id="app"><div class="empty"><h2>Carregando dados...</h2><p style="font-size:13px;margin-top:6px">Buscando análise mais recente...</p></div></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-solicitacoes.json';
 const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#10b981','#8b5cf6','#dc2626'];
@@ -576,13 +583,80 @@ document.addEventListener('click', e => {
   if (!e.target.closest('.assunto-filter')) fecharDropdown('assuntoDropdown');
 });
 
-function renderAnom() {
-  const visiveis = anomalias_global
+function obterAnomaliasFiltradas() {
+  return anomalias_global
     .filter(a => filtros[a.tipo]
       && (diretoriaFiltro === 'todas' || a.diretoria === diretoriaFiltro)
       && (cidadeFiltro === 'todas' || a.cidade === cidadeFiltro)
       && (assuntoFiltro === 'todos' || a.motivo === assuntoFiltro))
     .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+}
+
+function exportarExcel() {
+  const registros = obterAnomaliasFiltradas();
+  if (!registros.length) {
+    alert('Não há registros para exportar com os filtros selecionados.');
+    return;
+  }
+  if (typeof XLSX === 'undefined') {
+    alert('Não foi possível carregar o recurso de exportação para Excel.');
+    return;
+  }
+
+  const linhas = registros.map(a => ({
+    'Diretoria': a.diretoria || '',
+    'Cidade': a.cidade,
+    'Solicitação': a.motivo,
+    'Jan': a.vals[0],
+    'Fev': a.vals[1],
+    'Mar': a.vals[2],
+    'Abr': a.vals[3],
+    'Mai': a.vals[4],
+    'Jun': a.vals[5],
+    'Mês Atual': a.vals[6],
+    'Média Histórica': a.hist,
+    'Variação %': a.delta,
+    'Status': a.tipo === 'high' ? 'Alta' : 'Queda'
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(linhas);
+  ws['!cols'] = [
+    {wch:14},{wch:22},{wch:42},
+    {wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:14},{wch:16},{wch:13},{wch:10}
+  ];
+
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let r = 1; r <= range.e.r; r++) {
+    for (let c = 3; c <= 10; c++) {
+      const cell = ws[XLSX.utils.encode_cell({r, c})];
+      if (cell) cell.z = '#,##0.00';
+    }
+    const varCell = ws[XLSX.utils.encode_cell({r, c:11})];
+    if (varCell) varCell.z = '0.00%';
+  }
+
+  const filtrosWs = XLSX.utils.aoa_to_sheet([
+    ['Filtro', 'Valor'],
+    ['Status', filtros.high && filtros.low ? 'Todos' : filtros.high ? 'Altas' : filtros.low ? 'Quedas' : 'Nenhum'],
+    ['Diretoria', diretoriaFiltro === 'todas' ? 'Todas' : diretoriaFiltro],
+    ['Cidade', cidadeFiltro === 'todas' ? 'Todas' : cidadeFiltro],
+    ['Solicitação', assuntoFiltro === 'todos' ? 'Todas' : assuntoFiltro],
+    ['Registros exportados', registros.length],
+    ['Data da extração', new Date().toLocaleString('pt-BR')]
+  ]);
+  filtrosWs['!cols'] = [{wch:22},{wch:45}];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Solicitações');
+  XLSX.utils.book_append_sheet(wb, filtrosWs, 'Filtros');
+
+  const hoje = new Date();
+  const dataArq = hoje.getFullYear() + '-' + String(hoje.getMonth()+1).padStart(2,'0') + '-' + String(hoje.getDate()).padStart(2,'0');
+  XLSX.writeFile(wb, 'solicitacoes_filtradas_' + dataArq + '.xlsx');
+}
+
+function renderAnom() {
+  const visiveis = obterAnomaliasFiltradas();
 
   const total = visiveis.length;
   const inicio = (paginaAnom - 1) * ANOM_POR_PAG;
@@ -783,7 +857,13 @@ function render(data) {
     <div class="two">
 
       <div class="card card-full">
-        <div class="card-title">Filtros</div>
+        <div class="card-title-row">
+          <div class="card-title">Filtros</div>
+          <button class="export-btn" type="button" onclick="exportarExcel()" title="Exportar todos os registros filtrados para Excel">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm0 2.5L17.5 8H14zM8.2 11l1.55 2.45L11.3 11h1.9l-2.45 3.5L13.3 18h-1.95l-1.65-2.55L8.05 18H6.1l2.55-3.55L6.3 11z"/></svg>
+            Exportar Excel
+          </button>
+        </div>
         <div class="filter-section">
           <div class="filter-row">
             <span class="filter-label">Status</span>
