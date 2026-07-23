@@ -219,7 +219,7 @@ function parseServicos(txt) {
                 if (!dir || dir === 'Diretoria') continue;
                 const prazoRaw = cols[4].trim();
                 const { cod, desc } = parseCodDesc(cols[3].trim());
-                data.os.push({ diretoria: dir, cidade: cols[1].trim(), grupo: cols[2].trim(), cod, desc, qtd: 1, prazoRaw, prazoKey: getPrazoKey(prazoRaw) });
+                data.os.push({ diretoria: dir, cidade: cols[1].trim(), grupo: cols[2].trim(), tipo: [cod, desc].filter(Boolean).join(' - '), cod, desc, qtd: 1, prazoRaw, prazoKey: getPrazoKey(prazoRaw) });
               }
             }
           }
@@ -238,6 +238,7 @@ function parseServicos(txt) {
           data.resumo.push({
             diretoria: (obj['Regional'] || obj['Diretoria'] || '').trim(),
             grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
+            tipo: (obj['Tipo de OS'] || obj['Tipo OS'] || obj['TIPO DE OS'] || obj['TIPO OS'] || obj['Tipo'] || '').trim(),
             qtd, prazoRaw, prazoKey
           });
         } else {
@@ -247,6 +248,7 @@ function parseServicos(txt) {
             diretoria: (obj['Diretoria'] || obj['Regional'] || '').trim(),
             cidade: (obj['Cidade'] || '').trim(),
             grupo: (obj['GRUPOS'] || obj['Grupo'] || '').trim(),
+            tipo: (obj['Tipo de OS'] || obj['Tipo OS'] || obj['TIPO DE OS'] || obj['TIPO OS'] || obj['Tipo'] || [cod, desc].filter(Boolean).join(' - ')).trim(),
             cod, desc, qtd: 1,
             prazoRaw, prazoKey
           });
@@ -264,7 +266,7 @@ function parseServicos(txt) {
     const prazoRaw = cols[4].trim();
     const { cod, desc } = parseCodDesc(cols[3].trim());
     data.os.push({
-      diretoria, cidade: cols[1].trim(), grupo: cols[2].trim(),
+      diretoria, cidade: cols[1].trim(), grupo: cols[2].trim(), tipo: [cod, desc].filter(Boolean).join(' - '),
       cod, desc, qtd: 1, prazoRaw, prazoKey: getPrazoKey(prazoRaw)
     });
   }
@@ -272,7 +274,7 @@ function parseServicos(txt) {
   // Se só veio resumo (sem detalhe), usa o resumo expandido na lista
   if (data.os.length === 0 && data.resumo.length > 0) {
     data.os = data.resumo.map(r => ({
-      diretoria: r.diretoria, cidade: '', grupo: r.grupo,
+      diretoria: r.diretoria, cidade: '', grupo: r.grupo, tipo: r.tipo || '',
       cod: '', desc: '', qtd: r.qtd, prazoRaw: r.prazoRaw, prazoKey: r.prazoKey
     }));
   }
@@ -289,7 +291,7 @@ function parseServicos(txt) {
 function agruparOS(lista) {
   const mapa = {};
   for (const o of lista) {
-    const key = [o.diretoria, o.cidade, o.grupo, o.cod, o.prazoKey].join('||');
+    const key = [o.diretoria, o.cidade, o.grupo, o.tipo, o.cod, o.prazoKey].join('||');
     if (mapa[key]) {
       mapa[key].qtd += (o.qtd || 1);
     } else {
@@ -373,15 +375,18 @@ let os_global = [];
 let filtDiretoria = 'todas';
 let filtPrazo = 'todas';
 let filtGrupo = 'todos';
+let filtTipo = 'todos';
 let filtCidade = 'todas';
+let diretorias_global = [];
 let pagina = 1;
 const POR_PAG = 30;
 
-function filtrarOS() {
+function filtrarOS(opcoes = {}) {
+  const ignorarDiretoria = !!opcoes.ignorarDiretoria;
   return os_global.filter(o =>
-    (filtDiretoria === 'todas' || o.diretoria === filtDiretoria) &&
-
+    (ignorarDiretoria || filtDiretoria === 'todas' || o.diretoria === filtDiretoria) &&
     (filtGrupo === 'todos' || o.grupo === filtGrupo) &&
+    (filtTipo === 'todos' || o.tipo === filtTipo) &&
     (filtCidade === 'todas' || !o.cidade || o.cidade === filtCidade) &&
     (filtPrazo === 'todas' || (filtPrazo === 'urgente' ? ['b)','c)'].includes(o.prazoKey) : o.prazoKey === filtPrazo))
   ).sort((a,b) => {
@@ -398,6 +403,7 @@ function exportarExcel() {
     'Diretoria': o.diretoria || '',
     'Cidade': o.cidade || '',
     'Grupo': o.grupo || '',
+    'Tipo de OS': o.tipo || '',
     'Código': o.cod || '',
     'Descrição': o.desc || '',
     'Quantidade': o.qtd || 1,
@@ -409,6 +415,7 @@ function exportarExcel() {
     { wch: 12 }, // Diretoria
     { wch: 22 }, // Cidade
     { wch: 28 }, // Grupo
+    { wch: 24 }, // Tipo de OS
     { wch: 12 }, // Código
     { wch: 50 }, // Descrição
     { wch: 12 }, // Quantidade
@@ -421,6 +428,31 @@ function exportarExcel() {
   const agora = new Date();
   const stamp = agora.toISOString().slice(0,10);
   XLSX.writeFile(wb, `servicos_corsan_${stamp}.xlsx`);
+}
+
+function atualizarCards() {
+  const lista = filtrarOS();
+  const m = calcMetrics(lista);
+  const atrasado = m.total - m.prazo - m.amanha - m.venceHoje;
+
+  const valores = {
+    'header-total': m.total,
+    'metric-hoje': m.venceHoje,
+    'metric-amanha': m.amanha,
+    'metric-atrasado': atrasado,
+    'metric-prazo': m.prazo
+  };
+  Object.entries(valores).forEach(([id, valor]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = valor.toLocaleString('pt-BR');
+  });
+
+  renderDirCards(filtrarOS({ ignorarDiretoria: true }), diretorias_global);
+}
+
+function atualizarVisualizacao() {
+  atualizarCards();
+  renderOS();
 }
 
 function renderOS() {
@@ -441,7 +473,7 @@ function renderOS() {
           <div class="os-body">
             <div class="os-info">
               <div class="os-grupo">${o.grupo}</div>
-              <div class="os-desc">${o.cod ? o.cod + ' — ' : ''}${o.desc}</div>
+              <div class="os-desc">${o.tipo || ((o.cod ? o.cod + ' — ' : '') + o.desc)}</div>
             </div>
             <div class="os-right">
               <span class="os-dir-cidade">${o.diretoria}${o.cidade ? ' / ' + o.cidade : ''}</span>
@@ -496,7 +528,7 @@ function selecionarDir(d) {
   document.querySelectorAll('.fbtn[data-reg]').forEach(b => {
     b.className = 'fbtn' + (b.dataset.reg === d ? ' on' : '');
   });
-  renderOS();
+  atualizarVisualizacao();
 }
 
 function filtrarReg(reg) {
@@ -510,7 +542,7 @@ function filtrarReg(reg) {
     const onclick = el.getAttribute('onclick') || '';
     el.classList.toggle('active', onclick.includes("'" + reg + "'") || (reg === 'todas' && onclick.includes("'todas'")));
   });
-  renderOS();
+  atualizarVisualizacao();
 }
 
 function selecionarPrazo(p, btn) {
@@ -519,21 +551,23 @@ function selecionarPrazo(p, btn) {
   document.querySelectorAll('.fbtn[data-prazo]').forEach(b => {
     b.className = 'fbtn' + (b.dataset.prazo === p ? (p==='todas'?' on':p==='b)'?' on-b':' on-c') : '');
   });
-  renderOS();
+  atualizarVisualizacao();
 }
 
 function handleCidade(el) { selecionarByEl('cidade', el); }
 function handleGrupo(el) { selecionarByEl('grupo', el); }
+function handleTipo(el) { selecionarByEl('tipo', el); }
 function selecionarByEl(tipo, el) {
   const val = el.dataset[tipo];
   if (tipo === 'grupo') { filtGrupo = val; atualizarTag('grupoTag', val, 'todos', 'limparGrupo'); }
+  if (tipo === 'tipo') { filtTipo = val; atualizarTag('tipoTag', val, 'todos', 'limparTipo'); }
   if (tipo === 'cidade') { filtCidade = val; atualizarTag('cidadeTag', val, 'todas', 'limparCidade'); }
   document.querySelectorAll('.dd-opt[data-' + tipo + ']').forEach(o => o.classList.toggle('sel', o.dataset[tipo] === val));
   const inp = document.getElementById(tipo + 'Input');
   if (inp) inp.value = (val === 'todos' || val === 'todas') ? '' : val;
   fecharDD(tipo + 'DD');
   pagina = 1;
-  renderOS();
+  atualizarVisualizacao();
 }
 
 function atualizarTag(id, val, vazio, fnLimpar) {
@@ -547,14 +581,21 @@ function limparGrupo() {
   const inp = document.getElementById('grupoInput'); if (inp) inp.value = '';
   document.querySelectorAll('.dd-opt[data-grupo]').forEach(o => o.classList.toggle('sel', o.dataset.grupo === 'todos'));
   atualizarTag('grupoTag','todos','todos','limparGrupo');
-  pagina = 1; renderOS();
+  pagina = 1; atualizarVisualizacao();
+}
+function limparTipo() {
+  filtTipo = 'todos';
+  const inp = document.getElementById('tipoInput'); if (inp) inp.value = '';
+  document.querySelectorAll('.dd-opt[data-tipo]').forEach(o => o.classList.toggle('sel', o.dataset.tipo === 'todos'));
+  atualizarTag('tipoTag','todos','todos','limparTipo');
+  pagina = 1; atualizarVisualizacao();
 }
 function limparCidade() {
   filtCidade = 'todas';
   const inp = document.getElementById('cidadeInput'); if (inp) inp.value = '';
   document.querySelectorAll('.dd-opt[data-cidade]').forEach(o => o.classList.toggle('sel', o.dataset.cidade === 'todas'));
   atualizarTag('cidadeTag','todas','todas','limparCidade');
-  pagina = 1; renderOS();
+  pagina = 1; atualizarVisualizacao();
 }
 
 function toggleDD(id) { document.getElementById(id)?.classList.toggle('open'); }
@@ -562,7 +603,7 @@ function fecharDD(id) { document.getElementById(id)?.classList.remove('open'); }
 function filterDD(id, val) {
   document.getElementById(id)?.classList.add('open');
   document.querySelectorAll(`#${id} .dd-opt`).forEach(o => {
-    o.style.display = (o.dataset.grupo==='todos'||o.dataset.cidade==='todas'||
+    o.style.display = (o.dataset.grupo==='todos'||o.dataset.tipo==='todos'||o.dataset.cidade==='todas'||
       (o.textContent||'').toLowerCase().includes(val.toLowerCase())) ? '' : 'none';
   });
 }
@@ -577,8 +618,10 @@ function render(data) {
   os_global = data.os;
   const fonte = data.resumo && data.resumo.length > 0 ? data.resumo : data.os;
   const m = calcMetrics(fonte);
-  const dirs = [...new Set(fonte.map(o=>o.diretoria).filter(Boolean))].sort();
+  const dirs = [...new Set(data.os.map(o=>o.diretoria).filter(Boolean))].sort();
+  diretorias_global = dirs;
   const grupos = [...new Set(data.os.map(o=>o.grupo).filter(Boolean))].sort();
+  const tipos = [...new Set(data.os.map(o=>o.tipo).filter(Boolean))].sort();
   const cidades = data.cidades || [...new Set(data.os.map(o=>o.cidade).filter(Boolean))].sort();
 
   const cidadeOpts = cidades.length > 0 ? (
@@ -591,6 +634,10 @@ function render(data) {
     grupos.map(function(g){ return '<div class="dd-opt" data-grupo="' + g + '" onclick="handleGrupo(this)">' + g + '</div>'; })
   ).join('');
 
+  const tipoOpts = ['<div class="dd-opt sel" data-tipo="todos" onclick="handleTipo(this)">Todos os tipos</div>'].concat(
+    tipos.map(function(t){ return '<div class="dd-opt" data-tipo="' + t + '" onclick="handleTipo(this)">' + t + '</div>'; })
+  ).join('');
+
   document.getElementById('app').innerHTML = `
     <div class="header">
       <div class="header-left">
@@ -599,16 +646,16 @@ function render(data) {
         <div class="header-meta">Gerado em ${data.gerado}</div>
       </div>
       <div class="header-stat">
-        <div class="header-stat-val">${m.total.toLocaleString('pt-BR')}</div>
+        <div class="header-stat-val" id="header-total">${m.total.toLocaleString('pt-BR')}</div>
         <div class="header-stat-label">OS em aberto</div>
       </div>
     </div>
 
     <div class="metrics">
-      <div class="metric"><div class="metric-val" style="color:#dc2626">${m.venceHoje.toLocaleString('pt-BR')}</div><div class="metric-label">Vence hoje</div></div>
-      <div class="metric"><div class="metric-val" style="color:#d97706">${m.amanha.toLocaleString('pt-BR')}</div><div class="metric-label">Vence amanhã</div></div>
-      <div class="metric"><div class="metric-val" style="color:#7c3aed">${(m.total-m.prazo-m.amanha-m.venceHoje).toLocaleString('pt-BR')}</div><div class="metric-label">Atrasado (>1 dia)</div></div>
-      <div class="metric"><div class="metric-val" style="color:#16a34a">${m.prazo.toLocaleString('pt-BR')}</div><div class="metric-label">Dentro do prazo</div></div>
+      <div class="metric"><div class="metric-val" id="metric-hoje" style="color:#dc2626">${m.venceHoje.toLocaleString('pt-BR')}</div><div class="metric-label">Vence hoje</div></div>
+      <div class="metric"><div class="metric-val" id="metric-amanha" style="color:#d97706">${m.amanha.toLocaleString('pt-BR')}</div><div class="metric-label">Vence amanhã</div></div>
+      <div class="metric"><div class="metric-val" id="metric-atrasado" style="color:#7c3aed">${(m.total-m.prazo-m.amanha-m.venceHoje).toLocaleString('pt-BR')}</div><div class="metric-label">Atrasado (>1 dia)</div></div>
+      <div class="metric"><div class="metric-val" id="metric-prazo" style="color:#16a34a">${m.prazo.toLocaleString('pt-BR')}</div><div class="metric-label">Dentro do prazo</div></div>
     </div>
 
     ${data.narracao ? `
@@ -653,6 +700,15 @@ function render(data) {
           </div>
           <div class="tag-row" id="grupoTag"></div>
         </div>
+        <div class="filter-row">
+          <span class="filter-label">Tipo OS</span>
+          <div class="dd-wrap">
+            <input class="dd-input" id="tipoInput" placeholder="Buscar tipo de OS..." autocomplete="off"
+              onclick="toggleDD('tipoDD')" oninput="filterDD('tipoDD',this.value)">
+            <div class="dd-list" id="tipoDD">${tipoOpts}</div>
+          </div>
+          <div class="tag-row" id="tipoTag"></div>
+        </div>
 
       </div>
       ${cidades.length > 0 ? `
@@ -693,8 +749,7 @@ function render(data) {
       <span class="footer-badge">AI Builder · Power Automate</span>
     </div>`;
 
-  renderDirCards(fonte, dirs);
-  renderOS();
+  atualizarVisualizacao();
 }
 
 fetch(JSON_URL + '?t=' + Date.now())
