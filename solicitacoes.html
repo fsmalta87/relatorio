@@ -233,7 +233,18 @@
 <script>
 const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-solicitacoes.json';
 const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#10b981','#8b5cf6','#dc2626'];
-const MESES  = ['Jan','Fev','Mar','Abr','Mai','Jun','Atual'];
+function gerarMeses() {
+  const nomes = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const hoje = new Date();
+  const labels = [];
+  for (let i = 6; i >= 1; i--) {
+    const idx = (hoje.getMonth() - i + 12) % 12;
+    labels.push(nomes[idx]);
+  }
+  labels.push('Atual');
+  return labels;
+}
+const MESES = gerarMeses();
 
 function parseNum(s) {
   if (!s || s.trim() === '') return 0;
@@ -391,13 +402,13 @@ function parseAnomalia(txt) {
         const obj = JSON.parse(lt2.replace(/,$/, ''));
         cidade = (obj['CIDADE'] || obj['Cidade'] || '').trim();
         motivo = (obj['motivos de contato (grupos)'] || obj['Motivo'] || '').trim();
-        jan    = parseNum(obj['jan26'] || obj['Jan'] || obj['Jan/26'] || '0');
-        fev    = parseNum(obj['fev26'] || obj['Fev'] || obj['Fev/26'] || '0');
-        mar    = parseNum(obj['mar26'] || obj['Mar'] || obj['Mar/26'] || '0');
-        abr    = parseNum(obj['abr26'] || obj['Abr'] || obj['Abr/26'] || '0');
-        mai    = parseNum(obj['mai26'] || obj['Mai'] || obj['Mai/26'] || '0');
-        jun    = parseNum(obj['jun26'] || obj['Jun'] || obj['Jun/26'] || '0');
-        atual  = parseNum(obj['Mês Atual'] || obj['MesAtual'] || obj['Atual'] || obj['jul26'] || '0');
+        jan    = parseNum(obj['jan26'] || obj['Jan'] || obj['Jan/26'] || obj['M1'] || '0');
+        fev    = parseNum(obj['fev26'] || obj['Fev'] || obj['Fev/26'] || obj['M2'] || '0');
+        mar    = parseNum(obj['mar26'] || obj['Mar'] || obj['Mar/26'] || obj['M3'] || '0');
+        abr    = parseNum(obj['abr26'] || obj['Abr'] || obj['Abr/26'] || obj['M4'] || '0');
+        mai    = parseNum(obj['mai26'] || obj['Mai'] || obj['Mai/26'] || obj['M5'] || '0');
+        jun    = parseNum(obj['jun26'] || obj['Jun'] || obj['Jun/26'] || obj['M6'] || '0');
+        atual  = parseNum(obj['Mês Atual'] || obj['MesAtual'] || obj['Atual'] || obj['jul26'] || obj['ago26'] || '0');
         hist   = parseNum(obj['Média'] || obj['Media'] || obj['Média Hist_x002e_Variação %Status'] || '0');
         delta  = parseFloat(obj['Variacao'] || obj['Variação %'] || '0') || 0;
         statusCol = (obj['Status'] || '').trim();
@@ -412,7 +423,8 @@ function parseAnomalia(txt) {
       const cols = isCSV ? l.split(';') : l.split('\t');
 
       if (isCSV) {
-        // Formato: Regional;Unidade;Cidade;Motivo;Jan;Fev;Mar;Abr;Mai;Jun;Jul;MédiaHist;Variação%;Status;Rank
+        // Formato: Regional;Unidade;Cidade;Motivo;M1;M2;M3;M4;M5;M6;Atual;MédiaHist;Variação%;Status;Rank
+        // (a janela de 6 meses históricos rola mensalmente — os rótulos exibidos são calculados por gerarMeses())
         if (cols.length < 13) continue;
         diretoria = limparCampo(cols[0]);
         // cols[1] = unidade (ignorar)
@@ -424,7 +436,7 @@ function parseAnomalia(txt) {
         abr       = parseNum(limparCampo(cols[7]));
         mai       = parseNum(limparCampo(cols[8]));
         jun       = parseNum(limparCampo(cols[9]));
-        atual     = parseNum(limparCampo(cols[10]));  // Jul = mês atual
+        atual     = parseNum(limparCampo(cols[10]));  // mês atual (último mês do período)
         hist      = parseNum(limparCampo(cols[11]));
         delta     = parseFloat(limparCampo(cols[12])) || 0;
         statusCol = limparCampo(cols[13]);
@@ -905,16 +917,7 @@ function render(data) {
       <div class="card card-full">
         <div class="card-title">Evolução mensal — top variações com contexto de cidade</div>
         <div id="spark-list"></div>
-        <div class="legend">
-          <span class="legend-item"><span class="legend-sq" style="background:#378ADD"></span>Jan</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#BA7517"></span>Fev</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#1D9E75"></span>Mar</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#534AB7"></span>Abr</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#10b981"></span>Mai</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#8b5cf6"></span>Jun</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#dc2626"></span>Atual (alta)</span>
-          <span class="legend-item"><span class="legend-sq" style="background:#16a34a"></span>Atual (queda)</span>
-        </div>
+        <div class="legend" id="mesesLegend"></div>
         <div class="pager">
           <span id="spark-pager-info"></span>
           <div class="pager-btns">
@@ -929,7 +932,7 @@ function render(data) {
     </div>
 
     <div class="footer">
-      <span>Top 10 motivos por cidade. Limiar 15% vs. média Jan–Jun. Calculado no Excel.</span>
+      <span>Top 10 motivos por cidade. Limiar 15% vs. média ${MESES[0]}–${MESES[5]}. Calculado no Excel.</span>
       <span class="footer-badge">AI Builder · Power Automate</span>
     </div>
 
@@ -947,6 +950,15 @@ function render(data) {
     </div>`;
 
   renderSparks(data.anomalias);
+
+  const legendEl = document.getElementById('mesesLegend');
+  if (legendEl) {
+    legendEl.innerHTML = MESES.slice(0, 6).map((m, i) =>
+      '<span class="legend-item"><span class="legend-sq" style="background:' + MCORES[i] + '"></span>' + m + '</span>'
+    ).join('') +
+    '<span class="legend-item"><span class="legend-sq" style="background:#dc2626"></span>Atual (alta)</span>' +
+    '<span class="legend-item"><span class="legend-sq" style="background:#16a34a"></span>Atual (queda)</span>';
+  }
 }
 
 
