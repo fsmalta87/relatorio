@@ -232,19 +232,8 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const JSON_URL = 'https://raw.githubusercontent.com/fsmalta87/relatorio-agua/main/dados-solicitacoes.json';
-const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#10b981','#8b5cf6','#dc2626'];
-function gerarMeses() {
-  const nomes = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const hoje = new Date();
-  const labels = [];
-  for (let i = 6; i >= 1; i--) {
-    const idx = (hoje.getMonth() - i + 12) % 12;
-    labels.push(nomes[idx]);
-  }
-  labels.push('Atual');
-  return labels;
-}
-const MESES = gerarMeses();
+const MCORES = ['#378ADD','#BA7517','#1D9E75','#534AB7','#10b981','#8b5cf6','#0ea5e9','#f59e0b','#dc2626'];
+const MESES  = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set'];
 
 function parseNum(s) {
   if (!s || s.trim() === '') return 0;
@@ -254,6 +243,20 @@ function parseNum(s) {
 function fmt(n) {
   if (!n && n !== 0) return '—';
   return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function rawFilled(v) {
+  return v !== undefined && v !== null && String(v).trim() !== '';
+}
+
+function montarSerieMeses(rawMeses) {
+  const ultimoPreenchido = rawMeses.reduce((acc, item, idx) => rawFilled(item.raw) ? idx : acc, -1);
+  const corte = ultimoPreenchido >= 0 ? ultimoPreenchido + 1 : rawMeses.length;
+  const serie = rawMeses.slice(0, corte);
+  return {
+    meses: serie.map(item => item.label),
+    vals: serie.map(item => parseNum(String(item.raw ?? '0')))
+  };
 }
 
 // Parser da narração em subcards
@@ -386,6 +389,39 @@ function parseAnomalia(txt) {
   const linhas = txt.split('\n');
   let section = 'dados';
   let maiorAbs = 0;
+  let csvHeader = null;
+
+  function limparCampo(s) {
+    return (s || '').trim().replace(/^"|"$/g, '').trim();
+  }
+
+  function mesLabelFromHeader(h) {
+    const m = limparCampo(h).match(/^(?:01\/)?(\d{2})\/(\d{4})$/);
+    if (!m) return null;
+    const nomes = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    const idx = Number(m[1]) - 1;
+    return idx >= 0 && idx < 12 ? nomes[idx] : null;
+  }
+
+  function detectarCabecalho(cols) {
+    const limpos = cols.map(limparCampo);
+    const monthCols = [];
+    limpos.forEach((h, idx) => {
+      const label = mesLabelFromHeader(h);
+      if (label) monthCols.push({ idx, label });
+    });
+    if (!monthCols.length) return null;
+    return {
+      dir: limpos.findIndex(h => h.toLowerCase() === 'regional'),
+      cidade: limpos.findIndex(h => h.toLowerCase().includes('cidade')),
+      motivo: limpos.findIndex(h => h.toLowerCase().includes('motivos_de_contato') || h.toLowerCase() === 'motivo'),
+      monthCols,
+      hist: limpos.findIndex(h => h.toLowerCase().startsWith('média hist') || h.toLowerCase().startsWith('media hist')),
+      delta: limpos.findIndex(h => h.toLowerCase() === 'variação %' || h.toLowerCase() === 'variacao %'),
+      status: limpos.findIndex(h => h.toLowerCase() === 'status')
+    };
+  }
+
   for (let i = 0; i < linhas.length; i++) {
     const l = linhas[i];
     const lt = l.trim();
@@ -395,75 +431,101 @@ function parseAnomalia(txt) {
     if (lt.startsWith('---')) { if(section==='narracao') section='dados'; continue; }
     if (section === 'narracao') { data.narracao += (data.narracao ? '\n' : '') + lt; continue; }
 
-    let cidade, motivo, jan, fev, mar, abr, mai, jun, atual, hist, delta, statusCol, diretoria = '';
+    let cidade = '', motivo = '', hist = 0, delta = 0, statusCol = '', diretoria = '';
+    let mesesLinha = [], valsLinha = [];
     const lt2 = lt;
+
     if (lt2.startsWith('{')) {
       try {
         const obj = JSON.parse(lt2.replace(/,$/, ''));
         cidade = (obj['CIDADE'] || obj['Cidade'] || '').trim();
         motivo = (obj['motivos de contato (grupos)'] || obj['Motivo'] || '').trim();
-        jan    = parseNum(obj['jan26'] || obj['Jan'] || obj['Jan/26'] || obj['M1'] || '0');
-        fev    = parseNum(obj['fev26'] || obj['Fev'] || obj['Fev/26'] || obj['M2'] || '0');
-        mar    = parseNum(obj['mar26'] || obj['Mar'] || obj['Mar/26'] || obj['M3'] || '0');
-        abr    = parseNum(obj['abr26'] || obj['Abr'] || obj['Abr/26'] || obj['M4'] || '0');
-        mai    = parseNum(obj['mai26'] || obj['Mai'] || obj['Mai/26'] || obj['M5'] || '0');
-        jun    = parseNum(obj['jun26'] || obj['Jun'] || obj['Jun/26'] || obj['M6'] || '0');
-        atual  = parseNum(obj['Mês Atual'] || obj['MesAtual'] || obj['Atual'] || obj['jul26'] || obj['ago26'] || '0');
-        hist   = parseNum(obj['Média'] || obj['Media'] || obj['Média Hist_x002e_Variação %Status'] || '0');
-        delta  = parseFloat(obj['Variacao'] || obj['Variação %'] || '0') || 0;
-        statusCol = (obj['Status'] || '').trim();
-        diretoria = (obj['Diretoria'] || obj['diretoria'] || '').trim();
+        const serieObj = montarSerieMeses([
+          { label:'Jan', raw: obj['jan26'] ?? obj['Jan'] ?? obj['Jan/26'] },
+          { label:'Fev', raw: obj['fev26'] ?? obj['Fev'] ?? obj['Fev/26'] },
+          { label:'Mar', raw: obj['mar26'] ?? obj['Mar'] ?? obj['Mar/26'] ?? obj['01/03/2026'] },
+          { label:'Abr', raw: obj['abr26'] ?? obj['Abr'] ?? obj['Abr/26'] ?? obj['01/04/2026'] },
+          { label:'Mai', raw: obj['mai26'] ?? obj['Mai'] ?? obj['Mai/26'] ?? obj['01/05/2026'] },
+          { label:'Jun', raw: obj['jun26'] ?? obj['Jun'] ?? obj['Jun/26'] ?? obj['01/06/2026'] },
+          { label:'Jul', raw: obj['jul26'] ?? obj['Jul'] ?? obj['Jul/26'] ?? obj['01/07/2026'] },
+          { label:'Ago', raw: obj['ago26'] ?? obj['Ago'] ?? obj['Ago/26'] ?? obj['01/08/2026'] },
+          { label:'Set', raw: obj['set26'] ?? obj['Set'] ?? obj['Set/26'] ?? obj['01/09/2026'] ?? obj['Mês Atual'] ?? obj['MesAtual'] ?? obj['Atual'] }
+        ]);
+        mesesLinha = serieObj.meses;
+        valsLinha = serieObj.vals;
+        // Remove meses iniciais inexistentes (ex.: a base atual começa em março)
+        while (mesesLinha.length && valsLinha.length && valsLinha[0] === 0) {
+          const lbl = mesesLinha[0];
+          const rawKeyExists = Object.prototype.hasOwnProperty.call(obj, lbl) || Object.prototype.hasOwnProperty.call(obj, lbl + '/26');
+          if (rawKeyExists) break;
+          mesesLinha.shift(); valsLinha.shift();
+        }
+        hist   = parseNum(String(obj['Média'] ?? obj['Media'] ?? obj['Média Hist.Variação %Status'] ?? obj['Média Hist_x002e_Variação %Status'] ?? '0'));
+        delta  = parseFloat(obj['Variacao'] ?? obj['Variação %'] ?? '0') || 0;
+        statusCol = String(obj['Status'] || '').trim();
+        diretoria = String(obj['Diretoria'] || obj['diretoria'] || '').trim();
       } catch(e) { continue; }
     } else {
-      // Suporte a CSV com ; (novo formato Office Script) e TSV com tab (legado)
-      // Remove aspas duplas de cada campo
-      function limparCampo(s) { return (s||'').trim().replace(/^"|"$/g,'').trim(); }
-
       const isCSV = l.includes(';');
       const cols = isCSV ? l.split(';') : l.split('\t');
 
       if (isCSV) {
-        // Formato: Regional;Unidade;Cidade;Motivo;M1;M2;M3;M4;M5;M6;Atual;MédiaHist;Variação%;Status;Rank
-        // (a janela de 6 meses históricos rola mensalmente — os rótulos exibidos são calculados por gerarMeses())
-        if (cols.length < 13) continue;
-        diretoria = limparCampo(cols[0]);
-        // cols[1] = unidade (ignorar)
-        cidade    = limparCampo(cols[2]);
-        motivo    = limparCampo(cols[3]);
-        jan       = parseNum(limparCampo(cols[4]));
-        fev       = parseNum(limparCampo(cols[5]));
-        mar       = parseNum(limparCampo(cols[6]));
-        abr       = parseNum(limparCampo(cols[7]));
-        mai       = parseNum(limparCampo(cols[8]));
-        jun       = parseNum(limparCampo(cols[9]));
-        atual     = parseNum(limparCampo(cols[10]));  // mês atual (último mês do período)
-        hist      = parseNum(limparCampo(cols[11]));
-        delta     = parseFloat(limparCampo(cols[12])) || 0;
-        statusCol = limparCampo(cols[13]);
-        // cols[14] = rank (ignorar)
+        // Detecta a linha de cabeçalho e usa os nomes reais dos meses.
+        const possivelHeader = detectarCabecalho(cols);
+        if (possivelHeader && limparCampo(cols[0]).toLowerCase() === 'regional') {
+          csvHeader = possivelHeader;
+          continue;
+        }
+
+        // Padrão atual: Regional;Unidade;Cidade;Motivo;Mar;Abr;Mai;Jun;Jul;Ago;Set;Média;Variação;Status;Rank
+        const h = csvHeader || {
+          dir: 0, cidade: 2, motivo: 3,
+          monthCols: [
+            {idx:4,label:'Mar'},{idx:5,label:'Abr'},{idx:6,label:'Mai'},
+            {idx:7,label:'Jun'},{idx:8,label:'Jul'},{idx:9,label:'Ago'},{idx:10,label:'Set'}
+          ],
+          hist: 11, delta: 12, status: 13
+        };
+
+        if (cols.length <= Math.max(h.status, h.delta, h.hist, ...h.monthCols.map(x=>x.idx))) continue;
+        diretoria = h.dir >= 0 ? limparCampo(cols[h.dir]) : '';
+        cidade = h.cidade >= 0 ? limparCampo(cols[h.cidade]) : '';
+        motivo = h.motivo >= 0 ? limparCampo(cols[h.motivo]) : '';
+        mesesLinha = h.monthCols.map(x => x.label);
+        valsLinha = h.monthCols.map(x => parseNum(limparCampo(cols[x.idx])));
+        hist = h.hist >= 0 ? parseNum(limparCampo(cols[h.hist])) : 0;
+        delta = h.delta >= 0 ? (parseFloat(limparCampo(cols[h.delta])) || 0) : 0;
+        statusCol = h.status >= 0 ? limparCampo(cols[h.status]) : '';
       } else {
-        // Formato TSV legado
+        // TSV legado: mantém suporte ao formato anterior.
         if (cols.length < 10) continue;
         const offset = cols[0].trim() === '' ? 1 : 0;
-        cidade    = (cols[0 + offset] || '').trim();
-        motivo    = (cols[1 + offset] || '').trim();
-        jan       = parseNum(cols[2 + offset]);
-        fev       = parseNum(cols[3 + offset]);
-        mar       = parseNum(cols[4 + offset]);
-        abr       = parseNum(cols[5 + offset]);
-        mai       = parseNum(cols[6 + offset]);
-        jun       = parseNum(cols[7 + offset]);
-        atual     = parseNum(cols[8 + offset]);
-        hist      = parseNum(cols[9 + offset]);
-        const varStr = (cols[10 + offset] || '').trim().replace('%','').replace('+','');
-        delta     = parseFloat(varStr) || 0;
-        statusCol = (cols[11 + offset] || cols[12 + offset] || '').trim();
-        diretoria = (cols[13 + offset] || '').trim();
+        cidade = (cols[0 + offset] || '').trim();
+        motivo = (cols[1 + offset] || '').trim();
+        const serieLinha = montarSerieMeses([
+          { label:'Jan', raw: cols[2 + offset] },
+          { label:'Fev', raw: cols[3 + offset] },
+          { label:'Mar', raw: cols[4 + offset] },
+          { label:'Abr', raw: cols[5 + offset] },
+          { label:'Mai', raw: cols[6 + offset] },
+          { label:'Jun', raw: cols[7 + offset] },
+          { label:'Jul', raw: cols[8 + offset] },
+          { label:'Ago', raw: cols[9 + offset] },
+          { label:'Set', raw: cols[10 + offset] }
+        ]);
+        mesesLinha = serieLinha.meses;
+        valsLinha = serieLinha.vals;
+        hist = parseNum(cols[11 + offset] || '0');
+        const varStr = (cols[12 + offset] || '').trim().replace('%','').replace('+','');
+        delta = parseFloat(varStr) || 0;
+        statusCol = (cols[13 + offset] || cols[14 + offset] || '').trim();
+        diretoria = (cols[15 + offset] || '').trim();
       }
     }
+
     if (!cidade || cidade === 'CIDADE' || cidade === 'Unidade' || cidade === 'RS' || cidade === 'f_motivos_contato_CIDADE') continue;
     if (!motivo || motivo === 'motivos de contato (grupos)' || motivo.startsWith('f_motivos')) continue;
-    // Ignorar status Normal (só altas e quedas)
+
     const isAlta  = statusCol.includes('ALTA')  || statusCol.includes('🔴');
     const isQueda = statusCol.includes('QUEDA') || statusCol.includes('🟢');
     if (!isAlta && !isQueda) continue;
@@ -475,9 +537,20 @@ function parseAnomalia(txt) {
       const sinal = delta > 0 ? '+' : '';
       data.maiorDesvio = `${sinal}${Math.round(delta * 100)}%`;
     }
-    const avgVals = [jan,fev,mar,abr,mai,jun].filter(v=>v>0);
+
+    const histSliceCount = Math.max(valsLinha.length - 1, 1);
+    const avgVals = valsLinha.slice(0, histSliceCount).filter(v => v > 0);
     const avg = avgVals.length ? avgVals.reduce((a,b)=>a+b,0)/avgVals.length : hist;
-    data.anomalias.push({ cidade, motivo, diretoria: diretoria || '', vals:[jan,fev,mar,abr,mai,jun,atual], hist:hist||avg, delta, tipo });
+    data.anomalias.push({
+      cidade,
+      motivo,
+      diretoria: diretoria.replace(/\u00a0/g, ' ').trim(),
+      meses: mesesLinha,
+      vals: valsLinha,
+      hist: hist || avg,
+      delta,
+      tipo
+    });
   }
   return data;
 }
@@ -615,36 +688,35 @@ function exportarExcel() {
     return;
   }
 
-  const linhas = registros.map(a => ({
-    'Diretoria': a.diretoria || '',
-    'Cidade': a.cidade,
-    'Solicitação': a.motivo,
-    'Jan': a.vals[0],
-    'Fev': a.vals[1],
-    'Mar': a.vals[2],
-    'Abr': a.vals[3],
-    'Mai': a.vals[4],
-    'Jun': a.vals[5],
-    'Mês Atual': a.vals[6],
-    'Média Histórica': a.hist,
-    'Variação %': a.delta,
-    'Status': a.tipo === 'high' ? 'Alta' : 'Queda'
-  }));
+  const linhas = registros.map(a => {
+    const row = {
+      'Diretoria': a.diretoria || '',
+      'Cidade': a.cidade,
+      'Solicitação': a.motivo
+    };
+    (a.meses || []).forEach((mes, i) => { row[mes] = a.vals[i] ?? ''; });
+    row['Mês Atual'] = a.vals[a.vals.length - 1] ?? '';
+    row['Referência Atual'] = (a.meses && a.meses.length ? a.meses[a.meses.length - 1] : 'Atual');
+    row['Média Histórica'] = a.hist;
+    row['Variação %'] = a.delta;
+    row['Status'] = a.tipo === 'high' ? 'Alta' : 'Queda';
+    return row;
+  });
 
   const ws = XLSX.utils.json_to_sheet(linhas);
-  ws['!cols'] = [
-    {wch:14},{wch:22},{wch:42},
-    {wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:14},{wch:16},{wch:13},{wch:10}
-  ];
+  const headersExcel = Object.keys(linhas[0] || {});
+  ws['!cols'] = headersExcel.map(h => ({wch: h === 'Solicitação' ? 42 : h === 'Cidade' ? 22 : h === 'Diretoria' ? 14 : 14}));
 
   const range = XLSX.utils.decode_range(ws['!ref']);
+  const idxVar = headersExcel.indexOf('Variação %');
+  const mesesExport = new Set(registros.flatMap(a => a.meses || []));
   for (let r = 1; r <= range.e.r; r++) {
-    for (let c = 3; c <= 10; c++) {
+    headersExcel.forEach((h, c) => {
       const cell = ws[XLSX.utils.encode_cell({r, c})];
-      if (cell) cell.z = '#,##0.00';
-    }
-    const varCell = ws[XLSX.utils.encode_cell({r, c:11})];
-    if (varCell) varCell.z = '0.00%';
+      if (!cell) return;
+      if (mesesExport.has(h) || h === 'Mês Atual' || h === 'Média Histórica') cell.z = '#,##0.00';
+      if (c === idxVar) cell.z = '0.00%';
+    });
   }
 
   const filtrosWs = XLSX.utils.aoa_to_sheet([
@@ -687,7 +759,7 @@ function renderAnom() {
             <span class="anom-city">${a.diretoria ? '<span style="font-size:10px;color:var(--muted);display:block;line-height:1.2">' + a.diretoria + '</span>' : ''}${a.cidade}</span>
             <span class="anom-motivo">${a.motivo}</span>
             <div class="anom-nums">
-              <span class="anom-atual">${fmt(a.vals[6])}</span>
+              <span class="anom-atual">${fmt(a.vals[a.vals.length - 1])}</span>
               <span class="anom-delta">${sinal}${Math.round(a.delta * 100)}%</span>
               <span class="anom-avg">méd ${fmt(a.hist)}</span>
             </div>
@@ -723,16 +795,16 @@ function renderSparks(anomalias) {
     const cls = a.delta>0?'badge-up':'badge-down';
     const bars = a.vals.map((v,i)=>{
       const h=Math.max(3,Math.round(v/maxV*26));
-      const isAnom=i===6&&Math.abs(a.delta)>30;
+      const isAnom=i===a.vals.length-1&&Math.abs(a.delta)>30;
       const cor=isAnom?(a.delta>0?'#dc2626':'#16a34a'):MCORES[i];
-      return '<div class="spark-b" style="height:'+h+'px;background:'+cor+'" title="'+MESES[i]+': '+fmt(v)+'"></div>';
+      return '<div class="spark-b" style="height:'+h+'px;background:'+cor+'" title="'+((a.meses && a.meses[i]) || MESES[i] || ('M'+(i+1)))+': '+fmt(v)+'"></div>';
     }).join('');
     const idxGlobal = anomalias_global.indexOf(a);
     return '<div class="spark-row" onclick="abrirDetalhe(' + idxGlobal + ')">'
       +'<span class="spark-city">'+(a.diretoria?'<span style="font-size:9px;color:var(--muted);display:block;line-height:1">'+a.diretoria+'</span>':'')+a.cidade+'</span>'
       +'<span class="spark-motivo">'+a.motivo+'</span>'
       +'<div class="spark">'+bars+'</div>'
-      +'<span class="spark-val">'+fmt(a.vals[6])+'</span>'
+      +'<span class="spark-val">'+fmt(a.vals[a.vals.length - 1])+'</span>'
       +'<span class="spark-badge '+cls+'">'+sinal+Math.round(a.delta*100)+'%</span>'
       +'</div>';
   }).join('');
@@ -766,7 +838,7 @@ function abrirDetalhe(index) {
 
   document.getElementById('detailBody').innerHTML = `
     <div class="detail-summary">
-      <div class="detail-kpi"><div class="detail-kpi-val">${fmt(a.vals[6])}</div><div class="detail-kpi-label">Mês atual</div></div>
+      <div class="detail-kpi"><div class="detail-kpi-val">${fmt(a.vals[a.vals.length - 1])}</div><div class="detail-kpi-label">${(a.meses && a.meses.length ? a.meses[a.meses.length - 1] : 'Atual')}</div></div>
       <div class="detail-kpi"><div class="detail-kpi-val">${fmt(a.hist)}</div><div class="detail-kpi-label">Média histórica</div></div>
       <div class="detail-kpi"><div class="detail-kpi-val" style="color:${statusColor}">${sinal}${Math.round(a.delta*100)}%</div><div class="detail-kpi-label">Variação</div></div>
       <div class="detail-kpi"><div class="detail-status ${statusCls}">${statusTxt}</div><div class="detail-kpi-label" style="margin-top:7px">Classificação</div></div>
@@ -778,11 +850,11 @@ function abrirDetalhe(index) {
         <div class="detail-chart">
           ${a.vals.map((v,i)=>{
             const h = Math.max(8, Math.round(v/maxV*190));
-            const color = i===6 ? statusColor : MCORES[i];
+            const color = i===a.vals.length-1 ? statusColor : MCORES[i];
             return `<div class="detail-bar-wrap">
               <div class="detail-bar-value">${fmt(v)}</div>
-              <div class="detail-bar" style="height:${h}px;background:${color}" title="${MESES[i]}: ${fmt(v)}"></div>
-              <div class="detail-bar-label">${MESES[i]}</div>
+              <div class="detail-bar" style="height:${h}px;background:${color}" title="${((a.meses && a.meses[i]) || MESES[i] || ('M' + (i+1)))}: ${fmt(v)}"></div>
+              <div class="detail-bar-label">${((a.meses && a.meses[i]) || MESES[i] || ('M' + (i+1)))}</div>
             </div>`;
           }).join('')}
         </div>
@@ -794,7 +866,7 @@ function abrirDetalhe(index) {
           A solicitação <strong>${a.motivo}</strong>, em <strong>${a.cidade}</strong>,
           apresenta ${a.tipo==='high'?'alta':'queda'} de
           <strong>${sinal}${Math.round(a.delta*100)}%</strong> em relação à média histórica.
-          O valor atual é <strong>${fmt(a.vals[6])}</strong>, frente à média de
+          O valor atual é <strong>${fmt(a.vals[a.vals.length - 1])}</strong>, frente à média de
           <strong>${fmt(a.hist)}</strong>.
           <br><br>
           Recomenda-se validar ocorrências operacionais, indisponibilidades,
@@ -803,7 +875,7 @@ function abrirDetalhe(index) {
         </div>
 
         <div class="detail-history">
-          ${a.vals.map((v,i)=>`<div class="detail-history-row"><span>${MESES[i]}</span><strong>${fmt(v)}</strong></div>`).join('')}
+          ${a.vals.map((v,i)=>`<div class="detail-history-row"><span>${((a.meses && a.meses[i]) || MESES[i] || ('M' + (i+1)))}</span><strong>${fmt(v)}</strong></div>`).join('')}
         </div>
       </div>
     </div>`;
@@ -829,6 +901,12 @@ function render(data) {
   const cidades = data.cidades || [...new Set(data.anomalias.map(a=>a.cidade))].sort();
   const assuntos = [...new Set(data.anomalias.map(a=>a.motivo))].sort();
   const diretorias = [...new Set(data.anomalias.map(a=>a.diretoria).filter(Boolean))].sort();
+  const serieMaisLonga = data.anomalias.reduce((best, a) => ((a.meses || []).length > best.length ? (a.meses || []) : best), []);
+  const mesesPainel = serieMaisLonga.length ? serieMaisLonga : MESES;
+  const coresPainel = MCORES.slice(0, mesesPainel.length);
+  const legendaHtml = mesesPainel.map((mes, idx) =>
+    '<span class="legend-item"><span class="legend-sq" style="background:' + coresPainel[idx] + '"></span>' + mes + '</span>'
+  ).join('');
 
   const cidadeOpts = [
     '<div class="city-opt selected" data-cidade="todas" onclick="selecionarCidadeByEl(this)"><span>Todas as cidades</span></div>',
@@ -917,7 +995,7 @@ function render(data) {
       <div class="card card-full">
         <div class="card-title">Evolução mensal — top variações com contexto de cidade</div>
         <div id="spark-list"></div>
-        <div class="legend" id="mesesLegend"></div>
+        <div class="legend">${legendaHtml}</div>
         <div class="pager">
           <span id="spark-pager-info"></span>
           <div class="pager-btns">
@@ -932,7 +1010,7 @@ function render(data) {
     </div>
 
     <div class="footer">
-      <span>Top 10 motivos por cidade. Limiar 15% vs. média ${MESES[0]}–${MESES[5]}. Calculado no Excel.</span>
+      <span>Top 10 motivos por cidade. Setembro/2026 comparado à média histórica Mar–Ago. Calculado no Excel.</span>
       <span class="footer-badge">AI Builder · Power Automate</span>
     </div>
 
@@ -950,15 +1028,6 @@ function render(data) {
     </div>`;
 
   renderSparks(data.anomalias);
-
-  const legendEl = document.getElementById('mesesLegend');
-  if (legendEl) {
-    legendEl.innerHTML = MESES.slice(0, 6).map((m, i) =>
-      '<span class="legend-item"><span class="legend-sq" style="background:' + MCORES[i] + '"></span>' + m + '</span>'
-    ).join('') +
-    '<span class="legend-item"><span class="legend-sq" style="background:#dc2626"></span>Atual (alta)</span>' +
-    '<span class="legend-item"><span class="legend-sq" style="background:#16a34a"></span>Atual (queda)</span>';
-  }
 }
 
 
